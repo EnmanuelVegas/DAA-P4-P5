@@ -21,3 +21,9 @@ double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> s
   double y_value = first.second - second.second;
   return std::sqrt(std::pow(x_value, 2) + std::pow(y_value, 2));
 }
+
+int SpaceIndex(std::string& string_find) {
+  int separator_index = string_find.find(" ");
+  return separator_index;
+}
+  

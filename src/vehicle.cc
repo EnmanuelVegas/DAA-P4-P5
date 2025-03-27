@@ -9,10 +9,13 @@
  */
 
 #include "../include/vehicle.h"
+#include "../include/zone.h"
+#include "../include/greedy_vehicle_route.h"
 
-void Vehicle::AddStop(Zone zone) {
-  this->route_.insert(zone);
-  this->remaining_capacity_ -= zone.waste_quantity();
+
+void Vehicle::AddStop(ZonePtr) {
+  this->route_.emplace_back(zone);
+  // this->remaining_capacity_ -= zone.waste_quantity();
   return;
 }
 

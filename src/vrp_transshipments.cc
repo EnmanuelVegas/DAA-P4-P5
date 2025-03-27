@@ -10,6 +10,12 @@
 
 #include "../include/vrp_transshipments.h"
 
-std::vector<Vehicle> VRPTransshipments::ComputeUsedVehicles() {
-  return route_generator_.SolveAlgorithm(zones_, collection_capacity_, max_time_, transport_zones_, depot_);
+VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance) 
+  : instance_(instance), route_generator_(GreedyVehicleRoute()) {
+    return;
+}
+
+
+std::vector<Vehicle> VRPTransshipments::ComputeRoutes() {
+  return route_generator_.SolveAlgorithm(this->instance_);
 }

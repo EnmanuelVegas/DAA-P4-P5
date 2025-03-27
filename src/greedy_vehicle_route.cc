@@ -13,12 +13,13 @@
 
 #include "../include/greedy_vehicle_route.h"
 
-std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(
-    std::vector<Zone> collection_zones,
-    int collection_capacity, 
-    int max_time,
-    std::vector<Zone> transport_zones,
-    Zone depot) {
+
+std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(std::shared_ptr<VRPInstance> instance) {
+  std::vector<std::shared_ptr<Zone>> collection_zones = instance->zones();
+  int collection_capacity = instance->collection_capacity();
+  int max_time = instance->max_collection_time();
+  ZonePtrPair transport_zones = instance->transfer_stations();
+  
   this->vehicles_used_.clear();
   int vehicle_index = 1;
   while (!collection_zones.empty()) {
@@ -26,7 +27,7 @@ std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(
     current_vehicle.AddStop(depot);
     while (true) {
       Zone last_stop = vehicles_used_.back().route().back();
-      Zone closest = SelectClosestZone(last_stop, collection_zones);
+      std::shared_ptr<CollectionZone> closest = SelectClosestZone(last_stop, collection_zones);
       int visit_closest_time = 0; // CALCULAR
       if (closest.waste_quantity() <= current_vehicle.remaining_capacity() &&
           visit_closest_time <= current_vehicle.remaining_time()) {
@@ -58,18 +59,20 @@ std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(
   return this->vehicles_used_;
 }
 
-Zone GreedyVehicleRoute::SelectClosestZone(Zone zone, std::vector<Zone>& candidates) {
+
+std::shared_ptr<CollectionZone> GreedyVehicleRoute::SelectClosestZone(
+  std::shared_ptr<Zone> zone, std::vector<std::shared_ptr<Zone>>& candidates) {
   // if (zones.size() == 0) { return anchor; }
   int minimum_distance{0};
   int minimum_index{0};
   for (int i{0}; i < candidates.size(); i++) {
-    int distance = ComputeEuclideanDistance(zone.coordinates(), candidates.at(i).coordinates());
+    int distance = ComputeEuclideanDistance(zone->coordinates(), candidates.at(i)->coordinates());
     if (distance < minimum_distance) {
       minimum_distance = distance;
       minimum_index = i;
     }
   }
-  return candidates[minimum_index];
+  return std::dynamic_pointer_cast<CollectionZone>(candidates[minimum_index]);
 }
 
 bool GreedyVehicleRoute::BelongsTo(Zone zone, std::vector<Zone>& candidates) {

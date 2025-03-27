@@ -15,6 +15,7 @@
 #include <vector>
 #include <set>
 
+#include "vrp_instance.h"
 #include "greedy_vehicle_route.h"
 
 /*
@@ -22,21 +23,17 @@
 */
 class VRPTransshipments {
  public:
-  VRPTransshipments() : route_generator_(GreedyVehicleRoute()) { }
+  VRPTransshipments(std::shared_ptr<VRPInstance> instance);
 
-  std::vector<Vehicle> ComputeUsedVehicles();
+  // std::vector<Vehicle> ComputeUsedVehicles();
   
-  // std::vector<Route> SolveAlgorithm(std::vector<Zone> collection_zones);
+  std::vector<Vehicle> ComputeRoutes();
   
  private:
+  std::shared_ptr<VRPInstance> instance_;
   GreedyVehicleRoute route_generator_;
   std::vector<Zone> zones_;
-  int collection_capacity_;
-  int max_time_;
   std::vector<Zone> transport_zones_;
-  Zone depot_;
-  // std::vector<Route> completed_routes_;
-
 };
 
 #endif

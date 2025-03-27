@@ -13,23 +13,23 @@
 
 #include <fstream>
 #include <vector>
+#include <memory>
 
 #include "route.h"
 #include "zone.h"
 #include "vehicle.h"
+#include "vrp_instance.h"
 #include "./tools/utils.h"
 
 class GreedyVehicleRoute {
  public:
   GreedyVehicleRoute() { }
 
-  std::vector<Vehicle> SolveAlgorithm(std::vector<Zone> collection_zones,
-                                      int collection_capacity, 
-                                      int max_time,
-                                      std::vector<Zone> transport_zones,
-                                      Zone depot);
+  std::vector<Vehicle> SolveAlgorithm(std::shared_ptr<VRPInstance> instance);
 
-  Zone SelectClosestZone(Zone zone, std::vector<Zone>& candidates);
+  std::shared_ptr<CollectionZone> SelectClosestZone(
+    std::shared_ptr<VRPInstance> zone,
+    std::vector<std::shared_ptr<Zone>>& candidates);
 
   bool BelongsTo(Zone zone, std::vector<Zone>& candidates);
 

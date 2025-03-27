@@ -12,7 +12,10 @@
 
 #include <utility>
 #include <cmath>
+#include <string>
 
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second);
+
+int SpaceIndex(std::string& string_find);
 
 #endif

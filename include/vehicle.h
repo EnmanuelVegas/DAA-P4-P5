@@ -21,7 +21,7 @@ class Vehicle {
   Vehicle(int id = 0, int time = 0, int capacity = 0 ) 
   : id_(id), remaining_time_(time), remaining_capacity_(capacity), route_() { }
 
-  void AddStop(Zone zone);
+  void AddStop(ZonePtr zone);
 
   int id() const { return id_; }
 
@@ -29,10 +29,10 @@ class Vehicle {
 
   int remaining_capacity() const { return this->remaining_capacity_; }
 
-  std::vector<Zone> route() { return route_; }
+  std::vector<ZonePtr> route() { return route_; }
 
  private:
-  std::vector<Zone> route_;
+  std::vector<ZonePtr> route_;
   int id_;
   int remaining_time_;
   int remaining_capacity_;

@@ -13,14 +13,19 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
+
+#include "../include/vrp_transshipments.h"
+#include "../include/vrp_instance.h"
 
 
 int main(int argc, char* argv[]) {
   try {
     std::string input_filename{argv[1]};
-    
-    // RamMachine ram_machine(instructions_filename, input_filename, output_file);
-    // ram_machine.ExecuteProgram();
+    std::shared_ptr<VRPInstance> instance = std::make_shared<VRPInstance>(input_filename);
+    std::shared_ptr<VRPTransshipments> solver = std::make_shared<VRPTransshipments>(instance);
+    solver->ComputeRoutes();
+
   } catch (const std::exception& error) {
     std::cerr << "Ha ocurrido un error: " << error.what() << std::endl;
     return EXIT_FAILURE;
