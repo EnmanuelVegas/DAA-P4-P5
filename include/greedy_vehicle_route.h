@@ -14,6 +14,7 @@
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 #include "route.h"
 #include "zone.h"
@@ -25,18 +26,20 @@ class GreedyVehicleRoute {
  public:
   GreedyVehicleRoute() { }
 
-  std::vector<Vehicle> SolveAlgorithm(std::shared_ptr<VRPInstance> instance);
+  std::vector<VehiclePtr> SolveAlgorithm(std::shared_ptr<VRPInstance> instance);
 
-  std::shared_ptr<CollectionZone> SelectClosestZone(
-    std::shared_ptr<VRPInstance> zone,
-    std::vector<std::shared_ptr<Zone>>& candidates);
+  double CalculateTime(ZonePtr closest_zone, ZonePtrPair stations, ZonePtr depot);
 
-  bool BelongsTo(Zone zone, std::vector<Zone>& candidates);
 
+  ZonePtr SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
+
+  ZonePtr SelectClosestZone(ZonePtr zone, ZonePtrPair& transport_zones);
+
+  bool BelongsTo(ZonePtr zone, ZonePtrPair& zones);
 
 
  private:
-  std::vector<Vehicle> vehicles_used_;
+  std::vector<VehiclePtr> vehicles_used_;
 };
 
 #endif

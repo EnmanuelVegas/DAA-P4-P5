@@ -13,9 +13,9 @@
 #include "../include/greedy_vehicle_route.h"
 
 
-void Vehicle::AddStop(ZonePtr) {
-  this->route_.emplace_back(zone);
-  // this->remaining_capacity_ -= zone.waste_quantity();
+void Vehicle::AddStop(ZonePtr stop_zone) {
+  this->route_.emplace_back(stop_zone);
+  this->remaining_capacity_ -= stop_zone->waste_quantity();
   return;
 }
 

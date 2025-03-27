@@ -27,7 +27,7 @@ class VRPTransshipments {
 
   // std::vector<Vehicle> ComputeUsedVehicles();
   
-  std::vector<Vehicle> ComputeRoutes();
+  std::vector<VehiclePtr> ComputeRoutes();
   
  private:
   std::shared_ptr<VRPInstance> instance_;

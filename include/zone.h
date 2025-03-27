@@ -21,7 +21,8 @@ class Zone {
  public:
   Zone() { } // test
 
-  Zone(int id, std::pair<int, int> coordinates) : zone_id_(id), coordinates_(coordinates) { }
+  Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands) 
+  : zone_id_(id), coordinates_(coordinates), demands_(demands) { }
   
   Zone(int id, std::string& input);
 
@@ -30,6 +31,9 @@ class Zone {
   bool operator==(const Zone& other) const {
     return this->zone_id() == other.zone_id(); // Suponiendo que Zone tiene un atributo id
   }
+
+  double waste_quantity() { return demands_.second - demands_.first; }
+
 
   int zone_id() const { return this->zone_id_; }
 
@@ -68,24 +72,10 @@ class Zone {
 //  }
 
  protected:
+  std::pair<int, int> demands_;
   std::pair<int, int> coordinates_;
   int zone_id_;
 
-};
-
-
-
-class CollectionZone : public Zone {
- public:
-  CollectionZone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands);
-
-  ~CollectionZone() { }
-
-  double waste_quantity() { return demands_.second - demands_.first; }
-
-
- protected:
-  std::pair<int, int> demands_;
 };
 
 

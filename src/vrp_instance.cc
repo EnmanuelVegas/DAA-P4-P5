@@ -33,17 +33,18 @@ VRPInstance::VRPInstance(std::string& input_name) {
   std::getline(input_file, line);
   speed_ = std::stoi(line.substr(SpaceIndex(line) + 1));
   std::getline(input_file, line);
-  depot_ = std::make_shared<Zone>(0, line);
+  this->zones_[0] = std::make_shared<Zone>(-1, line);
   std::getline(input_file, line);
-  transport_zones_.first = std::make_shared<Zone>(-2, line);
+  this->zones_[1] = std::make_shared<Zone>(-2, line);
   std::getline(input_file, line);
-  transport_zones_.second = std::make_shared<Zone>(-3, line);
+  this->zones_[2] = std::make_shared<Zone>(-3, line);
   std::getline(input_file, line);
-  dumpsite_ = std::make_shared<Zone>(-1, line);
+  this->zones_[3] = std::make_shared<Zone>(-4, line);
   std::getline(input_file, line);
   std::getline(input_file, line);
   std::getline(input_file, line);
   ReadZones(input_file);
+  FillDistanceMatrix();
   input_file.close();
 }
 
@@ -56,7 +57,13 @@ void VRPInstance::ReadZones(std::ifstream& filestream) {
     // std::getline(filestream, line);
     std::pair<int, int> coordinates{coord_x, coord_y};
     std::pair<int, int> demands{d1, d2}; 
-    this->zones_.emplace_back(std::make_shared<CollectionZone>(id, coordinates, demands));
+    this->zones_.emplace_back(std::make_shared<Zone>(id, coordinates, demands));
   }
+  return;
+}
+
+
+void VRPInstance::FillDistanceMatrix() {
+
   return;
 }

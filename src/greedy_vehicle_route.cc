@@ -14,30 +14,32 @@
 #include "../include/greedy_vehicle_route.h"
 
 
-std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(std::shared_ptr<VRPInstance> instance) {
-  std::vector<std::shared_ptr<Zone>> collection_zones = instance->zones();
+std::vector<VehiclePtr> GreedyVehicleRoute::SolveAlgorithm(std::shared_ptr<VRPInstance> instance) {
+  // Greedy Requirements
+  std::vector<std::shared_ptr<Zone>> zones = instance->collection_zones();
   int collection_capacity = instance->collection_capacity();
   int max_time = instance->max_collection_time();
   ZonePtrPair transport_zones = instance->transfer_stations();
-  
+  ZonePtr depot = instance->depot();
+  // Greedy start
   this->vehicles_used_.clear();
   int vehicle_index = 1;
-  while (!collection_zones.empty()) {
-    Vehicle current_vehicle = Vehicle(vehicle_index, max_time, collection_capacity);
-    current_vehicle.AddStop(depot);
+  while (!zones.empty()) {
+    VehiclePtr current_vehicle = std::make_shared<Vehicle>(vehicle_index, max_time, collection_capacity);
+    current_vehicle->AddStop(depot);
     while (true) {
-      Zone last_stop = vehicles_used_.back().route().back();
-      std::shared_ptr<CollectionZone> closest = SelectClosestZone(last_stop, collection_zones);
+      ZonePtr last_stop = current_vehicle->route().back();
+      ZonePtr closest = SelectClosestZone(last_stop, zones);
       int visit_closest_time = 0; // CALCULAR
-      if (closest.waste_quantity() <= current_vehicle.remaining_capacity() &&
-          visit_closest_time <= current_vehicle.remaining_time()) {
-            current_vehicle.AddStop(closest); // It also substracts the capacity.
+      if (closest->waste_quantity() <= current_vehicle->remaining_capacity() &&
+          visit_closest_time <= current_vehicle->remaining_time()) {
+            current_vehicle->AddStop(closest); // It also substracts the capacity.
             // Update current_vehicle_time
-            collection_zones.erase(std::find(collection_zones.begin(), collection_zones.end(), closest));
+            zones.erase(find(zones.begin(), zones.end(), closest));
       }
-      else if (visit_closest_time <= current_vehicle.remaining_time()) {
-        Zone closest_transport = SelectClosestZone(closest, transport_zones);
-        current_vehicle.AddStop(closest_transport); // It also substracts the capacity.
+      else if (visit_closest_time <= current_vehicle->remaining_time()) {
+        ZonePtr closest_transport = SelectClosestZone(closest, transport_zones);
+        current_vehicle->AddStop(closest_transport); // It also substracts the capacity.
         // update capacity but to Q
         // Update current_vehicle_time
       }
@@ -45,13 +47,13 @@ std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(std::shared_ptr<VRPInsta
         break;
       }
     }
-    Zone last_stop = vehicles_used_.back().route().back();
+    ZonePtr last_stop = vehicles_used_.back()->route().back();
     if (!BelongsTo(last_stop, transport_zones)) {
-      Zone closest_transport = SelectClosestZone(last_stop, transport_zones);
-      current_vehicle.AddStop(closest_transport); // It also substracts the capacity.
-      current_vehicle.AddStop(depot); // It also substracts the capacity.
+      ZonePtr closest_transport = SelectClosestZone(last_stop, transport_zones);
+      current_vehicle->AddStop(closest_transport); // It also substracts the capacity.
+      current_vehicle->AddStop(depot); // It also substracts the capacity.
     } else {
-      current_vehicle.AddStop(depot); // It also substracts the capacity.
+      current_vehicle->AddStop(depot); // It also substracts the capacity.
     }
     vehicles_used_.push_back(current_vehicle);
     vehicle_index++;
@@ -59,27 +61,41 @@ std::vector<Vehicle> GreedyVehicleRoute::SolveAlgorithm(std::shared_ptr<VRPInsta
   return this->vehicles_used_;
 }
 
+double GreedyVehicleRoute::CalculateTime(ZonePtr closest_zone, ZonePtrPair stations, ZonePtr depot) {
+  
+  return 0.0;
+}
 
-std::shared_ptr<CollectionZone> GreedyVehicleRoute::SelectClosestZone(
-  std::shared_ptr<Zone> zone, std::vector<std::shared_ptr<Zone>>& candidates) {
+
+ZonePtr GreedyVehicleRoute::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates) {
   // if (zones.size() == 0) { return anchor; }
   int minimum_distance{0};
   int minimum_index{0};
   for (int i{0}; i < candidates.size(); i++) {
     int distance = ComputeEuclideanDistance(zone->coordinates(), candidates.at(i)->coordinates());
-    if (distance < minimum_distance) {
+    if (distance < minimum_distance || zone != candidates.at(i)) {
       minimum_distance = distance;
       minimum_index = i;
     }
   }
-  return std::dynamic_pointer_cast<CollectionZone>(candidates[minimum_index]);
+  return candidates.at(minimum_index);
 }
 
-bool GreedyVehicleRoute::BelongsTo(Zone zone, std::vector<Zone>& candidates) {
-  for (int i{0}; i < candidates.size(); i++) {
-    if (zone == candidates[i]) {
-      return true;
-    }
-  }
-  return false;
+ZonePtr GreedyVehicleRoute::SelectClosestZone(ZonePtr zone, ZonePtrPair& transport_zones) {
+  // int minimum_distance{0};
+  int minimum_index{0};
+  // for (int i{0}; i < candidates.size(); i++) {
+  //   int distance = ComputeEuclideanDistance(zone->coordinates(), candidates.at(i)->coordinates());
+  //   if (distance < minimum_distance) {
+  //     minimum_distance = distance;
+  //     minimum_index = i;
+  //   }
+  // }
+  return transport_zones.first;
+}
+
+
+
+bool GreedyVehicleRoute::BelongsTo(ZonePtr zone, ZonePtrPair& zones) {
+  return (zone == zones.first ? true : ((zone == zones.second) ? true : false));
 }

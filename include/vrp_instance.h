@@ -24,7 +24,6 @@ typedef std::pair<std::shared_ptr<Zone>, std::shared_ptr<Zone>> ZonePtrPair;
 typedef std::shared_ptr<Zone> ZonePtr;
 
 
-
 /*
  * VRPT stands for Vehicle Routing Problem.
 */
@@ -32,7 +31,7 @@ class VRPInstance {
  public:
   VRPInstance(std::string& input_name);
 
-  std::vector<std::shared_ptr<Zone>> zones() { return this->zones_; }
+  ZonePtr GetZone(int& index) { return zones_.at(index + 4); }
   
   int max_collection_time() { return this->max_collection_time_; }
 
@@ -46,15 +45,16 @@ class VRPInstance {
 
   int speed() { return this->speed_; }
 
-  ZonePtr depot() { return this->depot_; }
+  ZonePtr depot() { return zones_.at(0); }
 
-  ZonePtrPair transfer_stations() { return this->transfer_stations_; }
+  ZonePtrPair transfer_stations() { return {zones_.at(1), zones_.at(2)}; }
 
-  ZonePtr dumpsite() { return this->dumpsite_; }
+  ZonePtr dumpsite() { return zones_.at(3); }
 
  private:
 
   void ReadZones(std::ifstream& filestream);
+  void FillDistanceMatrix();
   int max_collection_time_;
   int max_transport_time_;
   int max_vehicles_;
@@ -62,12 +62,10 @@ class VRPInstance {
   int collection_capacity_;
   int transport_capacity_;
   int speed_;
-  std::shared_ptr<Zone> depot_;
-  std::shared_ptr<Zone> first_transfer_station_;
-  std::shared_ptr<Zone> second_transfer_station_;
-  std::shared_ptr<Zone> dumpsite_;
-  std::vector<std::shared_ptr<Zone>> zones_;
-  ZonePtrPair transfer_stations_;  
+  // std::shared_ptr<Zone> depot_;
+  // std::shared_ptr<Zone> dumpsite_;
+  std::vector<ZonePtr> zones_;
+  // ZonePtrPair transfer_stations_;  
 };
 
 #endif

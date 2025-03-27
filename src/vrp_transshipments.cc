@@ -16,6 +16,6 @@ VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance)
 }
 
 
-std::vector<Vehicle> VRPTransshipments::ComputeRoutes() {
+std::vector<VehiclePtr> VRPTransshipments::ComputeRoutes() {
   return route_generator_.SolveAlgorithm(this->instance_);
 }

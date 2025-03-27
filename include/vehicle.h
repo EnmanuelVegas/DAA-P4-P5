@@ -15,6 +15,11 @@
 #include <vector>
 
 #include "zone.h"
+#include "vrp_instance.h"
+
+class Vehicle;
+
+typedef std::shared_ptr<Vehicle> VehiclePtr;
 
 class Vehicle {
  public:

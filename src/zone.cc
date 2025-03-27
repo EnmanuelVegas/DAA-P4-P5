@@ -10,19 +10,19 @@
 
 #include "../include/zone.h"
 
-Zone::Zone(int id, std::string& input) {
+Zone::Zone(int id, std::string& input) :  demands_{0, 0} {
   this->zone_id_ = id;
   int space_index = SpaceIndex(input);
   std::string coordinates_string = input.substr(space_index + 1);
   space_index = SpaceIndex(coordinates_string);
-  coordinates_.first = std::stoi(coordinates_string.substr(0, space_index)); 
+  coordinates_.first = std::stoi(coordinates_string.substr(0, space_index));
   coordinates_.second = std::stoi(coordinates_string.substr(space_index + 1));
   return;
 }
 
 
-CollectionZone::CollectionZone(int id, std::pair<int, int> coordinates,
-                               std::pair<int, int> demands) : Zone(id, coordinates) {
-  this->demands_ = demands;
-}
+// CollectionZone::CollectionZone(int id, std::pair<int, int> coordinates,
+//                                std::pair<int, int> demands) : Zone(id, coordinates) {
+//   this->demands_ = demands;
+// }
 
