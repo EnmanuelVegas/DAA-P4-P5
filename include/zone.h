@@ -22,20 +22,20 @@ class Zone {
   Zone() { } // test
 
   Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands) 
-  : zone_id_(id), coordinates_(coordinates), demands_(demands) { }
+  : id_(id), coordinates_(coordinates), demands_(demands) { }
   
   Zone(int id, std::string& input);
 
   virtual ~Zone() { }
 
   bool operator==(const Zone& other) const {
-    return this->zone_id() == other.zone_id(); // Suponiendo que Zone tiene un atributo id
+    return this->id() == other.id(); // Suponiendo que Zone tiene un atributo id
   }
 
   double waste_quantity() { return demands_.second - demands_.first; }
 
 
-  int zone_id() const { return this->zone_id_; }
+  int id() const { return this->id_; }
 
   std::pair<int, int> coordinates() const { return coordinates_; }
 
@@ -74,7 +74,7 @@ class Zone {
  protected:
   std::pair<int, int> demands_;
   std::pair<int, int> coordinates_;
-  int zone_id_;
+  int id_;
 
 };
 

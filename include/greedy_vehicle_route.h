@@ -24,21 +24,23 @@
 
 class GreedyVehicleRoute {
  public:
-  GreedyVehicleRoute() { }
+  GreedyVehicleRoute(std::shared_ptr<VRPInstance> instance) : instance_(instance) { }
 
-  std::vector<VehiclePtr> SolveAlgorithm(std::shared_ptr<VRPInstance> instance);
+  std::vector<VehiclePtr> SolveAlgorithm();
 
-  double CalculateTime(ZonePtr closest_zone, ZonePtrPair stations, ZonePtr depot);
+  double CalculateTime(ZonePtr actual, int destination_id);
 
+  double ReturnToDepotTime(ZonePtr actual_zone, int closest_id);
 
   ZonePtr SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
 
-  ZonePtr SelectClosestZone(ZonePtr zone, ZonePtrPair& transport_zones);
+  ZonePtr SelectClosestTransferStation(int zone_id);
 
   bool BelongsTo(ZonePtr zone, ZonePtrPair& zones);
 
 
  private:
+  std::shared_ptr<VRPInstance> instance_;
   std::vector<VehiclePtr> vehicles_used_;
 };
 

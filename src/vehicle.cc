@@ -19,3 +19,7 @@ void Vehicle::AddStop(ZonePtr stop_zone) {
   return;
 }
 
+void Vehicle::RestoreCapacity(int new_capacity) {
+  this->remaining_capacity_ = new_capacity;
+  return;
+}

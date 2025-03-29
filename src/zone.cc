@@ -11,7 +11,7 @@
 #include "../include/zone.h"
 
 Zone::Zone(int id, std::string& input) :  demands_{0, 0} {
-  this->zone_id_ = id;
+  this->id_ = id;
   int space_index = SpaceIndex(input);
   std::string coordinates_string = input.substr(space_index + 1);
   space_index = SpaceIndex(coordinates_string);

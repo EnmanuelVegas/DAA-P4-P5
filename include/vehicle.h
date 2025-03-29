@@ -28,9 +28,13 @@ class Vehicle {
 
   void AddStop(ZonePtr zone);
 
+  void UpdateTime(double time) { remaining_time_ -= remaining_time_; }
+
+  void RestoreCapacity(int new_capacity);
+
   int id() const { return id_; }
 
-  int remaining_time() const { return this->remaining_time_; }
+  double remaining_time() const { return this->remaining_time_; }
 
   int remaining_capacity() const { return this->remaining_capacity_; }
 
@@ -39,7 +43,7 @@ class Vehicle {
  private:
   std::vector<ZonePtr> route_;
   int id_;
-  int remaining_time_;
+  double remaining_time_;
   int remaining_capacity_;
 };
 

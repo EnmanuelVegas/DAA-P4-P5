@@ -11,11 +11,11 @@
 #include "../include/vrp_transshipments.h"
 
 VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance) 
-  : instance_(instance), route_generator_(GreedyVehicleRoute()) {
+  : instance_(instance), route_generator_(GreedyVehicleRoute(instance)) {
     return;
 }
 
 
 std::vector<VehiclePtr> VRPTransshipments::ComputeRoutes() {
-  return route_generator_.SolveAlgorithm(this->instance_);
+  return route_generator_.SolveAlgorithm();
 }
