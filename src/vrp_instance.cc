@@ -85,8 +85,8 @@ void VRPInstance::ReadZones(std::ifstream& filestream) {
 
 double VRPInstance::GetDistance(ZonePtr actual, int destination_id) {
   std::cout << (destination_id > this->collection_zones_.size()) << std::endl;
-  if ((destination_id <= 0 || destination_id > this->collection_zones_.size() - 1) ||
-       actual->id() <= 0 || actual->id() > this->collection_zones_.size() - 1) {
+  if ((destination_id <= 0 || destination_id > this->collection_zones_.size() + 4 - 1) ||
+       actual->id() <= 0 || actual->id() > this->collection_zones_.size() + 4 - 1) {
   std::cout << "Condition triggered: destination_id < -3 || (destination_id > 0 && destination_id > collection_zones_.size()) || "
                "actual->id() < -3 || actual->id() > collection_zones_.size()" << std::endl;
   throw std::out_of_range("Not permited position!\n");
