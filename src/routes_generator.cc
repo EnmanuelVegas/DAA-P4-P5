@@ -46,7 +46,7 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
     if (!BelongsTo(last_stop, transport_zones)) {
       ZonePtr closest_transport = SelectClosestTransferStation(last_stop->id());
       AddTransferStop(last_stop, closest_transport, current_vehicle, collection_capacity, max_time);
-      AddNormalStop(last_stop, depot, current_vehicle);
+      AddNormalStop(closest_transport, depot, current_vehicle);
     } else {
       AddNormalStop(last_stop, depot, current_vehicle);
     }
