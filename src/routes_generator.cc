@@ -16,8 +16,8 @@
 std::vector<VehiclePtr> RoutesGenerator::Generate() {
   // Greedy Requirements
   std::vector<ZonePtr> zones = instance_->collection_zones();
-  int collection_capacity = instance_->collection_capacity();
-  int max_time = instance_->max_collection_time();
+  double collection_capacity = instance_->collection_capacity();
+  double max_time = instance_->max_collection_time();
   ZonePtrPair transport_zones = instance_->transfer_stations();
   ZonePtr depot = instance_->depot();
   // Greedy execution
@@ -33,19 +33,11 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
       double return_depot_time = ReturnToDepotTime(last_stop, closest->id());
       if (closest->waste_quantity() <= current_vehicle->remaining_capacity() &&
           return_depot_time <= current_vehicle->remaining_time()) {
-        current_vehicle->AddStop(closest);  // It also substracts the capacity.
-        double visit_closest_time = CalculateTime(last_stop->id(), closest->id());
-        current_vehicle->UpdateTime(visit_closest_time);
+        AddNormalStop(last_stop, closest, current_vehicle);
         zones.erase(find(zones.begin(), zones.end(), closest));
       } else if (return_depot_time <= current_vehicle->remaining_time()) {
-        ZonePtr closest_transfer = SelectClosestTransferStation(closest->id());
-        double visit_transfer_time = CalculateTime(last_stop->id(), closest_transfer->id());
-        current_vehicle->UpdateTime(visit_transfer_time);
-        tasks_.push_back(std::make_shared<Task>(
-              collection_capacity - current_vehicle->remaining_capacity(),
-              closest_transfer->id(), max_time - current_vehicle->remaining_time()));
-        current_vehicle->AddStop(closest_transfer);
-        current_vehicle->RestoreCapacity(collection_capacity);
+        ZonePtr closest_transfer = SelectClosestTransferStation(last_stop->id()); // REVISAR CON EL PSEUDOCÓDIGO: last_stop o closest_zone?
+        AddTransferStop(last_stop, closest_transfer, current_vehicle, collection_capacity, max_time);        
       } else {
         break;
       }
@@ -53,16 +45,19 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
     ZonePtr last_stop = current_vehicle->route().back();
     if (!BelongsTo(last_stop, transport_zones)) {
       ZonePtr closest_transport = SelectClosestTransferStation(last_stop->id());
-      current_vehicle->AddStop(closest_transport);
-      current_vehicle->AddStop(depot);
-      current_vehicle->UpdateTime(CalculateTime(last_stop->id(), closest_transport->id())  + CalculateTime(closest_transport->id(), depot->id()));
+      AddTransferStop(last_stop, closest_transport, current_vehicle, collection_capacity, max_time);
+      AddNormalStop(last_stop, depot, current_vehicle);
     } else {
-      current_vehicle->AddStop(depot);
-      current_vehicle->UpdateTime(CalculateTime(last_stop->id(), depot->id()));
+      AddNormalStop(last_stop, depot, current_vehicle);
     }
     vehicles_used_.push_back(current_vehicle);
-    std::cout << *(current_vehicle);
     vehicle_index++;
+  }
+  for (auto& vehicle : vehicles_used_) {
+    std::cout << *vehicle;
+  }
+  for (auto& task : tasks_) {
+    std::cout << *task;
   }
   return this->vehicles_used_;
 }
@@ -98,7 +93,6 @@ ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& c
       distances.emplace_back(distance, candidate);
     }
   }
-
   // Ordenar los candidatos por distancia
   std::sort(distances.begin(), distances.end(),
             [](const std::pair<double, ZonePtr>& a, const std::pair<double, ZonePtr>& b) {
@@ -114,12 +108,28 @@ ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& c
   return distances[random_index].second;  // Retornar el ZonePtr seleccionado
 }
 
+void RoutesGenerator::AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle) {
+  vehicle->AddStop(closest);  // It also substracts the capacity.
+  double visit_closest_time = CalculateTime(last->id(), closest->id());
+  vehicle->UpdateTime(visit_closest_time);  
+  return;
+}
+
+void RoutesGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr vehicle,
+                                     double capacity, double max_time) {
+  double visit_transfer_time = CalculateTime(last->id(), transfer->id());
+  vehicle->UpdateTime(visit_transfer_time);
+  tasks_.push_back(std::make_shared<Task>(capacity - vehicle->remaining_capacity(),
+                                          transfer->id(), max_time - vehicle->remaining_time()));
+  vehicle->AddStop(transfer);
+  vehicle->RestoreCapacity(capacity);
+  return;
+}
+
 ZonePtr RoutesGenerator::SelectClosestTransferStation(int zone_id) {
   // if (zones.size() == 0) { return anchor; }
-  int distance_first = instance_->GetDistance(
-      zone_id, instance_->transfer_stations().first->id());
-  int distance_second = instance_->GetDistance(
-      zone_id, instance_->transfer_stations().second->id());
+  double distance_first = instance_->GetDistance(zone_id, instance_->transfer_stations().first->id());
+  double distance_second = instance_->GetDistance(zone_id, instance_->transfer_stations().second->id());
   if (distance_first <= distance_second) {
     return instance_->transfer_stations().first;
   }

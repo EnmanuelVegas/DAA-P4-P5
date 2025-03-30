@@ -36,7 +36,7 @@ class Vehicle {
 
   double remaining_time() const { return this->remaining_time_; }
 
-  int remaining_capacity() const { return this->remaining_capacity_; }
+  double remaining_capacity() const { return this->remaining_capacity_; }
 
   std::vector<ZonePtr> route() { return route_; }
 
@@ -46,7 +46,7 @@ class Vehicle {
   std::vector<ZonePtr> route_;
   int id_;
   double remaining_time_;
-  int remaining_capacity_;
+  double remaining_capacity_;
 };
 
 #endif

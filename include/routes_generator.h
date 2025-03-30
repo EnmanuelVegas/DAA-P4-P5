@@ -41,9 +41,9 @@ class RoutesGenerator {
 
   bool BelongsTo(ZonePtr zone, ZonePtrPair& zones);
 
-  void AddNormalStop();
+  void AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle);
 
-  void AddTransferStop();
+  void AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr vehicle, double capacity, double max_time);
 
  private:
   std::shared_ptr<VRPInstance> instance_;

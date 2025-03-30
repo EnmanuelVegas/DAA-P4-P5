@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/vrpt_transport",
-      "args": ["${workspaceFolder}/instances/instance1.txt"],
+      "args": ["${workspaceFolder}/instances/instance18.txt" , "1"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
