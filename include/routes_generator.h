@@ -15,37 +15,41 @@
 #include <fstream>
 #include <memory>
 #include <vector>
+#include <algorithm>  // Para std::sort
+#include <random>     // Para generar números aleatorios
 
 #include "./tools/utils.h"
-#include "route.h"
 #include "vehicle.h"
 #include "vrp_instance.h"
 #include "zone.h"
+#include "task.h"
 
 class RoutesGenerator {
  public:
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size)
-      : candidates_size_(candidate_size), instance_(instance) {}
+      : candidates_size_(candidate_size), instance_(instance), gen_(std::random_device{}()) {}
 
   std::vector<VehiclePtr> Generate();
 
-  // std::vector<VehiclePtr> SolveGRASP();
-
-  double CalculateTime(ZonePtr actual, int destination_id);
+  double CalculateTime(int actual_id, int destination_id);
 
   double ReturnToDepotTime(ZonePtr actual_zone, int closest_id);
 
   ZonePtr SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
 
-  ZonePtr SelectRandomizedClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
-
   ZonePtr SelectClosestTransferStation(int zone_id);
 
   bool BelongsTo(ZonePtr zone, ZonePtrPair& zones);
 
+  void AddNormalStop();
+
+  void AddTransferStop();
+
  private:
   std::shared_ptr<VRPInstance> instance_;
+  std::mt19937 gen_;  
   int candidates_size_;
+  std::vector<std::shared_ptr<Task>> tasks_;
   std::vector<VehiclePtr> vehicles_used_;
 };
 

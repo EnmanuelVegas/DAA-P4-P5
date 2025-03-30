@@ -12,7 +12,7 @@
 
 VRPInstance::VRPInstance(std::string& input_name) :
                       zones_(std::vector<ZonePtr>(0)),
-                      distances_(std::vector<std::vector<int>>(0)) {
+                      distances_(std::vector<std::vector<double>>(0)) {
   std::ifstream input_file{input_name};
   if(!input_file.is_open()) {
     throw std::runtime_error("Cannot open input file!");
@@ -85,15 +85,20 @@ double VRPInstance::GetDistance(int actual_id, int destination_id) {
 void VRPInstance::ComputeDistances() {
   distances_.resize(max_zones_ + 4);
   for (int i{0}; i < this->distances_.size(); i++) {
-    this->distances_[i] = std::vector<int>(max_zones_ + 4, 0);
+    this->distances_[i] = std::vector<double>(max_zones_ + 4, 0);
     for (int j{0}; j < i; j++) {
       distances_[i][j] = ComputeEuclideanDistance(zones_[i]->coordinates(),
                                                   zones_[j]->coordinates());
     }
   }
-  // for (int i{0}; i < max_zones_; i++) {
-  //   for (int j{0}; j < max_zones_; j++) {
-  //     std::cout << distances_collection_[i][j]<< " ";
+  // for (int i{-1}; i < max_zones_ + 4; i++) {
+  //   std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
+  // }
+  // std::cout << std::endl;
+  // for (int i{0}; i < max_zones_ + 4; i++) {
+  //   std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
+  //   for (int j{0}; j < max_zones_ + 4; j++) {
+  //     std::cout << std::setw(8) << distances_[i][j] << " ";  // Ancho fijo de 5 caracteres
   //   }
   //   std::cout << std::endl;
   // }

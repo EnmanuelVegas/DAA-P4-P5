@@ -26,50 +26,11 @@ class Zone {
   
   Zone(int id, std::string& input);
 
-  virtual ~Zone() { }
-
-  bool operator==(const Zone& other) const {
-    return this->id() == other.id(); // Suponiendo que Zone tiene un atributo id
-  }
-
   double waste_quantity() { return demands_.second - demands_.first; }
-
 
   int id() const { return this->id_; }
 
   std::pair<int, int> coordinates() const { return coordinates_; }
-
-  /**
-  * @brief 'File Input' operator overloading to build a 'Zone' object.
-  * @return std::ifstream input element.
-  */
-//  friend std::ifstream& operator>>(std::ifstream& input_file, Zone& zone) {
-//   // std::ifstream& operator>>(std::ifstream& input, Automaton& automaton) {
-//   //   std::string line;
-//   //   std::getline(input, line);
-//   //   std::istringstream line_stream{line};
-//   //   char symbol_ascii;
-//   //   while (line_stream >> symbol_ascii) {
-//   //     automaton.automaton_associated_alphabet_.Insert(symbol_ascii);
-//   //   }
-//   //   int states_quantity;
-//   //   input >> states_quantity;
-//   //   input >> std::ws;  
-//   //   std::getline(input, line);
-//   //   line_stream.clear();
-//   //   line_stream.str(line);
-//   //   line_stream >> automaton.initial_state_;
-//   //   // We check there is only one starting state for the automaton
-//   //   if (line_stream >> automaton.initial_state_) {
-//   //     std::cout << "The automaton can only have ONE starting state. Check yout input!\n";
-//   //     exit (1);
-//   //   }
-//   //   // We do this to eliminate the left '\n' symbol after reading the first elements.
-//   //   input >> std::ws;
-//   //   automaton.ReadStates(input, states_quantity);
-//   //   return input;
-//   // }
-//  }
 
  protected:
   std::pair<int, int> demands_;

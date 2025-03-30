@@ -29,24 +29,23 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
     while (true) {
       ZonePtr last_stop = current_vehicle->route().back();
       ZonePtr closest = SelectClosestZone(last_stop, zones);
-      if (closest == nullptr) {
-        break;
-      }
+      if (closest == nullptr) { break; }
       double return_depot_time = ReturnToDepotTime(last_stop, closest->id());
-      // std::cout << return_depot_time << std::endl;
       if (closest->waste_quantity() <= current_vehicle->remaining_capacity() &&
           return_depot_time <= current_vehicle->remaining_time()) {
         current_vehicle->AddStop(closest);  // It also substracts the capacity.
-        double visit_closest_time = CalculateTime(last_stop, closest->id());
+        double visit_closest_time = CalculateTime(last_stop->id(), closest->id());
         current_vehicle->UpdateTime(visit_closest_time);
         zones.erase(find(zones.begin(), zones.end(), closest));
       } else if (return_depot_time <= current_vehicle->remaining_time()) {
         ZonePtr closest_transfer = SelectClosestTransferStation(closest->id());
+        double visit_transfer_time = CalculateTime(last_stop->id(), closest_transfer->id());
+        current_vehicle->UpdateTime(visit_transfer_time);
+        tasks_.push_back(std::make_shared<Task>(
+              collection_capacity - current_vehicle->remaining_capacity(),
+              closest_transfer->id(), max_time - current_vehicle->remaining_time()));
         current_vehicle->AddStop(closest_transfer);
         current_vehicle->RestoreCapacity(collection_capacity);
-        double visit_transfer_time =
-            CalculateTime(last_stop, closest_transfer->id());
-        current_vehicle->UpdateTime(visit_transfer_time);
       } else {
         break;
       }
@@ -56,8 +55,10 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
       ZonePtr closest_transport = SelectClosestTransferStation(last_stop->id());
       current_vehicle->AddStop(closest_transport);
       current_vehicle->AddStop(depot);
+      current_vehicle->UpdateTime(CalculateTime(last_stop->id(), closest_transport->id())  + CalculateTime(closest_transport->id(), depot->id()));
     } else {
       current_vehicle->AddStop(depot);
+      current_vehicle->UpdateTime(CalculateTime(last_stop->id(), depot->id()));
     }
     vehicles_used_.push_back(current_vehicle);
     std::cout << *(current_vehicle);
@@ -66,10 +67,9 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
   return this->vehicles_used_;
 }
 
-double RoutesGenerator::CalculateTime(ZonePtr actual, int destination_id) {
-  return (instance_->GetDistance(actual->id(), destination_id) /
-          instance_->speed()) *
-         60;
+double RoutesGenerator::CalculateTime(int actual_id, int destination_id) {
+  return (instance_->GetDistance(actual_id, destination_id) /
+          instance_->speed()) * 60;
 }
 
 double RoutesGenerator::ReturnToDepotTime(ZonePtr actual_zone, int closest_id) {
@@ -87,19 +87,31 @@ double RoutesGenerator::ReturnToDepotTime(ZonePtr actual_zone, int closest_id) {
 }
 
 ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates) {
-  if (candidates.size() == 0) {
+  if (candidates.empty()) {
     return nullptr;
   }
-  double minimum_distance{instance_->GetDistance(zone->id(), candidates[0]->id())};
-  ZonePtr minimum_zone{candidates[0]};
-  for (int i{0}; i < candidates.size(); i++) {
-    int distance = instance_->GetDistance(zone->id(), candidates[i]->id());
-    if (distance < minimum_distance && zone->id() != candidates[i]->id()) {
-      minimum_distance = distance;
-      minimum_zone = candidates[i];
+  // Crear un vector de pares (distancia, ZonePtr)
+  std::vector<std::pair<double, ZonePtr>> distances;
+  for (const auto& candidate : candidates) {
+    if (zone->id() != candidate->id()) {  // Evitar comparar con la misma zona
+      double distance = instance_->GetDistance(zone->id(), candidate->id());
+      distances.emplace_back(distance, candidate);
     }
   }
-  return minimum_zone;
+
+  // Ordenar los candidatos por distancia
+  std::sort(distances.begin(), distances.end(),
+            [](const std::pair<double, ZonePtr>& a, const std::pair<double, ZonePtr>& b) {
+              return a.first < b.first;
+            });
+  // Limitar a los `n` elementos más cercanos
+  if (distances.size() > this->candidates_size_) {
+    distances.resize(this->candidates_size_);
+  }
+  // Seleccionar aleatoriamente uno de los `n` elementos más cercanos
+  std::uniform_int_distribution<> dis(0, distances.size() - 1);  // Crear la distribución
+  int random_index = dis(this->gen_);
+  return distances[random_index].second;  // Retornar el ZonePtr seleccionado
 }
 
 ZonePtr RoutesGenerator::SelectClosestTransferStation(int zone_id) {

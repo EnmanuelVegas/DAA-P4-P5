@@ -16,6 +16,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <iomanip>
 
 #include "zone.h"
 
@@ -64,7 +65,7 @@ class VRPInstance {
   int collection_capacity_;
   int transport_capacity_;
   int speed_;
-  std::vector<std::vector<int>> distances_;
+  std::vector<std::vector<double>> distances_;
   std::shared_ptr<Zone> depot_;
   std::shared_ptr<Zone> dumpsite_;
   std::vector<ZonePtr> zones_;
