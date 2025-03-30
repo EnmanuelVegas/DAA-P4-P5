@@ -9,9 +9,9 @@
  */
 
 #include "../include/vehicle.h"
-#include "../include/zone.h"
-#include "../include/greedy_vehicle_route.h"
 
+#include "../include/routes_generator.h"
+#include "../include/zone.h"
 
 void Vehicle::AddStop(ZonePtr stop_zone) {
   this->route_.emplace_back(stop_zone);
@@ -22,4 +22,16 @@ void Vehicle::AddStop(ZonePtr stop_zone) {
 void Vehicle::RestoreCapacity(int new_capacity) {
   this->remaining_capacity_ = new_capacity;
   return;
+}
+
+std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
+  os << "Vehicle ID: " << vehicle.id_ << "\n";
+  os << "Remaining Time: " << vehicle.remaining_time_ << "\n";
+  os << "Remaining Capacity: " << vehicle.remaining_capacity_ << "\n";
+  os << "Route: ";
+  for (const auto& zone : vehicle.route_) {
+    os << zone->id() << " ";
+  }
+  os << "\n";
+  return os;
 }

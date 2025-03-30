@@ -28,7 +28,7 @@ class Vehicle {
 
   void AddStop(ZonePtr zone);
 
-  void UpdateTime(double time) { remaining_time_ -= remaining_time_; }
+  void UpdateTime(double time) { remaining_time_ -= time; }
 
   void RestoreCapacity(int new_capacity);
 
@@ -39,6 +39,8 @@ class Vehicle {
   int remaining_capacity() const { return this->remaining_capacity_; }
 
   std::vector<ZonePtr> route() { return route_; }
+
+  friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
 
  private:
   std::vector<ZonePtr> route_;

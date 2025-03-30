@@ -11,9 +11,8 @@
 #include "../include/vrp_instance.h"
 
 VRPInstance::VRPInstance(std::string& input_name) :
-                      collection_zones_(std::vector<ZonePtr>(0)),
-                      distances_collection_(std::vector<std::vector<int>>(0)),
-                      distances_transfer_(std::vector<std::vector<int>>(2))  {
+                      zones_(std::vector<ZonePtr>(0)),
+                      distances_(std::vector<std::vector<int>>(0)) {
   std::ifstream input_file{input_name};
   if(!input_file.is_open()) {
     throw std::runtime_error("Cannot open input file!");
@@ -36,126 +35,67 @@ VRPInstance::VRPInstance(std::string& input_name) :
   std::getline(input_file, line);
   speed_ = std::stoi(line.substr(SpaceIndex(line) + 1));
   std::getline(input_file, line);
-  this->depot_ = std::make_shared<Zone>(1 + max_zones_, line);
-  // this->zones_.emplace_back(std::make_shared<Zone>(0, line));
+  ZonePtr depot = std::make_shared<Zone>(1 + max_zones_, line);
   std::getline(input_file, line);
-  this->transfer_stations_.first = std::make_shared<Zone>(2 + max_zones_, line);
-  // this->zones_.emplace_back(std::make_shared<Zone>(-1, line));
+  ZonePtr first_transfer = std::make_shared<Zone>(2 + max_zones_, line);
   std::getline(input_file, line);
-  this->transfer_stations_.second = std::make_shared<Zone>(3 + max_zones_, line);
-  // this->zones_.emplace_back(std::make_shared<Zone>(-2, line));
+  ZonePtr second_transfer = std::make_shared<Zone>(3 + max_zones_, line);
   std::getline(input_file, line);
-  this->dumpsite_ = std::make_shared<Zone>(4 + max_zones_, line);
-  // this->zones_.emplace_back(std::make_shared<Zone>(-3, line));
+  ZonePtr dumpsite = std::make_shared<Zone>(4 + max_zones_, line);
   std::getline(input_file, line);
   std::getline(input_file, line);
   std::getline(input_file, line);
   ReadZones(input_file);
-  FillCollectionDistances();
-  FillTransferDistances();
+  this->zones_.emplace_back(depot);
+  zones_.emplace_back(first_transfer);
+  zones_.emplace_back(second_transfer);
+  zones_.emplace_back(dumpsite);
+  ComputeDistances();
   input_file.close();
 }
 
 void VRPInstance::ReadZones(std::ifstream& filestream) {
-  // std::string line{""};
   int id;
   double coord_x, coord_y, d1, d2;
   for (int i{0}; i < this->max_zones_; i++) {
     filestream >> id >> coord_x >> coord_y >> d1 >> d2;
-    // std::getline(filestream, line);
     std::pair<int, int> coordinates{coord_x, coord_y};
     std::pair<int, int> demands{d1, d2}; 
-    this->collection_zones_.emplace_back(std::make_shared<Zone>(id, coordinates, demands));
+    this->zones_.emplace_back(std::make_shared<Zone>(id, coordinates, demands));
   }
   return;
 }
 
-
-// std::vector<ZonePtr> VRPInstance::collection_zones() {
-//   return std::vector<ZonePtr>(zones_.begin() + 4, zones_.end());
-// }
-
-
-// ZonePtr VRPInstance::GetZone(int& id) { 
-//   if (index < 0 || index > this->collection_zones_.size()) {
-//     throw std::out_of_range("Not permited position!\n");
-//   }
-//   return collection_zones_.at(index);
-// }
-
-double VRPInstance::GetDistance(ZonePtr actual, int destination_id) {
-  std::cout << (destination_id > this->collection_zones_.size()) << std::endl;
-  if ((destination_id <= 0 || destination_id > this->collection_zones_.size() + 4 - 1) ||
-       actual->id() <= 0 || actual->id() > this->collection_zones_.size() + 4 - 1) {
-  std::cout << "Condition triggered: destination_id < -3 || (destination_id > 0 && destination_id > collection_zones_.size()) || "
-               "actual->id() < -3 || actual->id() > collection_zones_.size()" << std::endl;
-  throw std::out_of_range("Not permited position!\n");
+std::vector<ZonePtr> VRPInstance::collection_zones() {
+  return std::vector<ZonePtr>(zones_.begin(), zones_.end() - 4);
 }
-  if (destination_id < this->max_zones_) {
-    return GetCollectionDistance(actual->id(), destination_id);
-  } else if (destination_id < 0) {
-    return GetTransferDistance(actual->id(), destination_id);
-  } 
-  else {
-    return ComputeEuclideanDistance(actual->coordinates(), depot_->coordinates());
+
+double VRPInstance::GetDistance(int actual_id, int destination_id) {
+  // std::cout << (destination_id > this->zones_.size()) << std::endl;
+  if ((destination_id <= 0 || destination_id > this->zones_.size() + 4 - 1) ||
+       actual_id <= 0 || actual_id > this->zones_.size() + 4 - 1) {
+      throw std::out_of_range("Not permited position!\n");
   }
-
-  // return ((dist_1 + dist_2 + dist_3) / speed);
-
-
-
-
-}
-
-double VRPInstance::GetCollectionDistance(int first_id, int second_id) {
-  if (first_id >= second_id) {
-    return distances_collection_[first_id - 1][second_id - 1];
+  if (actual_id >= destination_id) {
+    return distances_[actual_id - 1][destination_id - 1];
   }
-  return distances_collection_[second_id - 1][first_id - 1];
+  return distances_[destination_id - 1][actual_id - 1];
 }
 
-
-
-double VRPInstance::GetTransferDistance(int zone_id, int transfer_id) {
-  if (transfer_id == -1) {
-    return this->distances_transfer_[0][zone_id - 1];
-  }
-  return this->distances_transfer_[1][zone_id - 1];
-}
-
-void VRPInstance::FillCollectionDistances() {
-  distances_collection_.resize(max_zones_);
-  for (int i{0}; i < this->max_zones_; i++) {
-    this->distances_collection_[i] = std::vector<int>(max_zones_, 0);
+void VRPInstance::ComputeDistances() {
+  distances_.resize(max_zones_ + 4);
+  for (int i{0}; i < this->distances_.size(); i++) {
+    this->distances_[i] = std::vector<int>(max_zones_ + 4, 0);
     for (int j{0}; j < i; j++) {
-      distances_collection_[i][j] = ComputeEuclideanDistance(collection_zones_[i]->coordinates(),
-                                              collection_zones_[j]->coordinates());
+      distances_[i][j] = ComputeEuclideanDistance(zones_[i]->coordinates(),
+                                                  zones_[j]->coordinates());
     }
   }
   // for (int i{0}; i < max_zones_; i++) {
   //   for (int j{0}; j < max_zones_; j++) {
-  //     std::cout << distances_collection[i][j]<< " ";
+  //     std::cout << distances_collection_[i][j]<< " ";
   //   }
   //   std::cout << std::endl;
   // }
   return;
 }
-
-void VRPInstance::FillTransferDistances() {
-  for (int i{0}; i < 2; i++) {
-    this->distances_transfer_[i] = std::vector<int>(max_zones_, 0);
-    for (int j{0}; j < max_zones_; j++) {
-      if (i == 0) {
-        distances_transfer_[i][j] = ComputeEuclideanDistance(
-                                    transfer_stations_.first->coordinates(), 
-                                    collection_zones_[j]->coordinates());
-      } else {
-        distances_transfer_[i][j] = ComputeEuclideanDistance(
-                                    transfer_stations_.second->coordinates(), 
-                                    collection_zones_[j]->coordinates());
-      }
-    }
-  }
-  return;
-}
-

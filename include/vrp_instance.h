@@ -4,7 +4,7 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file greedy_vehicle_route.h: Declaracion de la clase 'GreedyVehicleRoute'.
+ * @file routes_generator.h: Declaracion de la clase 'RoutesGenerator'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
@@ -12,10 +12,10 @@
 #define VRP_INSTANCE_H
 
 #include <fstream>
-#include <vector>
+#include <memory>
 #include <string>
 #include <utility>
-#include <memory>
+#include <vector>
 
 #include "zone.h"
 
@@ -23,18 +23,15 @@ typedef std::pair<std::shared_ptr<Zone>, std::shared_ptr<Zone>> ZonePtrPair;
 
 typedef std::shared_ptr<Zone> ZonePtr;
 
-
 /*
  * VRPT stands for Vehicle Routing Problem.
-*/
+ */
 class VRPInstance {
  public:
   VRPInstance(std::string& input_name);
 
-  // ZonePtr GetZone(int& index);
+  std::vector<ZonePtr> collection_zones();
 
-  std::vector<ZonePtr> collection_zones() { return collection_zones_; }
-  
   int max_collection_time() { return this->max_collection_time_; }
 
   int max_transport_time() { return this->max_transport_time_; }
@@ -47,23 +44,19 @@ class VRPInstance {
 
   int speed() { return this->speed_; }
 
-  ZonePtr depot() { return depot_; }
+  ZonePtr depot() { return zones_[max_zones_]; }
 
-  ZonePtrPair transfer_stations() { return  transfer_stations_; }
+  ZonePtrPair transfer_stations() {
+    return {zones_[max_zones_ + 1], zones_[max_zones_ + 2]};
+  }
 
-  ZonePtr dumpsite() { return dumpsite_; }
+  ZonePtr dumpsite() { return zones_[max_zones_ + 3]; }
 
-double GetDistance(ZonePtr actual, int destination_id);
-
-  double GetCollectionDistance(int zone_id, int collection_id);
-
-  double GetTransferDistance(int zone_id, int transfer_id);
+  double GetDistance(int actual_id, int destination_id);
 
  private:
-
   void ReadZones(std::ifstream& filestream);
-  void FillCollectionDistances();
-  void FillTransferDistances();
+  void ComputeDistances();
   int max_collection_time_;
   int max_transport_time_;
   int max_vehicles_;
@@ -71,12 +64,11 @@ double GetDistance(ZonePtr actual, int destination_id);
   int collection_capacity_;
   int transport_capacity_;
   int speed_;
-  std::vector<std::vector<int>> distances_collection_;
-  std::vector<std::vector<int>> distances_transfer_;
+  std::vector<std::vector<int>> distances_;
   std::shared_ptr<Zone> depot_;
   std::shared_ptr<Zone> dumpsite_;
-  std::vector<ZonePtr> collection_zones_;
-  ZonePtrPair transfer_stations_;  
+  std::vector<ZonePtr> zones_;
+  ZonePtrPair transfer_stations_;
 };
 
 #endif

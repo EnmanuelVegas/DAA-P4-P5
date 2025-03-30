@@ -22,8 +22,9 @@
 int main(int argc, char* argv[]) {
   try {
     std::string input_filename{argv[1]};
+    int candidates_size{std::stoi(argv[2])};
     std::shared_ptr<VRPInstance> instance = std::make_shared<VRPInstance>(input_filename);
-    std::shared_ptr<VRPTransshipments> solver = std::make_shared<VRPTransshipments>(instance);
+    std::shared_ptr<VRPTransshipments> solver = std::make_shared<VRPTransshipments>(instance, candidates_size);
     solver->ComputeRoutes();
 
   } catch (const std::exception& error) {

@@ -4,18 +4,18 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file greedy_vehicle_route.cc: Definición de métodos de la clase 'VRPTransshipments'.
+ * @file greedy_vehicle_route.cc: Definición de métodos de la clase
+ * 'VRPTransshipments'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
 #include "../include/vrp_transshipments.h"
 
-VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance) 
-  : instance_(instance), route_generator_(GreedyVehicleRoute(instance)) {
-    return;
+VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size)
+    : instance_(instance), route_generator_(RoutesGenerator(instance, candidates_size)) {
+  return;
 }
 
-
 std::vector<VehiclePtr> VRPTransshipments::ComputeRoutes() {
-  return route_generator_.SolveAlgorithm();
+  return route_generator_.Generate();
 }
