@@ -11,8 +11,9 @@
 
 #include "../include/vrp_transshipments.h"
 
-VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size)
-    : instance_(instance), route_generator_(RoutesGenerator(instance, candidates_size)) {
+VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance,
+  int candidates_size, int seed) : instance_(instance), 
+  route_generator_(RoutesGenerator(instance, candidates_size, seed)) {
   return;
 }
 

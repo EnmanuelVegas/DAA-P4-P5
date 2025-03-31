@@ -1,0 +1,6 @@
+
+EMPLEO:
+
+./vrpt_transport instances/instance1.txt -s 3
+
+./vrpt_transport -m instances/instance1.txt -s 1

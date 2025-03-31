@@ -23,7 +23,8 @@
  */
 class VRPTransshipments {
  public:
-  VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size = 1);
+  VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size, 
+                    int seed = std::random_device{}());
 
   // std::vector<Vehicle> ComputeUsedVehicles();
 

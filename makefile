@@ -15,8 +15,8 @@
 
 CXX=g++
 MAKEFLAGS=--no-print-directory
-CXXFLAGS=-std=c++20 -g -O0
-# CXXFLAGS = -std=c++20 -g -O0 -fsanitize=address
+# CXXFLAGS=-std=c++20 -g -O0
+CXXFLAGS = -std=c++20 -g -O0 -fsanitize=address
 
 SRC=src
 OBJ=build

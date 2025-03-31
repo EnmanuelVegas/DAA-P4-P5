@@ -26,8 +26,8 @@
 
 class RoutesGenerator {
  public:
-  RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size)
-      : candidates_size_(candidate_size), instance_(instance), gen_(std::random_device{}()) {}
+  RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
+      : candidates_size_(candidate_size), instance_(instance), gen_(seed) {}
 
   std::vector<VehiclePtr> Generate();
 

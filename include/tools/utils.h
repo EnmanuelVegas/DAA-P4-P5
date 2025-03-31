@@ -10,9 +10,30 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <utility>
+#include <expected>
+#include <fstream>
+#include <iostream>
+#include <optional>
+#include <string_view>
+#include <vector>
+#include <filesystem>
+#include <algorithm>
 #include <cmath>
-#include <string>
+
+struct ProgramOptions {
+  bool show_help{false};
+  bool multi_run{false};
+  std::string instances_source{""};
+  // bool imprimir_fichero = false;
+  int grasp_size{0};
+  // std::string algoritmo = "quicksort";
+};
+
+std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]);
+
+void PrintFile(const std::string& filename);
+
+std::vector<std::string> FilesInDirectory(const std::string& path);
 
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second);
 
