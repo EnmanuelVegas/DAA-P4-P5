@@ -112,7 +112,18 @@ std::vector<std::string> FilesInDirectory(const std::string& path) {
       paths_file.push_back("./" + relative_path.string());
     }
   }
+  // for (auto& file : paths_file) {
+  //   std::cout << file << std::endl;
+  // }
+  // std::cout << "-----------------------------------\n";
+  
   std::sort(paths_file.begin(), paths_file.end());
+  // for (auto& file : paths_file) {
+  //   std::cout << file << std::endl;
+  // }
+  // std::cout << "-----------------------------------\n";
+
+
   return paths_file;
 }
 

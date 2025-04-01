@@ -14,7 +14,7 @@ Dumpsite 10 60  //Ubicación del vertedero
 epsilon 20  //Ignorar
 offset 240  //Ignorar
 k 6   //Ignorar
-1 2.0 18.0 105.0 368.0 //#Zona Coord_X Coord_Y D1 D2. LA DEMANDA DE CADA ZONA SE CALCULA COMO (D2 - D1). 
+1 2.0 18.0 105.0 368.0 //#Zona Coord_X Coord_Y D1 D2. D1 = TIEMPO DE PROCESAMIENTO D2 = DEMANDA. 
 2 16.0 4.0 89.0 387.0
 3 9.0 9.0 100.0 395.0
 4 2.0 8.0 83.0 391.0

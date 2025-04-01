@@ -59,6 +59,7 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
   for (auto& task : tasks_) {
     std::cout << *task;
   }
+  std::cout << "Vehicles used:" << vehicles_used_.size() << std::endl;
   return this->vehicles_used_;
 }
 
