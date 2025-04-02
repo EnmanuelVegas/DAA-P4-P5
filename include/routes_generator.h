@@ -33,7 +33,7 @@ class RoutesGenerator {
 
   double CalculateTime(int actual_id, int destination_id);
 
-  double ReturnToDepotTime(ZonePtr actual_zone, int closest_id);
+  double ReturnToDepotTime(ZonePtr actual_zone, ZonePtr closest);
 
   ZonePtr SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
 
@@ -44,6 +44,8 @@ class RoutesGenerator {
   void AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle);
 
   void AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr vehicle, double capacity, double max_time);
+
+  // void PrintTable();
 
  private:
   std::shared_ptr<VRPInstance> instance_;

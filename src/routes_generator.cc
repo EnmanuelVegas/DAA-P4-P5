@@ -30,7 +30,7 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
       ZonePtr last_stop = current_vehicle->route().back();
       ZonePtr closest = SelectClosestZone(last_stop, zones);
       if (closest == nullptr) { break; }
-      double return_depot_time = ReturnToDepotTime(last_stop, closest->id());
+      double return_depot_time = ReturnToDepotTime(last_stop, closest);
       if (closest->waste_quantity() <= current_vehicle->remaining_capacity() &&
           return_depot_time <= current_vehicle->remaining_time()) {
         AddNormalStop(last_stop, closest, current_vehicle);
@@ -53,13 +53,14 @@ std::vector<VehiclePtr> RoutesGenerator::Generate() {
     vehicles_used_.push_back(current_vehicle);
     vehicle_index++;
   }
+  // PrintTable();
   for (auto& vehicle : vehicles_used_) {
     std::cout << *vehicle;
   }
   for (auto& task : tasks_) {
     std::cout << *task;
   }
-  std::cout << "Vehicles used:" << vehicles_used_.size() << std::endl;
+  std::cout << "Vehicles used: " << vehicles_used_.size() << std::endl;
   return this->vehicles_used_;
 }
 
@@ -68,18 +69,15 @@ double RoutesGenerator::CalculateTime(int actual_id, int destination_id) {
           instance_->speed()) * 60;
 }
 
-double RoutesGenerator::ReturnToDepotTime(ZonePtr actual_zone, int closest_id) {
-  // dist_1 = Current zone to closest collection zone.
-  double dist_1 = instance_->GetDistance(actual_zone->id(), closest_id);
-  ZonePtr transfer = SelectClosestTransferStation(closest_id);
-  // dist_2 = closest collection to closest SWTS.
-  double dist_2 = instance_->GetDistance(closest_id, transfer->id());
-  // dist_3 = SWTS to depot.
-  double dist_3 =
-      instance_->GetDistance(transfer->id(), instance_->depot()->id());
-  int speed = instance_->speed();
-  // time = distance / speed
-  return ((dist_1 + dist_2 + dist_3) / speed) * 60;
+double RoutesGenerator::ReturnToDepotTime(ZonePtr actual_zone, ZonePtr closest) {
+  // time_1 = Current zone to closest collection zone.
+  double time_1 = CalculateTime(actual_zone->id(), closest->id()) + closest->process_time();
+  ZonePtr transfer = SelectClosestTransferStation(closest->id());
+  // time_2 = closest collection to closest SWTS.
+  double time_2 = CalculateTime(closest->id(), transfer->id());
+  // time_3 = SWTS to depot.
+  double time_3 = CalculateTime(transfer->id(), instance_->depot()->id());
+  return time_1 + time_2 + time_3;
 }
 
 ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates) {
@@ -110,9 +108,14 @@ ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& c
 }
 
 void RoutesGenerator::AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle) {
-  vehicle->AddStop(closest);  // It also substracts the capacity.
+  std::cout << "la candidata es " << closest->id() << std::endl;
   double visit_closest_time = CalculateTime(last->id(), closest->id());
-  vehicle->UpdateTime(visit_closest_time);  
+  std::cout << "el tiempo para llegar hasta ella es de " << visit_closest_time << " minutos y tenemos " << vehicle->remaining_time() << " minutos." << std::endl;
+  // std::cout << "el tiempo para volver si la añadimos es de  " << tiempo_en_regresar << " minutos y tenemos " << vehicle->remaining_time() << " minutos." << std::endl;
+  std::cout << "la carga que añade es de " << closest->waste_quantity() << " y la capacidad restante del camión es de " << vehicle->remaining_capacity() << std::endl;
+
+  vehicle->AddStop(closest);  // It also substracts the capacity.
+  vehicle->UpdateTime(visit_closest_time + closest->process_time());  
   return;
 }
 

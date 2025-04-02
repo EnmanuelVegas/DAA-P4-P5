@@ -10,7 +10,16 @@
 
 #include "../include/zone.h"
 
-Zone::Zone(int id, std::string& input) :  demands_{0, 0} {
+Zone::Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands) 
+: id_(id), coordinates_(coordinates) {
+  // std::cout << waste_quantity_ << std::endl;
+  this->process_time_ = demands.first;
+  this->waste_quantity_ = demands.second;
+  return;
+}
+
+
+Zone::Zone(int id, std::string& input) : waste_quantity_(0), process_time_(0) {
   this->id_ = id;
   int space_index = SpaceIndex(input);
   std::string coordinates_string = input.substr(space_index + 1);

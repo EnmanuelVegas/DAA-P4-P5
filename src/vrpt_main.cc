@@ -42,9 +42,9 @@ int main(int argc, char* argv[]) {
       std::cout << "----------------------- File: " << input_filename << " -----------------------\n";
       instance = std::make_shared<VRPInstance>(input_filename);
       solver = std::make_shared<VRPTransshipments>(instance, grasp_size, 123);
-      chrono_timer.StartStopwatch();
+      // chrono_timer.StartStopwatch();
       solver->ComputeRoutes();
-      std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";
+      // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";
     }
   } catch (const std::exception& error) {
     std::cerr << "An error has occurred: " << error.what() << std::endl;
