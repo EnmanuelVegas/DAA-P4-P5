@@ -18,5 +18,5 @@ VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance,
 }
 
 SolutionPtr VRPTransshipments::ComputeRoutes() {
-  return route_generator_.Generate();
+  return route_generator_.GenerateGRASP();
 }

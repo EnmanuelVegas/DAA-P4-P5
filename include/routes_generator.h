@@ -22,13 +22,16 @@
 #include "./tools/utils.h"
 #include "vrp_instance.h"
 #include "solution.h"
+#include "./searches/inter_reinsertion.h"
 
 class RoutesGenerator {
  public:
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
       : candidates_size_(candidate_size), instance_(instance), gen_(seed) {}
 
-  SolutionPtr Generate();
+  SolutionPtr GenerateGRASP();
+
+  SolutionPtr PerformLocalSearch(SolutionPtr solution);
 
   double CalculateTime(int actual_id, int destination_id);
 
@@ -49,7 +52,7 @@ class RoutesGenerator {
   // void PrintTable();
 
  private:
-  SolutionPtr GenerateGreedy();
+  SolutionPtr GenerateSingleRoute();
   std::shared_ptr<VRPInstance> instance_;
   std::mt19937 gen_;  
   int candidates_size_;

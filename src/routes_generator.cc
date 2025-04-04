@@ -10,17 +10,16 @@
 
 #include "../include/routes_generator.h"
 
-
-SolutionPtr RoutesGenerator::Generate() {
+SolutionPtr RoutesGenerator::GenerateGRASP() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
-
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
   for (int i{0}; i < 5; i++) {
     for (int j{0}; j < 1000; j++) {
       // std::vector<VehiclePtr> local_best;
       // double local_best_time{std::numeric_limits<double>::max()};
-      SolutionPtr solution = this->GenerateGreedy();
+      SolutionPtr solution = this->GenerateSingleRoute();
+      solution = PerformLocalSearch(solution);
       double solution_time{CalculateRoutesTime(solution)};
       if (solution_time < best_time) {
         best_solution = solution;
@@ -29,15 +28,11 @@ SolutionPtr RoutesGenerator::Generate() {
     }
   }
   std::cout << *best_solution;
-  std::cout << "Whole time ";
-  std::cout << (instance_->max_collection_time() * best_solution->vehicles().size()) - 
-                best_solution->RemainingVehiclesTime();
-  std::cout << "\n";
   return best_solution;
 }
 
 
-SolutionPtr RoutesGenerator::GenerateGreedy() {
+SolutionPtr RoutesGenerator::GenerateSingleRoute() {
   // Greedy Requirements
   std::vector<ZonePtr> zones = instance_->collection_zones();
   double collection_capacity = instance_->collection_capacity();
@@ -79,6 +74,13 @@ SolutionPtr RoutesGenerator::GenerateGreedy() {
   }
   return solution;
 }
+
+SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
+  std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
+  solution = search_method->Apply(solution, this->instance_);
+  return solution;
+}
+
 
 
 double RoutesGenerator::CalculateRoutesTime(SolutionPtr solution) {
@@ -157,7 +159,7 @@ void RoutesGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr
   vehicle->AddTask(std::make_shared<Task>(capacity - vehicle->remaining_capacity(),
                    transfer->id(), max_time - vehicle->remaining_time()));
   vehicle->AddStop(transfer);
-  vehicle->RestoreCapacity(capacity);
+  vehicle->RestoreCapacity();
   return;
 }
 

@@ -21,9 +21,9 @@ class InterReinsertion : public LocalSearch {
  public:
   InterReinsertion() { }
 
-  InterReinsertion() { }
+  ~InterReinsertion() { }
 
-  int Apply();
+  SolutionPtr Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
  private:
 

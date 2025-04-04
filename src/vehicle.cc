@@ -19,14 +19,18 @@ void Vehicle::AddStop(ZonePtr stop_zone) {
   return;
 }
 
-void Vehicle::RestoreCapacity(int new_capacity) {
-  this->remaining_capacity_ = new_capacity;
+void Vehicle::RestoreCapacity() {
+  this->remaining_capacity_ = this->max_capacity_;
   return;
 }
 
 void Vehicle::AddTask(TaskPtr new_task) {
   this->tasks_.push_back(new_task);
   return;
+}
+
+double Vehicle::TimeUsed() {
+  return this->max_time_ - this->remaining_time_;
 }
 
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {

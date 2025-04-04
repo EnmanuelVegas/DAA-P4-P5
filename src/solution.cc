@@ -15,18 +15,13 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
   for (auto& vehicle : solution.vehicles_) {
     os << *vehicle;
   }
+  double whole_time{0};
   for (auto& vehicle : solution.vehicles_) {
+    whole_time += vehicle->TimeUsed();
     for (auto& task : vehicle->tasks()) {
       os << *task;
     }
   }
+  os << "Whole time: " << whole_time << "\n";
   return os;
-}
-
-double Solution::RemainingVehiclesTime() {
-  double whole_time{0};
-  for (auto& vehicle : this->vehicles_) {
-    whole_time += vehicle->remaining_time();
-  }
-  return whole_time;
 }

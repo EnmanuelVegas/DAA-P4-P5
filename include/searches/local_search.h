@@ -19,11 +19,11 @@
 #include <algorithm>  // Para std::sort
 #include <random>     // Para generar números aleatorios
 
-#include "./tools/utils.h"
-#include "vehicle.h"
-#include "vrp_instance.h"
-#include "zone.h"
-#include "task.h"
+#include "../vehicle.h"
+#include "../vrp_instance.h"
+#include "../zone.h"
+#include "../task.h"
+#include "../solution.h"
 
 class LocalSearch {
  public:
@@ -31,7 +31,7 @@ class LocalSearch {
 
   virtual ~LocalSearch() { }
 
-  virtual int Apply() = 0;
+  virtual SolutionPtr Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
 
  private:
 

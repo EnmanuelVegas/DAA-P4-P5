@@ -25,6 +25,25 @@ class Solution {
  public:
   Solution() : vehicles_(std::vector<VehiclePtr>(0)) { } // test
 
+  Solution(const Solution& other) {
+    for (const auto& vehicle : other.vehicles_) {
+      vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
+    }
+  }
+
+  // Operador de asignación para copia profunda
+  Solution& operator=(const Solution& other) {
+    if (this != &other) {
+      vehicles_.clear();
+      for (const auto& vehicle : other.vehicles_) {
+        vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
+      }
+    }
+    return *this;
+  }
+
+
+
   std::vector<VehiclePtr> vehicles() { return vehicles_; }
 
   // std::vector<Task> tasks() { return tasks_; }
@@ -32,8 +51,6 @@ class Solution {
   void PushVehicle(VehiclePtr vehicle) {
     this->vehicles_.push_back(vehicle);
   }
-
-  double RemainingVehiclesTime();
 
   friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
 
