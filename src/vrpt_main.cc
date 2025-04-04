@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
     for (auto& input_filename : files) {
       std::cout << "----------------------- File: " << input_filename << " -----------------------\n";
       instance = std::make_shared<VRPInstance>(input_filename);
+      // solver = std::make_shared<VRPTransshipments>(instance, grasp_size);
       solver = std::make_shared<VRPTransshipments>(instance, grasp_size, 123);
       // chrono_timer.StartStopwatch();
       solver->ComputeRoutes();

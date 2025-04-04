@@ -17,6 +17,10 @@
 
 #include "./tools/utils.h"
 
+class Task;
+
+typedef std::shared_ptr<Task> TaskPtr;
+
 class Task {
  public:
   Task() { } // test
@@ -26,7 +30,7 @@ class Task {
   
   double waste() { return waste_; }
 
-  int trasnfer_id() const { return transfer_id_; }
+  int transfer_id() const { return transfer_id_; }
 
   double time() { return time_; }
 
@@ -34,8 +38,6 @@ class Task {
     os << "(" << task.waste_ << ", " << task.transfer_id_ << ", " << task.time_ << ")" << std::endl; 
     return os;
   }
-
-
 
  protected:
   double waste_;

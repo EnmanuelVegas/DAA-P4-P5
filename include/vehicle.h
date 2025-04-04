@@ -16,6 +16,7 @@
 
 #include "zone.h"
 #include "vrp_instance.h"
+#include "task.h"
 
 class Vehicle;
 
@@ -32,6 +33,8 @@ class Vehicle {
 
   void RestoreCapacity(int new_capacity);
 
+  void AddTask(TaskPtr new_task);
+
   int id() const { return id_; }
 
   double remaining_time() const { return this->remaining_time_; }
@@ -40,10 +43,13 @@ class Vehicle {
 
   std::vector<ZonePtr> route() { return route_; }
 
+  std::vector<TaskPtr> tasks() { return tasks_; }
+
   friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
 
  private:
   std::vector<ZonePtr> route_;
+  std::vector<TaskPtr> tasks_;
   int id_;
   double remaining_time_;
   double remaining_capacity_;

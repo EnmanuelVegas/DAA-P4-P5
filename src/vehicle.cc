@@ -24,8 +24,13 @@ void Vehicle::RestoreCapacity(int new_capacity) {
   return;
 }
 
+void Vehicle::AddTask(TaskPtr new_task) {
+  this->tasks_.push_back(new_task);
+  return;
+}
+
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
-  os << "Vehicle ID: " << vehicle.id_ << "\n";
+  os << "*** Vehicle Nº " << vehicle.id_ << " ***" << "\n";
   os << "Remaining Time: " << vehicle.remaining_time_ << "\n";
   os << "Remaining Capacity: " << vehicle.remaining_capacity_ << "\n";
   os << "Route: ";
@@ -34,4 +39,18 @@ std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
   }
   os << "\n";
   return os;
+
+
+
+
+  // for (auto& vehicle : vehicles_used_) {
+  //   std::cout << *vehicle;
+  // }
+  // for (auto& task : tasks_) {
+  //   std::cout << *task;
+  // }
+  // std::cout << "Vehicles used: " << vehicles_used_.size() << std::endl;
+
+
+
 }

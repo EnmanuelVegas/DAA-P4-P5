@@ -15,23 +15,24 @@
 #include <fstream>
 #include <memory>
 #include <vector>
+#include <limits>
 #include <algorithm>  // Para std::sort
 #include <random>     // Para generar números aleatorios
 
 #include "./tools/utils.h"
-#include "vehicle.h"
 #include "vrp_instance.h"
-#include "zone.h"
-#include "task.h"
+#include "solution.h"
 
 class RoutesGenerator {
  public:
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
       : candidates_size_(candidate_size), instance_(instance), gen_(seed) {}
 
-  std::vector<VehiclePtr> Generate();
+  SolutionPtr Generate();
 
   double CalculateTime(int actual_id, int destination_id);
+
+  double CalculateRoutesTime(SolutionPtr vehicles);
 
   double ReturnToDepotTime(ZonePtr actual_zone, ZonePtr closest);
 
@@ -48,11 +49,10 @@ class RoutesGenerator {
   // void PrintTable();
 
  private:
+  SolutionPtr GenerateGreedy();
   std::shared_ptr<VRPInstance> instance_;
   std::mt19937 gen_;  
   int candidates_size_;
-  std::vector<std::shared_ptr<Task>> tasks_;
-  std::vector<VehiclePtr> vehicles_used_;
 };
 
 #endif
