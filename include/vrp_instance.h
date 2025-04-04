@@ -20,9 +20,9 @@
 
 #include "zone.h"
 
-typedef std::pair<std::shared_ptr<Zone>, std::shared_ptr<Zone>> ZonePtrPair;
+class VRPInstance;
 
-typedef std::shared_ptr<Zone> ZonePtr;
+typedef std::shared_ptr<VRPInstance> VRPInstancePtr;
 
 /*
  * VRPT stands for Vehicle Routing Problem.
@@ -47,13 +47,15 @@ class VRPInstance {
 
   ZonePtr depot() { return zones_[max_zones_]; }
 
-  ZonePtrPair transfer_stations() {
-    return {zones_[max_zones_ + 1], zones_[max_zones_ + 2]};
-  }
+  ZonePtrPair transfer_stations();
 
   ZonePtr dumpsite() { return zones_[max_zones_ + 3]; }
 
   double GetDistance(int actual_id, int destination_id);
+
+  double CalculateTime(int actual_id, int destination_id);
+
+  bool IsTransferStation(ZonePtr zone);
 
  private:
   void ReadZones(std::ifstream& filestream);

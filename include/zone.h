@@ -17,6 +17,12 @@
 
 #include "./tools/utils.h"
 
+class Zone;
+
+typedef std::pair<std::shared_ptr<Zone>, std::shared_ptr<Zone>> ZonePtrPair;
+
+typedef std::shared_ptr<Zone> ZonePtr;
+
 class Zone {
  public:
   Zone() { } // test

@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
       std::cout << "----------------------- File: " << input_filename << " -----------------------\n";
       instance = std::make_shared<VRPInstance>(input_filename);
       // solver = std::make_shared<VRPTransshipments>(instance, grasp_size);
-      solver = std::make_shared<VRPTransshipments>(instance, grasp_size, 123);
+      solver = std::make_shared<VRPTransshipments>(instance, grasp_size);
       // chrono_timer.StartStopwatch();
       solver->ComputeRoutes();
       // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";

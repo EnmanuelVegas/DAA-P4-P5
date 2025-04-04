@@ -15,7 +15,7 @@ SolutionPtr RoutesGenerator::GenerateGRASP() {
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
   for (int i{0}; i < 5; i++) {
-    for (int j{0}; j < 1000; j++) {
+    for (int j{0}; j < 10; j++) {
       // std::vector<VehiclePtr> local_best;
       // double local_best_time{std::numeric_limits<double>::max()};
       SolutionPtr solution = this->GenerateSingleRoute();
@@ -62,7 +62,7 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
       }
     }
     ZonePtr last_stop = current_vehicle->route().back();
-    if (!BelongsTo(last_stop, transport_zones)) {
+    if (!instance_->IsTransferStation(last_stop)) {
       ZonePtr closest_transport = SelectClosestTransferStation(last_stop->id());
       AddTransferStop(last_stop, closest_transport, current_vehicle, collection_capacity, max_time);
       AddNormalStop(closest_transport, depot, current_vehicle);
@@ -77,7 +77,20 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
-  solution = search_method->Apply(solution, this->instance_);
+  while(true) {
+    std::pair<bool, SolutionPtr> result{search_method->Apply(solution, this->instance_)};
+    if (result.first) {
+      std::cout << "\n--- LOCAL SEARCH ---\n";
+      std::cout << "FOUND A BETTER SOLUTION:\nOld solution:\n";
+      std::cout << *solution;
+      solution = result.second;
+      std::cout << "New solution:\n";
+      std::cout << *solution;
+    }
+    else {
+      break;
+    }
+  }
   return solution;
 }
 
@@ -90,26 +103,20 @@ double RoutesGenerator::CalculateRoutesTime(SolutionPtr solution) {
     // Otra forma de calcularlo: Recalculando todos los tiempos de la ruta.
     // std::vector<ZonePtr> route = vehicle->route();
     // for (auto& stop : route) {
-    //   total_time += CalculateTime();
+    //   total_time += CalculateTime(...);
     // }
   }
   return total_time;
 }
 
-
-double RoutesGenerator::CalculateTime(int actual_id, int destination_id) {
-  return (instance_->GetDistance(actual_id, destination_id) /
-          instance_->speed()) * 60;
-}
-
 double RoutesGenerator::ReturnToDepotTime(ZonePtr actual_zone, ZonePtr closest) {
   // time_1 = Current zone to closest collection zone.
-  double time_1 = CalculateTime(actual_zone->id(), closest->id()) + closest->process_time();
+  double time_1 = instance_->CalculateTime(actual_zone->id(), closest->id()) + closest->process_time();
   ZonePtr transfer = SelectClosestTransferStation(closest->id());
   // time_2 = closest collection to closest SWTS.
-  double time_2 = CalculateTime(closest->id(), transfer->id());
+  double time_2 = instance_->CalculateTime(closest->id(), transfer->id());
   // time_3 = SWTS to depot.
-  double time_3 = CalculateTime(transfer->id(), instance_->depot()->id());
+  double time_3 = instance_->CalculateTime(transfer->id(), instance_->depot()->id());
   return time_1 + time_2 + time_3;
 }
 
@@ -141,7 +148,7 @@ ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& c
 }
 
 void RoutesGenerator::AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle) {
-  double visit_closest_time = CalculateTime(last->id(), closest->id());
+  double visit_closest_time = instance_->CalculateTime(last->id(), closest->id());
   // std::cout << "la candidata es " << closest->id() << std::endl;
   // std::cout << "el tiempo para llegar hasta ella es de " << visit_closest_time << " minutos y tenemos " << vehicle->remaining_time() << " minutos." << std::endl;
   // std::cout << "el tiempo para volver si la añadimos es de  " << tiempo_en_regresar << " minutos y tenemos " << vehicle->remaining_time() << " minutos." << std::endl;
@@ -153,7 +160,7 @@ void RoutesGenerator::AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr ve
 
 void RoutesGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr vehicle,
                                      double capacity, double max_time) {
-  double visit_transfer_time = CalculateTime(last->id(), transfer->id());
+  double visit_transfer_time = instance_->CalculateTime(last->id(), transfer->id());
   vehicle->UpdateTime(visit_transfer_time);
 
   vehicle->AddTask(std::make_shared<Task>(capacity - vehicle->remaining_capacity(),
@@ -171,8 +178,4 @@ ZonePtr RoutesGenerator::SelectClosestTransferStation(int zone_id) {
     return instance_->transfer_stations().first;
   }
   return instance_->transfer_stations().second;
-}
-
-bool RoutesGenerator::BelongsTo(ZonePtr zone, ZonePtrPair& zones) {
-  return (zone == zones.first ? true : ((zone == zones.second) ? true : false));
 }

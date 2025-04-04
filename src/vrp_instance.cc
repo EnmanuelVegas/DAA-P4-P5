@@ -70,6 +70,10 @@ std::vector<ZonePtr> VRPInstance::collection_zones() {
   return std::vector<ZonePtr>(zones_.begin(), zones_.end() - 4);
 }
 
+ZonePtrPair VRPInstance::transfer_stations() {
+  return {zones_[max_zones_ + 1], zones_[max_zones_ + 2]};
+}
+
 double VRPInstance::GetDistance(int actual_id, int destination_id) {
   // std::cout << (destination_id > this->zones_.size()) << std::endl;
   if ((destination_id <= 0 || destination_id > this->zones_.size() + 4 - 1) ||
@@ -104,3 +108,12 @@ void VRPInstance::ComputeDistances() {
   // }
   return;
 }
+
+double VRPInstance::CalculateTime(int actual_id, int destination_id) {
+  return (GetDistance(actual_id, destination_id) / speed_) * 60;
+}
+
+bool VRPInstance::IsTransferStation(ZonePtr zone) {
+  return (zone == transfer_stations_.first ? true : ((zone == transfer_stations_.second) ? true : false));
+}
+

@@ -52,11 +52,9 @@ class Vehicle {
       remaining_capacity_ = other.remaining_capacity_;
       max_capacity_ = other.max_capacity_;
       max_time_ = other.max_time_;
-
       // Limpiar las colecciones actuales
       route_.clear();
       tasks_.clear();
-
       // Copia profunda de la ruta
       for (const auto& zone : other.route_) {
         route_.push_back(std::make_shared<Zone>(*zone));
@@ -73,6 +71,8 @@ class Vehicle {
 
   void UpdateTime(double time) { remaining_time_ -= time; }
 
+  void RestoreTime();
+
   void RestoreCapacity();
 
   double TimeUsed();
@@ -85,9 +85,13 @@ class Vehicle {
 
   double remaining_capacity() const { return this->remaining_capacity_; }
 
-  std::vector<ZonePtr> route() { return route_; }
+  std::vector<ZonePtr> route() const { return route_; }
 
-  std::vector<TaskPtr> tasks() { return tasks_; }
+  std::vector<TaskPtr> tasks() const { return tasks_; }
+
+  std::vector<ZonePtr>& route() { return route_; }
+
+  std::vector<TaskPtr>& tasks() { return tasks_; }
 
   friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
 

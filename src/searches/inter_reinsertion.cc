@@ -10,8 +10,7 @@
 
 #include "../../include/searches/inter_reinsertion.h"
 
-SolutionPtr InterReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  bool improvement = false;
+std::pair<bool, SolutionPtr> InterReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   for (auto& vehicle : solution->vehicles()) {
     int route_size{int(vehicle->route().size())};
     for (int i{1}; i < route_size - 1; i++) {
@@ -20,37 +19,38 @@ SolutionPtr InterReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPIns
           continue;
         }
         SolutionPtr new_solution = std::make_shared<Solution>(*solution);
-
-
+        auto& route = new_solution->vehicles()[vehicle->id() - 1]->route();
+        ZonePtr zone = route[i];
+        route.erase(route.begin() + i);
+        route.insert(route.begin() + j, zone);
+        // if (IsFeasible(new_solution, i, j, vehicle, instance)) {
+        if (solution->IsRouteFeasible(vehicle->id(), instance)) {
+          if (new_solution->total_time() < solution->total_time()) {
+            return {true, solution};
+          }
+        }
       }
     }
   }
-  return solution;
-
-
-
-
-
-
-
-
-
-
-
-
-  // int n = ruta.size();
-  // for (int i = 1; i < n; ++i) {
-  //     for (int j = 1; j < n; ++j) {
-  //         if (i == j) continue;
-  //         vector<int> nueva = ruta;
-  //         int ciudad = nueva[i];
-  //         nueva.erase(nueva.begin() + i);
-  //         nueva.insert(nueva.begin() + j, ciudad);
-  //         if (calcularCosto(nueva, dist) < calcularCosto(ruta, dist)) {
-  //             ruta = nueva;
-  //             return true;
-  //         }
-  //     }
-  // }
-  // return solution;
+  return {false, solution};
 }
+
+bool InterReinsertion::IsFeasible(SolutionPtr solution, int extraction_index, int insertion_index, VehiclePtr vehicle, std::shared_ptr<VRPInstance> instance) {
+  // if (Verificar capacidad)
+  // double route_time = solution->total_time();
+  // ZonePtr inserted = vehicle->route()[insertion_index];
+  // ZonePtr old_parent = vehicle->route()[extraction_index - 1];
+  // ZonePtr old_child = vehicle->route()[extraction_index];
+  // ZonePtr new_parent = vehicle->route()[insertion_index - 1];
+  // ZonePtr new_child = vehicle->route()[insertion_index + 1];
+  // // Adjust the extraction
+  // route_time -= instance->CalculateTime(old_parent->id(), inserted->id());
+  // route_time -= instance->CalculateTime(inserted->id(), old_child->id());
+  // route_time += instance->CalculateTime(old_parent->id(), old_child->id());
+  // // Adjust the insertion
+  // route_time -= instance->CalculateTime(old_parent->id(), old_child->id());
+  // route_time += instance->CalculateTime(new_parent->id(), inserted->id());
+  // route_time += instance->CalculateTime(inserted->id(), new_child->id());
+  return true;
+}
+

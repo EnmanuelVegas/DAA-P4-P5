@@ -33,8 +33,6 @@ class RoutesGenerator {
 
   SolutionPtr PerformLocalSearch(SolutionPtr solution);
 
-  double CalculateTime(int actual_id, int destination_id);
-
   double CalculateRoutesTime(SolutionPtr vehicles);
 
   double ReturnToDepotTime(ZonePtr actual_zone, ZonePtr closest);
@@ -42,8 +40,6 @@ class RoutesGenerator {
   ZonePtr SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& candidates);
 
   ZonePtr SelectClosestTransferStation(int zone_id);
-
-  bool BelongsTo(ZonePtr zone, ZonePtrPair& zones);
 
   void AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle);
 

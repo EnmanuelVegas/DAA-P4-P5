@@ -31,7 +31,7 @@ class LocalSearch {
 
   virtual ~LocalSearch() { }
 
-  virtual SolutionPtr Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
+  virtual std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
 
  private:
 

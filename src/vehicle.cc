@@ -24,6 +24,11 @@ void Vehicle::RestoreCapacity() {
   return;
 }
 
+void Vehicle::RestoreTime() {
+  this->remaining_time_ = this->max_time_;
+  return;
+}
+
 void Vehicle::AddTask(TaskPtr new_task) {
   this->tasks_.push_back(new_task);
   return;

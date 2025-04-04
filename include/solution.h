@@ -12,7 +12,7 @@
 #define SOLUTION_H
 
 // #include <fstream>
-// #include <iostream>
+#include <limits>
 
 #include "./task.h"
 #include "./vehicle.h"
@@ -23,34 +23,19 @@ typedef std::shared_ptr<Solution> SolutionPtr;
 
 class Solution {
  public:
-  Solution() : vehicles_(std::vector<VehiclePtr>(0)) { } // test
+  Solution() : vehicles_(std::vector<VehiclePtr>(0)), total_time_(0) { } // test
 
-  Solution(const Solution& other) {
-    for (const auto& vehicle : other.vehicles_) {
-      vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
-    }
-  }
+  Solution(const Solution& other);
 
-  // Operador de asignación para copia profunda
-  Solution& operator=(const Solution& other) {
-    if (this != &other) {
-      vehicles_.clear();
-      for (const auto& vehicle : other.vehicles_) {
-        vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
-      }
-    }
-    return *this;
-  }
-
-
+  Solution& operator=(const Solution& other);
 
   std::vector<VehiclePtr> vehicles() { return vehicles_; }
 
-  // std::vector<Task> tasks() { return tasks_; }
+  double total_time() const { return this->total_time_; } 
 
-  void PushVehicle(VehiclePtr vehicle) {
-    this->vehicles_.push_back(vehicle);
-  }
+  bool IsRouteFeasible(int vehicle_id, VRPInstancePtr instance);
+
+  void PushVehicle(VehiclePtr vehicle);
 
   friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
 
@@ -61,6 +46,7 @@ class Solution {
 
  protected:
   std::vector<VehiclePtr> vehicles_;
+  double total_time_;
 };
 
 
