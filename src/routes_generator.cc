@@ -14,11 +14,11 @@ SolutionPtr RoutesGenerator::GenerateGRASP() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
-  for (int i{0}; i < 3; i++) { // CAMBIAR A 5 Y 100
+  for (int i{0}; i < 1; i++) { // CAMBIAR A 5 Y 100
     std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
     SolutionPtr best_local;
     double best_local_time{std::numeric_limits<double>::max()};
-    for (int j{0}; j < 10; j++) {
+    for (int j{0}; j < 1; j++) {
       SolutionPtr solution = this->GenerateSingleRoute();
       solution = PerformLocalSearch(solution);
       double solution_time{CalculateRoutesTime(solution)};
@@ -86,7 +86,11 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 }
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
-  std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraReinsertion>();
+  // std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraReinsertion>(); // DONE
+  std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraSwap>(); // DONE
+  // std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>(); // DONE
+  // std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
+  
   std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   bool improved{false};

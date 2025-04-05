@@ -23,6 +23,9 @@
 #include "vrp_instance.h"
 #include "solution.h"
 #include "./searches/intra_reinsertion.h"
+#include "./searches/inter_reinsertion.h"
+#include "./searches/intra_swap.h"
+#include "./searches/inter_swap.h"
 
 class RoutesGenerator {
  public:

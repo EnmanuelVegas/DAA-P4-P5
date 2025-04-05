@@ -46,6 +46,15 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
   return os;
 }
 
+void Solution::PrintVehicleRoute(int vehicle_id) {
+  for (const auto& zone : this->vehicles_[vehicle_id - 1]->route()) {
+    std::cout << zone->id() << " ";
+  }
+  std::cout << "\n";
+  return;
+}
+
+
 void Solution::PushVehicle(VehiclePtr vehicle) {
   this->vehicles_.push_back(vehicle);
   this->total_time_ += vehicle->TimeUsed();

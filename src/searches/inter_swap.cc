@@ -8,9 +8,9 @@
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
-#include "../../include/searches/inter_reinsertion.h"
+#include "../../include/searches/inter_swap.h"
 
-std::pair<bool, SolutionPtr> InterReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
+std::pair<bool, SolutionPtr> InterSwap::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   // std::cout << solution->total_time() << std::endl;
   for (auto& vehicle : solution->vehicles()) {
     // std::cout << "Vehicle " << vehicle->id() << " con " << vehicle->route().size()<< " zonas"<< std::endl;
@@ -26,12 +26,15 @@ std::pair<bool, SolutionPtr> InterReinsertion::Apply(SolutionPtr solution, std::
           SolutionPtr new_solution = std::make_shared<Solution>(*solution);
           auto& first_route = new_solution->vehicles()[vehicle->id() - 1]->route();
           auto& second_route = new_solution->vehicles()[other_vehicle->id() - 1]->route();
-          ZonePtr zone = first_route[i];
+          // ZonePtr zone = route[i];
           // for (auto& zone : new_solution->vehicles()[vehicle->id() - 1]->route()) {
           //   std::cout << zone->id() << " ";
           // }
-          first_route.erase(first_route.begin() + i);
-          second_route.insert(second_route.begin() + j, zone);
+          // std::cout << std::endl;
+          std::swap(first_route[i], second_route[j]);
+          // for (auto& zone : new_solution->vehicles()[vehicle->id() - 1]->route()) {
+          //   std::cout << zone->id() << " ";
+          // }
           // std::cout << std::endl;
           if (new_solution->IsRouteFeasible(vehicle->id(), instance) &&
               new_solution->IsRouteFeasible(other_vehicle->id(), instance)) {

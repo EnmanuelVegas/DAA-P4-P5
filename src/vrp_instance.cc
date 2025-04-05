@@ -78,7 +78,8 @@ double VRPInstance::GetDistance(int actual_id, int destination_id) {
   // std::cout << (destination_id > this->zones_.size()) << std::endl;
   if ((destination_id <= 0 || destination_id > this->zones_.size() + 4 - 1) ||
        actual_id <= 0 || actual_id > this->zones_.size() + 4 - 1) {
-      throw std::out_of_range("Not permited position!\n");
+      std::string error_positions = std::to_string(actual_id) + ", " + std::to_string(destination_id);
+      throw std::out_of_range("Not permited positions: " + error_positions + ".");
   }
   if (actual_id >= destination_id) {
     return distances_[actual_id - 1][destination_id - 1];

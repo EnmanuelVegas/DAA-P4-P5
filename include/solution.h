@@ -37,6 +37,8 @@ class Solution {
 
   void PushVehicle(VehiclePtr vehicle);
 
+  void PrintVehicleRoute(int id);
+
   friend std::ostream& operator<<(std::ostream& os, const Solution& solution);
 
 
