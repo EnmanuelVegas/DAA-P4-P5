@@ -87,28 +87,27 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
-  // std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
-  std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
-  // bool improved{false};
+  std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  bool improved{false};
   while (true) {
     std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
     if (search_result.first) {
-      std::cout <<  " Before: \n";
-      std::cout << *solution;
-      std::cout <<  "- Time: ";
-      std::cout <<  std::to_string(solution->total_time()) + " --> ";
+      // std::cout << *solution;
+      result +=  "- Time: ";
+      result +=  std::to_string(solution->total_time()) + " --> ";
       solution = search_result.second;
-      std::cout <<  std::to_string(solution->total_time()) + " \n";
-      std::cout << *solution;
-      // improved = true;
+      result +=  std::to_string(solution->total_time()) + " \n";
+      // std::cout << *solution;
+      improved = true;
     }
     else {
       break;
     }
   }
-  // if (improved) {
-  //   std::cout << result;
-  // }
+  if (improved) {
+    std::cout << result;
+  }
   return solution;
 }
 

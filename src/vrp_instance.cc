@@ -95,17 +95,17 @@ void VRPInstance::ComputeDistances() {
                                                   zones_[j]->coordinates());
     }
   }
-  for (int i{-1}; i < max_zones_ + 4; i++) {
-    std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
-  }
-  std::cout << std::endl;
-  for (int i{0}; i < max_zones_ + 4; i++) {
-    std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
-    for (int j{0}; j < max_zones_ + 4; j++) {
-      std::cout << std::setw(8) << distances_[i][j] << " ";  // Ancho fijo de 5 caracteres
-    }
-    std::cout << std::endl;
-  }
+  // for (int i{-1}; i < max_zones_ + 4; i++) {
+  //   std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
+  // }
+  // std::cout << std::endl;
+  // for (int i{0}; i < max_zones_ + 4; i++) {
+  //   std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
+  //   for (int j{0}; j < max_zones_ + 4; j++) {
+  //     std::cout << std::setw(8) << distances_[i][j] << " ";  // Ancho fijo de 5 caracteres
+  //   }
+  //   std::cout << std::endl;
+  // }
   return;
 }
 

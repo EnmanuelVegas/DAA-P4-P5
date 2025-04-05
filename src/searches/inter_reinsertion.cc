@@ -37,7 +37,6 @@ std::pair<bool, SolutionPtr> InterReinsertion::Apply(SolutionPtr solution, std::
         if (new_solution->IsRouteFeasible(vehicle->id(), instance)) {
           // std::cout << new_solution->total_time() << " " << solution->total_time() << std::endl;
           if (new_solution->total_time() < solution->total_time()) {
-            // std::cout << "Hola";
             return {true, new_solution};
           }
         }
