@@ -8,8 +8,8 @@
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
-#ifndef INTER_REINSERTION_H
-#define INTER_REINSERTION_H
+#ifndef INTRA_REINSERTION_H
+#define INTRA_REINSERTION_H
 
 #include "local_search.h"
 // #include "./tools/utils.h"
@@ -17,11 +17,11 @@
 // #include "zone.h"
 // #include "task.h"
 
-class InterReinsertion : public LocalSearch {
+class IntraReinsertion : public LocalSearch {
  public:
-  InterReinsertion() { }
+  IntraReinsertion() { }
 
-  ~InterReinsertion() { }
+  ~IntraReinsertion() { }
 
   std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 

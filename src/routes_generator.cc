@@ -86,7 +86,7 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 }
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
-  std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
+  std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraReinsertion>();
   std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   bool improved{false};

@@ -8,9 +8,9 @@
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
-#include "../../include/searches/inter_reinsertion.h"
+#include "../../include/searches/intra_reinsertion.h"
 
-std::pair<bool, SolutionPtr> InterReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
+std::pair<bool, SolutionPtr> IntraReinsertion::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   // std::cout << solution->total_time() << std::endl;
   for (auto& vehicle : solution->vehicles()) {
     // std::cout << "Vehicle " << vehicle->id() << " con " << vehicle->route().size()<< " zonas"<< std::endl;
