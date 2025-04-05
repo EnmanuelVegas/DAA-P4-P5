@@ -14,20 +14,30 @@ SolutionPtr RoutesGenerator::GenerateGRASP() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
-  for (int i{0}; i < 5; i++) {
+  for (int i{0}; i < 3; i++) { // CAMBIAR A 5 Y 100
+    std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
+    SolutionPtr best_local;
+    double best_local_time{std::numeric_limits<double>::max()};
     for (int j{0}; j < 10; j++) {
-      // std::vector<VehiclePtr> local_best;
-      // double local_best_time{std::numeric_limits<double>::max()};
       SolutionPtr solution = this->GenerateSingleRoute();
       solution = PerformLocalSearch(solution);
       double solution_time{CalculateRoutesTime(solution)};
-      if (solution_time < best_time) {
-        best_solution = solution;
-        best_time = solution_time;
+      if (solution_time < best_local_time) {
+        best_local = solution;
+        best_local_time = solution_time;
       }
+      // std::cout << solution_time << std::endl; // VERIFY RANDOMNESS
+    }
+    // double solution_time{CalculateRoutesTime(best_local)};
+    std::cout << "Local best: " << best_local_time << "\n";
+    if (best_local_time < best_time) {
+      best_solution = best_local;
+      best_time = best_local_time;
     }
   }
-  std::cout << *best_solution;
+  std::cout << "Best global solution: ";
+  // std::cout << best_solution->total_time() << std::endl;
+  std::cout << *best_solution << std::endl;
   return best_solution;
 }
 
@@ -77,24 +87,32 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
-  while(true) {
-    std::pair<bool, SolutionPtr> result{search_method->Apply(solution, this->instance_)};
-    if (result.first) {
-      std::cout << "\n--- LOCAL SEARCH ---\n";
-      std::cout << "FOUND A BETTER SOLUTION:\nOld solution:\n";
+  // std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  // bool improved{false};
+  while (true) {
+    std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
+    if (search_result.first) {
+      std::cout <<  " Before: \n";
       std::cout << *solution;
-      solution = result.second;
-      std::cout << "New solution:\n";
+      std::cout <<  "- Time: ";
+      std::cout <<  std::to_string(solution->total_time()) + " --> ";
+      solution = search_result.second;
+      std::cout <<  std::to_string(solution->total_time()) + " \n";
       std::cout << *solution;
+      // improved = true;
     }
     else {
       break;
     }
   }
+  // if (improved) {
+  //   std::cout << result;
+  // }
   return solution;
 }
 
-
+ 
 
 double RoutesGenerator::CalculateRoutesTime(SolutionPtr solution) {
   double total_time{0};
@@ -144,6 +162,12 @@ ZonePtr RoutesGenerator::SelectClosestZone(ZonePtr zone, std::vector<ZonePtr>& c
   // Seleccionar aleatoriamente uno de los `n` elementos más cercanos
   std::uniform_int_distribution<> dis(0, distances.size() - 1);  // Crear la distribución
   int random_index = dis(this->gen_);
+  // for (auto& num : distances) {
+  //   std::cout << num.second->id() << " ";
+  // }
+  // std::cout << "Seleccionamos: " << distances[random_index].second->id();
+  // std::cout << "\n";
+  // std::cout << "Indice seleccionado: " << random_index << " ";
   return distances[random_index].second;  // Retornar el ZonePtr seleccionado
 }
 

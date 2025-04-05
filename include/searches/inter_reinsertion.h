@@ -25,8 +25,6 @@ class InterReinsertion : public LocalSearch {
 
   std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
-  bool IsFeasible(SolutionPtr solution, int extraction_index, int insertion_index, VehiclePtr vehicle, std::shared_ptr<VRPInstance> instance);
-
  private:
 
 };

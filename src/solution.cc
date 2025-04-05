@@ -38,9 +38,9 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
   double whole_time{0};
   for (auto& vehicle : solution.vehicles_) {
     whole_time += vehicle->TimeUsed();
-    for (auto& task : vehicle->tasks()) {
-      os << *task;
-    }
+  //   for (auto& task : vehicle->tasks()) {
+  //     os << *task;
+  //   }
   }
   os << "Whole time: " << whole_time << "\n";
   return os;
