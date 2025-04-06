@@ -12,10 +12,6 @@
 #define INTRA_REINSERTION_H
 
 #include "local_search.h"
-// #include "./tools/utils.h"
-// #include "vrp_instance.h"
-// #include "zone.h"
-// #include "task.h"
 
 class IntraReinsertion : public LocalSearch {
  public:
@@ -24,6 +20,8 @@ class IntraReinsertion : public LocalSearch {
   ~IntraReinsertion() { }
 
   std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+
+  std::string type() { return "Intra reinsertion.\n"; }
 
  private:
 

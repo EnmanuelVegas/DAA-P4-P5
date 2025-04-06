@@ -26,17 +26,18 @@
 #include "./searches/inter_reinsertion.h"
 #include "./searches/intra_swap.h"
 #include "./searches/inter_swap.h"
+#include "./searches/search_method_selector.h"
 
 class RoutesGenerator {
  public:
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
-      : candidates_size_(candidate_size), instance_(instance), gen_(seed) {}
+      : candidates_size_(candidate_size), instance_(instance), gen_(seed), search_selector_(seed) { }
 
   SolutionPtr GenerateCollectionRoutes();
 
   SolutionPtr GenerateTransferRoutes(std::vector<TaskPtr> tasks);
 
-  SolutionPtr PerformLocalSearch(SolutionPtr solution);
+  SolutionPtr RandomVND(SolutionPtr solution);
 
   double CalculateRoutesTime(SolutionPtr vehicles);
 
@@ -55,7 +56,8 @@ class RoutesGenerator {
  private:
   SolutionPtr GenerateSingleRoute();
   std::shared_ptr<VRPInstance> instance_;
-  std::mt19937 gen_;  
+  SearchMethodSelector search_selector_;
+  std::mt19937 gen_;
   int candidates_size_;
 };
 

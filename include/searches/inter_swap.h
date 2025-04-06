@@ -21,6 +21,8 @@ class InterSwap : public LocalSearch {
 
   std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
+  std::string type() { return "Inter swap.\n"; }
+
  private:
 
 };

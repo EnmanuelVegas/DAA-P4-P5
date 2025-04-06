@@ -8,20 +8,18 @@
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
-#ifndef INTRA_SWAP_H
-#define INTRA_SWAP_H
+#ifndef TWO_OPT_H
+#define TWO_OPT_H
 
 #include "local_search.h"
 
-class IntraSwap : public LocalSearch {
+class TwoOpt : public LocalSearch {
  public:
-  IntraSwap() { }
+  TwoOpt() { }
 
-  ~IntraSwap() { }
+  ~TwoOpt() { }
 
   std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
-
-  std::string type() { return "Intra swap.\n"; }
 
  private:
 

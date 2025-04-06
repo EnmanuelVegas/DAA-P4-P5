@@ -67,7 +67,7 @@ void Vehicle::RestoreTime() {
 }
 
 void Vehicle::AddTask(double waste, int transfer_id, double time) {
-  TaskPtr new_task = std::make_shared<Task>(waste, id, time);
+  TaskPtr new_task = std::make_shared<Task>(waste, transfer_id, time);
   this->tasks_.push_back(new_task);
   return;
 }

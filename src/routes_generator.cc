@@ -14,14 +14,14 @@ SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
-  for (int i{0}; i < 1; i++) { // CAMBIAR A 5 Y 100
+  for (int i{0}; i < 5; i++) { // CAMBIAR A 5 Y 100
     std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
     SolutionPtr best_local;
     double best_local_time{std::numeric_limits<double>::max()};
-    for (int j{0}; j < 1; j++) {
+    for (int j{0}; j < 100; j++) {
       SolutionPtr solution = this->GenerateSingleRoute();
-      std::cout << "ORIGINAL:\n" << *solution;
-      solution = PerformLocalSearch(solution);
+      // std::cout << "ORIGINAL:\n" << *solution;
+      solution = RandomVND(solution);
       double solution_time{CalculateRoutesTime(solution)};
       if (solution_time < best_local_time) {
         best_local = solution;
@@ -88,31 +88,35 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
   return solution;
 }
 
-SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
-  // std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraReinsertion>(); // DONE
-  // std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraSwap>(); // DONE
-  // std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>(); // DONE
-  std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
-  
+SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
+  int old_time = solution->total_time();
   std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
-  bool improved{false};
-  while (true) {
-    std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
-    if (search_result.first) {
-      // std::cout << *solution;
-      result +=  "- Time: ";
-      result +=  std::to_string(solution->total_time()) + " --> ";
-      solution = search_result.second;
-      result +=  std::to_string(solution->total_time()) + " \n";
-      // std::cout << *solution;
-      improved = true;
-    }
-    else {
-      break;
+  while (!this->search_selector_.IsEmpty()) {
+    std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
+    result += "Cambiamos a " + search_method->type();
+    bool improved_local{false};
+    while (true) {
+      std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
+      if (search_result.first) {
+        result +=  "- Time: ";
+        result +=  std::to_string(solution->total_time()) + " --> ";
+        solution = search_result.second;
+        result +=  std::to_string(solution->total_time()) + " \n";
+        improved_local = true;
+        continue;
+      }
+      else if (improved_local) {
+        result += "Reset!\n";
+        this->search_selector_.Reset();
+        break;
+      }
+      else {
+        break;
+      }
     }
   }
-  if (improved) {
+  if (solution->total_time() < old_time) {
     std::cout << result;
   }
   return solution;
