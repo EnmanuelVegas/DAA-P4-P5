@@ -115,6 +115,6 @@ double VRPInstance::CalculateTime(int actual_id, int destination_id) {
 }
 
 bool VRPInstance::IsTransferStation(ZonePtr zone) {
-  return (zone == transfer_stations_.first ? true : ((zone == transfer_stations_.second) ? true : false));
+  return (zone->id() == zones_[max_zones_ + 1]->id() ? true : ((zone->id() == zones_[max_zones_ + 2]->id()) ? true : false));
 }
 
