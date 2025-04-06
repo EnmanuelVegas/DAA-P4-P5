@@ -32,7 +32,9 @@ class RoutesGenerator {
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
       : candidates_size_(candidate_size), instance_(instance), gen_(seed) {}
 
-  SolutionPtr GenerateGRASP();
+  SolutionPtr GenerateCollectionRoutes();
+
+  SolutionPtr GenerateTransferRoutes(std::vector<TaskPtr> tasks);
 
   SolutionPtr PerformLocalSearch(SolutionPtr solution);
 

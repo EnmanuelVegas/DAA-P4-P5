@@ -10,16 +10,17 @@
 
 #include "../include/routes_generator.h"
 
-SolutionPtr RoutesGenerator::GenerateGRASP() {
+SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
-  for (int i{0}; i < 3; i++) { // CAMBIAR A 5 Y 100
+  for (int i{0}; i < 1; i++) { // CAMBIAR A 5 Y 100
     std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
     SolutionPtr best_local;
     double best_local_time{std::numeric_limits<double>::max()};
-    for (int j{0}; j < 10; j++) {
+    for (int j{0}; j < 1; j++) {
       SolutionPtr solution = this->GenerateSingleRoute();
+      std::cout << "ORIGINAL:\n" << *solution;
       solution = PerformLocalSearch(solution);
       double solution_time{CalculateRoutesTime(solution)};
       if (solution_time < best_local_time) {
@@ -37,7 +38,9 @@ SolutionPtr RoutesGenerator::GenerateGRASP() {
   }
   std::cout << "Best global solution: ";
   // std::cout << best_solution->total_time() << std::endl;
+  // best_solution->BuildTasks(this->instance_);
   std::cout << *best_solution << std::endl;
+
   return best_solution;
 }
 
@@ -87,9 +90,9 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 
 SolutionPtr RoutesGenerator::PerformLocalSearch(SolutionPtr solution) {
   // std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraReinsertion>(); // DONE
-  std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraSwap>(); // DONE
+  // std::shared_ptr<LocalSearch> search_method = std::make_shared<IntraSwap>(); // DONE
   // std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>(); // DONE
-  // std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
+  std::shared_ptr<LocalSearch> search_method = std::make_shared<InterReinsertion>();
   
   std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
@@ -190,8 +193,7 @@ void RoutesGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr
   double visit_transfer_time = instance_->CalculateTime(last->id(), transfer->id());
   vehicle->UpdateTime(visit_transfer_time);
 
-  vehicle->AddTask(std::make_shared<Task>(capacity - vehicle->remaining_capacity(),
-                   transfer->id(), max_time - vehicle->remaining_time()));
+  vehicle->AddTask(capacity - vehicle->remaining_capacity(), transfer->id(), max_time - vehicle->remaining_time());
   vehicle->AddStop(transfer);
   vehicle->RestoreCapacity();
   return;

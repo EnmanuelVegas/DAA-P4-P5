@@ -26,46 +26,11 @@ class Vehicle {
  public:
   Vehicle(int id = 0, int time = 0, int capacity = 0) 
   : id_(id), remaining_time_(time), remaining_capacity_(capacity), 
-  max_capacity_(capacity), max_time_(time), route_() { }
+  max_capacity_(capacity), max_time_(time), modified_(false), route_() { }
 
-  Vehicle(const Vehicle& other)
-      : id_(other.id_),
-        remaining_time_(other.remaining_time_),
-        remaining_capacity_(other.remaining_capacity_),
-        max_capacity_(other.max_capacity_),
-        max_time_(other.max_time_) {
-    // Copia profunda de la ruta
-    for (const auto& zone : other.route_) {
-      route_.push_back(std::make_shared<Zone>(*zone));
-    }
-    // Copia profunda de las tareas
-    for (const auto& task : other.tasks_) {
-      tasks_.push_back(std::make_shared<Task>(*task));
-    }
-  }
+  Vehicle(const Vehicle& other);
 
-  // Operador de asignación para copia profunda
-  Vehicle& operator=(const Vehicle& other) {
-    if (this != &other) {
-      id_ = other.id_;
-      remaining_time_ = other.remaining_time_;
-      remaining_capacity_ = other.remaining_capacity_;
-      max_capacity_ = other.max_capacity_;
-      max_time_ = other.max_time_;
-      // Limpiar las colecciones actuales
-      route_.clear();
-      tasks_.clear();
-      // Copia profunda de la ruta
-      for (const auto& zone : other.route_) {
-        route_.push_back(std::make_shared<Zone>(*zone));
-      }
-      // Copia profunda de las tareas
-      for (const auto& task : other.tasks_) {
-        tasks_.push_back(std::make_shared<Task>(*task));
-      }
-    }
-    return *this;
-  }
+  Vehicle& operator=(const Vehicle& other);
 
   void AddStop(ZonePtr zone);
 
@@ -77,13 +42,17 @@ class Vehicle {
 
   double TimeUsed();
 
-  void AddTask(TaskPtr new_task);
+  void AddTask(double waste, int transfer_id, double time);
 
   int id() const { return id_; }
 
   double remaining_time() const { return this->remaining_time_; }
 
   double remaining_capacity() const { return this->remaining_capacity_; }
+
+  bool modified() { return modified_; }
+
+  void MarkAsModified() { modified_ = true; return; }
 
   std::vector<ZonePtr> route() const { return route_; }
 
@@ -96,6 +65,7 @@ class Vehicle {
   friend std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle);
 
  private:
+  bool modified_;
   std::vector<ZonePtr> route_;
   std::vector<TaskPtr> tasks_;
   int id_;
