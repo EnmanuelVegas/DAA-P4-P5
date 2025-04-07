@@ -95,36 +95,29 @@ void PrintFile(const std::string& filename) {
   return;
 }
 
-std::vector<std::string> FilesInDirectory(const std::string& path) {
+std::vector<std::string> GetFiles(const std::string& path) {
   namespace fs = std::filesystem;
-  std::vector<std::string> paths_file;
+  std::vector<std::string> files;
   fs::path root_path = fs::absolute(path);
   fs::path execution_path = fs::current_path(); 
 
+  if (fs::is_regular_file(root_path)) {
+    files.push_back(path);
+    return files;
+  }
   if (!fs::exists(root_path) || !fs::is_directory(root_path)) {
     std::cerr << "Directory does not exist or is not valid.\n";
-    return paths_file;
+    return files;
   }
-  for (const auto& entrada : fs::directory_iterator(root_path)) {
-    if (fs::is_regular_file(entrada.path())) {
-      // Obtener ruta relativa desde el directorio de ejecución
-      fs::path relative_path = fs::relative(entrada.path(), execution_path);
-      paths_file.push_back("./" + relative_path.string());
+  for (const auto& file : fs::directory_iterator(root_path)) {
+    if (fs::is_regular_file(file.path())) {
+      std::string filename = file.path().filename().string();
+      fs::path relative_path = fs::relative(file.path(), execution_path);
+      files.push_back(relative_path.string());
     }
   }
-  // for (auto& file : paths_file) {
-  //   std::cout << file << std::endl;
-  // }
-  // std::cout << "-----------------------------------\n";
-  
-  std::sort(paths_file.begin(), paths_file.end());
-  // for (auto& file : paths_file) {
-  //   std::cout << file << std::endl;
-  // }
-  // std::cout << "-----------------------------------\n";
-
-
-  return paths_file;
+  std::sort(files.begin(), files.end());
+  return files;
 }
 
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second) {

@@ -23,7 +23,7 @@ typedef std::shared_ptr<Solution> SolutionPtr;
 
 class Solution {
  public:
-  Solution() : vehicles_(std::vector<VehiclePtr>(0)), tasks_(std::vector<TaskPtr>(0)), total_time_(0) { } // test
+  Solution() : vehicles_(std::vector<VehiclePtr>(0)), tasks_(std::vector<TaskPtr>(0)), total_time_(0), improvements_counter_(0) { }
 
   Solution(const Solution& other);
 
@@ -32,6 +32,8 @@ class Solution {
   std::vector<VehiclePtr> vehicles() { return vehicles_; }
 
   double total_time() const { return this->total_time_; } 
+
+  int& improvements_counter() { return improvements_counter_; }
 
   bool IsRouteFeasible(int vehicle_id, VRPInstancePtr instance);
 
@@ -52,6 +54,7 @@ class Solution {
   std::vector<VehiclePtr> vehicles_;
   std::vector<TaskPtr> tasks_;
   double total_time_;
+  int improvements_counter_;
 };
 
 

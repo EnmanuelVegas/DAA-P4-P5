@@ -18,6 +18,7 @@
 #include <vector>
 #include <filesystem>
 #include <algorithm>
+#include <regex>
 #include <cmath>
 
 struct ProgramOptions {
@@ -33,7 +34,14 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]);
 
 void PrintFile(const std::string& filename);
 
-std::vector<std::string> FilesInDirectory(const std::string& path);
+std::vector<std::string> GetFiles(const std::string& path);
+
+inline auto CenterText = [](const std::string& text, int width) {
+  int padding = width - text.size();
+  int left_padding = padding / 2;
+  int right_padding = padding - left_padding;
+  return std::string(left_padding, ' ') + text + std::string(right_padding, ' ');
+};
 
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second);
 

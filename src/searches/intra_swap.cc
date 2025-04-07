@@ -35,6 +35,7 @@ std::pair<bool, SolutionPtr> IntraSwap::Apply(SolutionPtr solution, std::shared_
           if (new_solution->total_time() < local_optimal->total_time()) {
             // std::cout << contador++ <<  ": " << new_solution->total_time() << std::endl;
             local_optimal = new_solution;
+            local_optimal->improvements_counter() = local_optimal->improvements_counter() + 1;
           }
         }
       }

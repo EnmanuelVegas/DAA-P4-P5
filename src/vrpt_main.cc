@@ -30,23 +30,33 @@ int main(int argc, char* argv[]) {
     return EXIT_SUCCESS;
   }
   try {
-    std::vector<std::string> files{options.instances_source};
-    if (options.multi_run) {
-      files = FilesInDirectory(options.instances_source);
-    }
-    Timer chrono_timer = Timer();
+    std::vector<std::string> files = GetFiles(options.instances_source);
+    // Timer chrono_timer = Timer();
     std::shared_ptr<VRPInstance> instance;
     std::shared_ptr<VRPTransshipments> solver;
     int grasp_size = options.grasp_size;
-    for (auto& input_filename : files) {
-      std::cout << "----------------------- File: " << input_filename << " -----------------------\n";
-      instance = std::make_shared<VRPInstance>(input_filename);
+    std::string result = "";
+    result += CenterText("Instance", 15) + "|";
+    result += CenterText("Nº vehicles", 15) + "|";
+    result += CenterText("Best Time", 15) + "\n";
+    result += std::string(45, '-') + "\n";
+    SolutionPtr solution;
+    std::regex re("(instance\\d+)\\.txt");
+    for (auto& input_file : files) {
+      std::cout << "----------------------- File: " << input_file << " -----------------------\n";
+      instance = std::make_shared<VRPInstance>(input_file);
       // solver = std::make_shared<VRPTransshipments>(instance, grasp_size, 123);
       solver = std::make_shared<VRPTransshipments>(instance, grasp_size);
       // chrono_timer.StartStopwatch();
-      solver->ComputeRoutes();
+      solution = solver->ComputeRoutes();
+      std::smatch match_name;
+      std::regex_search(input_file, match_name, re);  
+      result += CenterText(match_name[1].str(), 15) + "|";
+      result += CenterText(std::to_string(solution->vehicles().size()), 15) + "|";
+      result += std::to_string(solution->total_time()) + "\n";
       // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";
     }
+    std::cout << result << std::endl;
   } catch (const std::exception& error) {
     std::cerr << "An error has occurred: " << error.what() << std::endl;
     return EXIT_FAILURE;

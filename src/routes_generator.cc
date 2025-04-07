@@ -12,10 +12,11 @@
 
 SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
   // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
+  SolutionPtr first_solution;
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
   for (int i{0}; i < 5; i++) { // CAMBIAR A 5 Y 100
-    std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
+    // std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
     SolutionPtr best_local;
     double best_local_time{std::numeric_limits<double>::max()};
     for (int j{0}; j < 100; j++) {
@@ -36,10 +37,10 @@ SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
       best_time = best_local_time;
     }
   }
-  std::cout << "Best global solution: ";
-  // std::cout << best_solution->total_time() << std::endl;
+  std::cout << "Best global solution:\n";
+  std::cout << best_solution->total_time() << std::endl;
   // best_solution->BuildTasks(this->instance_);
-  std::cout << *best_solution << std::endl;
+  // std::cout << *best_solution << std::endl;
 
   return best_solution;
 }

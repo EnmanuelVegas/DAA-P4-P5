@@ -15,13 +15,15 @@ Solution::Solution(const Solution& other) : Solution() {
   for (const auto& vehicle : other.vehicles_) {
     vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
   }
+  improvements_counter_ = other.improvements_counter_;
 }
 
 // Operador de asignación para copia profunda
 Solution& Solution::operator=(const Solution& other) {
   if (this != &other) {
-    vehicles_.clear();
+    improvements_counter_ = other.improvements_counter_;
     total_time_ = other.total_time_;
+    vehicles_.clear();
     for (const auto& vehicle : other.vehicles_) {
       vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
     }
