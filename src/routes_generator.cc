@@ -41,7 +41,6 @@ SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
   std::cout << best_solution->total_time() << std::endl;
   // best_solution->BuildTasks(this->instance_);
   // std::cout << *best_solution << std::endl;
-
   return best_solution;
 }
 
