@@ -1,0 +1,23 @@
+   Instance    | Nº vehicles  |   Best Time   
+---------------------------------------------
+   instance1   |       6       |2385.364344
+  instance10   |       6       |2315.613390
+  instance11   |       6       |2280.717968
+  instance12   |       6       |2443.186846
+  instance13   |       6       |2406.302828
+  instance14   |       6       |2312.504183
+  instance15   |       6       |2388.034812
+  instance16   |       6       |2370.379668
+  instance17   |       7       |2560.377335
+  instance18   |       6       |2596.711118
+  instance19   |       6       |2406.627416
+   instance2   |       6       |2425.228827
+  instance20   |       6       |2556.168888
+   instance3   |       6       |2518.706210
+   instance4   |       6       |2471.257931
+   instance5   |       6       |2359.171304
+   instance6   |       6       |2439.129115
+   instance7   |       6       |2352.949847
+   instance8   |       6       |2289.466577
+   instance9   |       7       |2545.202493
+

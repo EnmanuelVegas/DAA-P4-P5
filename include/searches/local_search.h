@@ -25,6 +25,8 @@
 #include "../task.h"
 #include "../solution.h"
 
+constexpr double kEpsilon = 1e-9;
+
 class LocalSearch {
  public:
   LocalSearch() { }

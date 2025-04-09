@@ -8,6 +8,8 @@
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
+ #include <iomanip> // Necesario para std::setprecision
+
 #include "../../include/searches/inter_swap.h"
 
 std::pair<bool, SolutionPtr> InterSwap::Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
@@ -40,9 +42,13 @@ std::pair<bool, SolutionPtr> InterSwap::Apply(SolutionPtr solution, std::shared_
               new_solution->IsRouteFeasible(other_vehicle->id(), instance)) {
             // std::cout << new_solution->total_time() << " " << local_optimal->total_time() << std::endl;
             if (new_solution->total_time() < local_optimal->total_time()) {
-              // std::cout << contador++ <<  ": " << new_solution->total_time() << std::endl;
-              local_optimal = new_solution;
-              local_optimal->improvements_counter() = local_optimal->improvements_counter() + 1;
+              if (std::abs(new_solution->total_time() - local_optimal->total_time()) > kEpsilon) {
+                local_optimal = new_solution;
+                local_optimal->improvements_counter() = local_optimal->improvements_counter() + 1;
+              }
+              else {
+                break;
+              }
             }
           }
         }

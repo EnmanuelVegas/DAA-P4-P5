@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     SolutionPtr solution;
     std::regex re("(instance\\d+)\\.txt");
     for (auto& input_file : files) {
-      std::cout << "----------------------- File: " << input_file << " -----------------------\n";
+      // std::cout << "----------------------- File: " << input_file << " -----------------------\n";
       instance = std::make_shared<VRPInstance>(input_file);
       // solver = std::make_shared<VRPTransshipments>(instance, grasp_size, 123);
       solver = std::make_shared<VRPTransshipments>(instance, grasp_size);

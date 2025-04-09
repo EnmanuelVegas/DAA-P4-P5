@@ -31,14 +31,14 @@ SolutionPtr RoutesGenerator::GenerateCollectionRoutes() {
       // std::cout << solution_time << std::endl; // VERIFY RANDOMNESS
     }
     // double solution_time{CalculateRoutesTime(best_local)};
-    std::cout << "Local best: " << best_local_time << "\n";
+    // std::cout << "Local best: " << best_local_time << "\n";
     if (best_local_time < best_time) {
       best_solution = best_local;
       best_time = best_local_time;
     }
   }
-  std::cout << "Best global solution:\n";
-  std::cout << best_solution->total_time() << std::endl;
+  // std::cout << "Best global solution:\n";
+  // std::cout << best_solution->total_time() << std::endl;
   // best_solution->BuildTasks(this->instance_);
   // std::cout << *best_solution << std::endl;
   return best_solution;
@@ -90,24 +90,24 @@ SolutionPtr RoutesGenerator::GenerateSingleRoute() {
 
 SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
   int old_time = solution->total_time();
-  std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  // std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
     std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
-    result += "Cambiamos a " + search_method->type();
+    // result += "Cambiamos a " + search_method->type();
     bool improved_local{false};
     while (true) {
       std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
       if (search_result.first) {
-        result +=  "- Time: ";
-        result +=  std::to_string(solution->total_time()) + " --> ";
+        // result +=  "- Time: ";
+        // result +=  std::to_string(solution->total_time()) + " --> ";
         solution = search_result.second;
-        result +=  std::to_string(solution->total_time()) + " \n";
+        // result +=  std::to_string(solution->total_time()) + " \n";
         improved_local = true;
         continue;
       }
       else if (improved_local) {
-        result += "Reset!\n";
+        // result += "Reset!\n";
         this->search_selector_.Reset();
         break;
       }
@@ -117,7 +117,7 @@ SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
     }
   }
   if (solution->total_time() < old_time) {
-    std::cout << result;
+    // std::cout << result;
   }
   return solution;
 }
