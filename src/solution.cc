@@ -95,29 +95,29 @@ void Solution::BuildTasks(VRPInstancePtr instance) {
 }
 
 bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
+  std::cout << "Max " << instance->collection_capacity() << std::endl;
   VehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
-  this->total_time_ -= vehicle->TimeUsed();
+  // this->total_time_ -= vehicle->TimeUsed();
   vehicle->RestoreCapacity();
-  vehicle->RestoreTime();
-  vehicle->tasks().clear();
+  // vehicle->RestoreTime();
   int route_size = int(vehicle->route().size());
   double waste_collected{0};
   for (int j{1}; j < route_size; j++) { // Start from 1 to avoid adding depot.
     ZonePtr current_stop = vehicle->route()[j];
     ZonePtr last_stop = vehicle->route()[j - 1];
     if (instance->IsTransferStation(current_stop)) {
-      vehicle->AddTask(waste_collected, current_stop->id(), instance->max_collection_time() - vehicle->remaining_time());
       waste_collected = 0;
     }
     waste_collected += current_stop->waste_quantity();
-    vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
-    vehicle->UpdateTime(current_stop->process_time());
-    if (waste_collected > instance->collection_capacity() ||
-        vehicle->remaining_time() < 0) {
+    std::cout << current_stop->id() << " -> " << waste_collected << std::endl;
+    // vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
+    // vehicle->UpdateTime(current_stop->process_time());
+    if (waste_collected > instance->collection_capacity()) {// ||
+        // vehicle->remaining_time() < 0) {
       return false;
     }
   }
-  vehicle->MarkAsModified();
-  this->total_time_ += vehicle->TimeUsed();
+  // vehicle->MarkAsModified();
+  // this->total_time_ += vehicle->TimeUsed();
   return true;
 }

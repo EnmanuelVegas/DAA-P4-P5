@@ -25,15 +25,13 @@
 #include "../task.h"
 #include "../solution.h"
 
-constexpr double kEpsilon = 1e-9;
-
 class LocalSearch {
  public:
   LocalSearch() { }
 
   virtual ~LocalSearch() { }
 
-  virtual std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
+  virtual std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
 
   virtual std::string type() = 0;
 

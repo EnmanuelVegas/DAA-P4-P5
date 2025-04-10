@@ -97,7 +97,7 @@ SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
     // result += "Cambiamos a " + search_method->type();
     bool improved_local{false};
     while (true) {
-      std::pair<bool, SolutionPtr> search_result{search_method->Apply(solution, this->instance_)};
+      std::pair<bool, SolutionPtr> search_result{search_method->GetLocalOptimum(solution, this->instance_)};
       if (search_result.first) {
         // result +=  "- Time: ";
         // result +=  std::to_string(solution->total_time()) + " --> ";

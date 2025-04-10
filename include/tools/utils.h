@@ -21,6 +21,9 @@
 #include <regex>
 #include <cmath>
 
+constexpr double kEpsilon = 1e-9;
+
+
 struct ProgramOptions {
   bool show_help{false};
   bool multi_run{false};

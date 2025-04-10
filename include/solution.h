@@ -33,6 +33,8 @@ class Solution {
 
   double total_time() const { return this->total_time_; } 
 
+  void UpdateTotalTime(double new_time) { total_time_ = new_time; }
+
   int& improvements_counter() { return improvements_counter_; }
 
   bool IsRouteFeasible(int vehicle_id, VRPInstancePtr instance);

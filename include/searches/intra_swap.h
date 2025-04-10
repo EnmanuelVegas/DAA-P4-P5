@@ -19,9 +19,12 @@ class IntraSwap : public LocalSearch {
 
   ~IntraSwap() { }
 
-  std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Intra swap.\n"; }
+
+ private:
+  double GetNewTime(SolutionPtr new_solution, int vehicle_id, int zone_1_pos, int zone_2_pos, std::shared_ptr<VRPInstance> instance);
 
  private:
 
