@@ -50,6 +50,8 @@ class Vehicle {
 
   double remaining_capacity() const { return this->remaining_capacity_; }
 
+  void UpdateRouteTime(double time_diff);
+
   bool modified() { return modified_; }
 
   void MarkAsModified() { modified_ = true; return; }

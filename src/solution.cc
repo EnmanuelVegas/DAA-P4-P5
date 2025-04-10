@@ -95,7 +95,7 @@ void Solution::BuildTasks(VRPInstancePtr instance) {
 }
 
 bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
-  std::cout << "Max " << instance->collection_capacity() << std::endl;
+  // std::cout << "Max " << instance->collection_capacity() << std::endl;
   VehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
   // this->total_time_ -= vehicle->TimeUsed();
   vehicle->RestoreCapacity();
@@ -109,7 +109,7 @@ bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
       waste_collected = 0;
     }
     waste_collected += current_stop->waste_quantity();
-    std::cout << current_stop->id() << " -> " << waste_collected << std::endl;
+    // std::cout << current_stop->id() << " -> " << waste_collected << std::endl;
     // vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
     // vehicle->UpdateTime(current_stop->process_time());
     if (waste_collected > instance->collection_capacity()) {// ||

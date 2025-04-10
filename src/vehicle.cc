@@ -76,6 +76,16 @@ double Vehicle::TimeUsed() {
   return this->max_time_ - this->remaining_time_;
 }
 
+void Vehicle::UpdateRouteTime(double time_diff) {
+  // std::cout << "TIME DIFF: " << time_diff << std::endl;
+  // std::cout << "REMAIN: " << remaining_time_ << std::endl;
+
+  remaining_time_ = remaining_time_ - time_diff; 
+  // std::cout << "CURRENT: " << remaining_time_ << std::endl;
+  return;
+}
+
+
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
   os << "*** Vehicle Nº " << vehicle.id_ << " ***" << "\n";
   os << "Remaining Time: " << vehicle.remaining_time_ << "\n";
