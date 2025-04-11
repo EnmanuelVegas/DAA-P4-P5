@@ -13,9 +13,15 @@
 
 #include "local_search.h"
 
+struct IntraSwapMovement {
+  int vehicle_id = -1;
+  int first_zone_id = -1;
+  int second_zone_id = -1;
+};
+
 class IntraSwap : public LocalSearch {
  public:
-  IntraSwap() { }
+  IntraSwap() : movement_(IntraSwapMovement()) { }
 
   ~IntraSwap() { }
 
@@ -24,10 +30,12 @@ class IntraSwap : public LocalSearch {
   std::string type() { return "Intra swap.\n"; }
 
  private:
-  double GetNewTime(SolutionPtr new_solution, int vehicle_id, int zone_1_pos, int zone_2_pos, std::shared_ptr<VRPInstance> instance);
+  double GetNewTime(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance);
 
- private:
+  bool CheckMovement(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance);
 
+  private:
+  IntraSwapMovement movement_;
 };
 
 #endif

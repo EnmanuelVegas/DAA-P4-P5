@@ -11,9 +11,9 @@
 #include "../../include/searches/intra_swap.h"
 
 std::pair<bool, SolutionPtr> IntraSwap::GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  SolutionPtr local_optimal = std::make_shared<Solution>(*solution);
+  std::cout << "Entrada" << std::endl;
+  double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
-    // std::cout << "Vehicle " << vehicle->id() << " con " << vehicle->route().size()<< " zonas"<< std::endl;
     int route_size{int(vehicle->route().size())};
     for (int i{1}; i < route_size - 1; i++) { // From 1 to route size - 2 to avoid mixing the depots
       for (int j{i + 1}; j < route_size - 1; j++) {
@@ -22,37 +22,37 @@ std::pair<bool, SolutionPtr> IntraSwap::GetLocalOptimum(SolutionPtr solution, st
             i == j) {
           continue;
         }
-        SolutionPtr new_solution = std::make_shared<Solution>(*solution);
-        double new_time = GetNewTime(new_solution, vehicle->id(), i, j, instance);
-        if (!(new_time < local_optimal->total_time())) {
+        IntraSwapMovement candidate = {vehicle->id(), i, j};
+        double new_time = GetNewTime(solution, candidate, instance);
+        if (!(new_time < best_neighbor_time)) {
           continue;
         }
-        auto& route = new_solution->vehicles()[vehicle->id() - 1]->route();
-        // new_solution->PrintVehicleRoute(vehicle->id());
-        std::swap(route[i], route[j]);
-        // new_solution->PrintVehicleRoute(vehicle->id());
-        if (new_solution->IsRouteFeasible(vehicle->id(), instance)) {
-          new_solution->UpdateTotalTime(new_time);
-          local_optimal = new_solution;
+        if (CheckMovement(solution, candidate, instance)) {
+          movement_ = {vehicle->id(), i, j};
+          best_neighbor_time = new_time;
         }
       }
     }
   }
-  if (local_optimal->total_time() < solution->total_time()) {
-    return {true, local_optimal};
+  if (best_neighbor_time < solution->total_time()) {
+    SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
+    auto& route = best_neighbor->vehicles()[movement_.vehicle_id - 1]->route();
+    std::swap(route[movement_.first_zone_id], route[movement_.second_zone_id]);
+    best_neighbor->UpdateTotalTime(movement_.vehicle_id, instance);
+    return {true, best_neighbor};
   }
   return {false, solution};
 }
 
-double IntraSwap::GetNewTime(SolutionPtr new_solution, int vehicle_id, int zone_1_pos, int zone_2_pos, std::shared_ptr<VRPInstance> instance) {
+double IntraSwap::GetNewTime(SolutionPtr new_solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance) {
   double old_time = new_solution->total_time();
-  std::vector<ZonePtr> route = new_solution->vehicles()[vehicle_id - 1]->route();
-  ZonePtr zone_1 = route[zone_1_pos];
-  ZonePtr zone_2 = route[zone_2_pos];
-  ZonePtr parent_zone_1 = route[zone_1_pos - 1];
-  ZonePtr child_zone_1 = route[zone_1_pos + 1];
-  ZonePtr parent_zone_2 = route[zone_2_pos - 1];
-  ZonePtr child_zone_2 = route[zone_2_pos + 1];
+  std::vector<ZonePtr> route = new_solution->vehicles()[movement.vehicle_id - 1]->route();
+  ZonePtr zone_1 = route[movement.first_zone_id];
+  ZonePtr zone_2 = route[movement.second_zone_id];
+  ZonePtr parent_zone_1 = route[movement.first_zone_id - 1];
+  ZonePtr child_zone_1 = route[movement.first_zone_id + 1];
+  ZonePtr parent_zone_2 = route[movement.second_zone_id - 1];
+  ZonePtr child_zone_2 = route[movement.second_zone_id + 1];
   // Substracted
   double first_parent = instance->CalculateTime(parent_zone_1->id(), zone_1->id());
   double first_child = instance->CalculateTime(zone_1->id(), child_zone_1->id());
@@ -66,7 +66,7 @@ double IntraSwap::GetNewTime(SolutionPtr new_solution, int vehicle_id, int zone_
   // Added
   first_parent = instance->CalculateTime(parent_zone_1->id(), zone_2->id());
   // std::cout << "Agreg " << parent_zone_1->id() << " " << zone_2->id() << std::endl;
-  if (std::abs(zone_1_pos - zone_2_pos) == 1) {
+  if (std::abs(movement.first_zone_id - movement.second_zone_id) == 1) {
     // std::cout << "Agreg " << zone_2->id() << " " << zone_1->id() << std::endl;
     // std::cout << "Agreg " << zone_2->id() << " " << zone_1->id() << std::endl;
     first_child = instance->CalculateTime(zone_2->id(), zone_1->id());
@@ -81,10 +81,24 @@ double IntraSwap::GetNewTime(SolutionPtr new_solution, int vehicle_id, int zone_
   // std::cout << "Agreg " << zone_1->id() << " " << child_zone_2->id() << std::endl;
   second_child = instance->CalculateTime(zone_1->id(), child_zone_2->id());
   double added_time = first_parent + first_child + second_parent + second_child;
-
-  // std::cout << "TIME DIFF FUERA: " << added_time - deleted_time << std::endl;
-  new_solution->vehicles()[vehicle_id - 1]->UpdateRouteTime(added_time - deleted_time);
-
+  // new_solution->vehicles()[movement.vehicle_id - 1]->UpdateRouteTime(added_time - deleted_time);
   // std::cout <<  "RESULT " << old_time - deleted_time + added_time << std::endl;
   return old_time - deleted_time + added_time;
+}
+
+
+bool IntraSwap::CheckMovement(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance) {
+  auto route = solution->vehicles()[movement.vehicle_id - 1]->route();
+  std::swap(route[movement.first_zone_id], route[movement.second_zone_id]);
+  double waste{0};
+  for (auto zone : route) {
+    if (instance->IsTransferStation(zone)) {
+      waste = 0;
+    }
+    waste += zone->waste_quantity();
+    if (waste > instance->collection_capacity()) {
+      return false;
+    }
+  }
+  return true;
 }
