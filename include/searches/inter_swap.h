@@ -13,18 +13,29 @@
 
 #include "local_search.h"
 
+struct InterSwapMovement {
+  int first_vehicle_id = -1;
+  int second_vehicle_id = -1;
+  int first_route_zone_id = -1;
+  int second_route_zone_id = -1;
+};
+
 class InterSwap : public LocalSearch {
  public:
-  InterSwap() { }
+  InterSwap() : movement_(InterSwapMovement()) { }
 
   ~InterSwap() { }
 
-  std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Inter swap.\n"; }
 
  private:
+  double GetNewTime(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
 
+  bool CheckMovement(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+ 
+  InterSwapMovement movement_;
 };
 
 #endif

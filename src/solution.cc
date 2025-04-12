@@ -97,17 +97,17 @@ void Solution::BuildTasks(VRPInstancePtr instance) {
 void Solution::UpdateTotalTime(int vehicle_id, VRPInstancePtr instance) {
   // std::cout << "Max " << instance->collection_capacity() << std::endl;
   VehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
-  std::cout << "Desde dentro" << std::endl;
+  // std::cout << "Desde dentro" << std::endl;
   for (auto& zone : vehicle->route()) {
     std::cout << zone->id() << " ";
   } 
   std::cout << std::endl;
 
   
-  std::cout << "Total " << this->total_time_ << std::endl;
+  // std::cout << "Total " << this->total_time_ << std::endl;
   this->total_time_ -= vehicle->TimeUsed();
-  std::cout << "Total " << this->total_time_ << std::endl;
-  std::cout << "CAR BEFORE: " << vehicle->remaining_time();
+  // std::cout << "Total " << this->total_time_ << std::endl;
+  // std::cout << "CAR BEFORE: " << vehicle->remaining_time();
   vehicle->RestoreTime();
   int route_size = int(vehicle->route().size());
   for (int j{1}; j < route_size; j++) {
@@ -116,10 +116,10 @@ void Solution::UpdateTotalTime(int vehicle_id, VRPInstancePtr instance) {
     // std::cout << current_stop->id() << " -> " << waste_collected << std::endl;
     vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
     vehicle->UpdateTime(current_stop->process_time());
-    std::cout << "CAR: " << vehicle->remaining_time();
+    // std::cout << "CAR: " << vehicle->remaining_time();
   }
   this->total_time_ += vehicle->TimeUsed();
-  std::cout << "After recalculation " << this->total_time_ << std::endl;
+  // std::cout << "After recalculation " << this->total_time_ << std::endl;
   return;
 }
 

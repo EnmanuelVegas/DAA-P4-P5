@@ -1,0 +1,182 @@
+----------------------- File: instances/instance1.txt -----------------------
+Local best: 2387.84
+Local best: 2387.84
+Local best: 2387.84
+Local best: 2387.84
+Local best: 2387.84
+Best global solution:
+2387.84
+----------------------- File: instances/instance10.txt -----------------------
+Local best: 2316.9
+Local best: 2316.9
+Local best: 2316.9
+Local best: 2316.9
+Local best: 2316.9
+Best global solution:
+2316.9
+----------------------- File: instances/instance11.txt -----------------------
+Local best: 2281.11
+Local best: 2281.11
+Local best: 2281.11
+Local best: 2281.11
+Local best: 2281.11
+Best global solution:
+2281.11
+----------------------- File: instances/instance12.txt -----------------------
+Local best: 2462.23
+Local best: 2462.23
+Local best: 2462.23
+Local best: 2462.23
+Local best: 2462.23
+Best global solution:
+2462.23
+----------------------- File: instances/instance13.txt -----------------------
+Local best: 2406.3
+Local best: 2406.3
+Local best: 2406.3
+Local best: 2406.3
+Local best: 2406.3
+Best global solution:
+2406.3
+----------------------- File: instances/instance14.txt -----------------------
+Local best: 2319.08
+Local best: 2319.08
+Local best: 2319.08
+Local best: 2319.08
+Local best: 2319.08
+Best global solution:
+2319.08
+----------------------- File: instances/instance15.txt -----------------------
+Local best: 2406.71
+Local best: 2406.71
+Local best: 2406.71
+Local best: 2406.71
+Local best: 2406.71
+Best global solution:
+2406.71
+----------------------- File: instances/instance16.txt -----------------------
+Local best: 2377.48
+Local best: 2377.48
+Local best: 2377.48
+Local best: 2377.48
+Local best: 2377.48
+Best global solution:
+2377.48
+----------------------- File: instances/instance17.txt -----------------------
+Local best: 2565.82
+Local best: 2565.82
+Local best: 2565.82
+Local best: 2565.82
+Local best: 2565.82
+Best global solution:
+2565.82
+----------------------- File: instances/instance18.txt -----------------------
+Local best: 2601.32
+Local best: 2601.32
+Local best: 2601.32
+Local best: 2601.32
+Local best: 2601.32
+Best global solution:
+2601.32
+----------------------- File: instances/instance19.txt -----------------------
+Local best: 2414.99
+Local best: 2414.99
+Local best: 2414.99
+Local best: 2414.99
+Local best: 2414.99
+Best global solution:
+2414.99
+----------------------- File: instances/instance2.txt -----------------------
+Local best: 2450.16
+Local best: 2450.16
+Local best: 2450.16
+Local best: 2450.16
+Local best: 2450.16
+Best global solution:
+2450.16
+----------------------- File: instances/instance20.txt -----------------------
+Local best: 2592.43
+Local best: 2592.43
+Local best: 2592.43
+Local best: 2592.43
+Local best: 2592.43
+Best global solution:
+2592.43
+----------------------- File: instances/instance3.txt -----------------------
+Local best: 2520.88
+Local best: 2520.88
+Local best: 2520.88
+Local best: 2520.88
+Local best: 2520.88
+Best global solution:
+2520.88
+----------------------- File: instances/instance4.txt -----------------------
+Local best: 2478.2
+Local best: 2478.2
+Local best: 2478.2
+Local best: 2478.2
+Local best: 2478.2
+Best global solution:
+2478.2
+----------------------- File: instances/instance5.txt -----------------------
+Local best: 2404.49
+Local best: 2404.49
+Local best: 2404.49
+Local best: 2404.49
+Local best: 2404.49
+Best global solution:
+2404.49
+----------------------- File: instances/instance6.txt -----------------------
+Local best: 2439.13
+Local best: 2439.13
+Local best: 2439.13
+Local best: 2439.13
+Local best: 2439.13
+Best global solution:
+2439.13
+----------------------- File: instances/instance7.txt -----------------------
+Local best: 2356.87
+Local best: 2356.87
+Local best: 2356.87
+Local best: 2356.87
+Local best: 2356.87
+Best global solution:
+2356.87
+----------------------- File: instances/instance8.txt -----------------------
+Local best: 2289.86
+Local best: 2289.86
+Local best: 2289.86
+Local best: 2289.86
+Local best: 2289.86
+Best global solution:
+2289.86
+----------------------- File: instances/instance9.txt -----------------------
+Local best: 2556.26
+Local best: 2556.26
+Local best: 2556.26
+Local best: 2556.26
+Local best: 2556.26
+Best global solution:
+2556.26
+   Instance    | Nº vehicles  |   Best Time   
+---------------------------------------------
+   instance1   |       6       |2387.837649
+  instance10   |       6       |2316.899158
+  instance11   |       6       |2281.112816
+  instance12   |       6       |2462.232634
+  instance13   |       6       |2406.302828
+  instance14   |       6       |2319.080624
+  instance15   |       6       |2406.708419
+  instance16   |       6       |2377.482812
+  instance17   |       7       |2565.817461
+  instance18   |       6       |2601.315956
+  instance19   |       6       |2414.988831
+   instance2   |       6       |2450.159022
+  instance20   |       6       |2592.428857
+   instance3   |       6       |2520.882364
+   instance4   |       6       |2478.204202
+   instance5   |       6       |2404.489322
+   instance6   |       6       |2439.129115
+   instance7   |       6       |2356.871438
+   instance8   |       6       |2289.857550
+   instance9   |       7       |2556.256226
