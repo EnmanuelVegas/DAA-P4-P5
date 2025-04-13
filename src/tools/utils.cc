@@ -123,7 +123,18 @@ std::vector<std::string> GetFiles(const std::string& path) {
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second) {
   double x_value = first.first - second.first;
   double y_value = first.second - second.second;
-  return std::sqrt(std::pow(x_value, 2) + std::pow(y_value, 2));
+  double distance = std::sqrt(std::pow(x_value, 2) + std::pow(y_value, 2));
+  return std::round(distance * 10000.0) / 10000.0; // Redondear a 4 decimales
+}
+
+bool IsLess(double a, double b, double epsilon) {
+  return (b - a) > epsilon;
+  // return (b - a) > 0;
+}
+
+
+double RoundToFourDecimals(double value) {
+  return std::round(value * 10000.0) / 10000.0;
 }
 
 int SpaceIndex(std::string& string_find) {

@@ -13,8 +13,8 @@
 #include "../../include/searches/inter_swap.h"
 
 std::pair<bool, SolutionPtr> InterSwap::GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  std::cout << *solution;
-  // std::cout << "Entrada InterSwap" << std::endl;
+  // std::cout << *solution;
+  std::cout << "Entrada InterSwap" << std::endl;
   double best_neighbor_time = solution->total_time();
   // SolutionPtr local_optimal = std::make_shared<Solution>(*solution);
   int hola;
@@ -34,7 +34,7 @@ std::pair<bool, SolutionPtr> InterSwap::GetLocalOptimum(SolutionPtr solution, st
           // std::cout << "Movimiento: Vehiculo " << i + 1 << ", otro " << l + 1 << ", first: " << vehicle->route()[k]->id() << ", second:" << other_vehicle->route()[m]->id() << std::endl;
           InterSwapMovement candidate = {vehicle->id(), other_vehicle->id(), k, m};
           InterSwapTimes new_times = GetNewTime(solution, candidate, instance);
-          if (!(new_times.whole_time < best_neighbor_time)) {
+          if (!(IsLess(new_times.whole_time, best_neighbor_time))) {
             continue;
           }
           if (CheckMovement(solution, new_times, instance)) {
@@ -47,13 +47,17 @@ std::pair<bool, SolutionPtr> InterSwap::GetLocalOptimum(SolutionPtr solution, st
       }
     }
   }
-  if (best_neighbor_time < solution->total_time()) {
+  if (IsLess(best_neighbor_time, solution->total_time())) {
+    std::cout << "Entrada If final" << std::endl;
+
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& first_route = best_neighbor->vehicles()[movement_.first_vehicle_id - 1]->route();
     auto& second_route = best_neighbor->vehicles()[movement_.second_vehicle_id - 1]->route();
     std::swap(first_route[movement_.first_route_zone_id], second_route[movement_.second_route_zone_id]);
     best_neighbor->UpdateTotalTime(movement_.first_vehicle_id, instance);
     best_neighbor->UpdateTotalTime(movement_.second_vehicle_id, instance);
+
+    std::cout << "alida If final" << std::endl;
     return {true, best_neighbor};
   }
   return {false, solution};
@@ -64,6 +68,7 @@ std::pair<bool, SolutionPtr> InterSwap::GetLocalOptimum(SolutionPtr solution, st
               // }
 
 InterSwapTimes InterSwap::GetNewTime(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance) {
+  std::cout << "Get New Time" << std::endl;
   InterSwapTimes times;
   times.movement = movement;
   double old_time = solution->total_time();
@@ -107,11 +112,14 @@ InterSwapTimes InterSwap::GetNewTime(SolutionPtr solution, InterSwapMovement mov
   // std::cout << "Agreg " << zone_1->id() << " " << child_zone_2->id() << " Costo: " << second_child << std::endl;
   // std::cout <<  "RESULT " << old_time - deleted_time + added_time << std::endl;
   times.whole_time = old_time - deleted_time + added_time;
+  std::cout << "Salida Get New Time" << std::endl;
   return times;
 }
 
 
 bool InterSwap::CheckMovement(SolutionPtr solution, InterSwapTimes times, std::shared_ptr<VRPInstance> instance) {
+  std::cout << "CheckMovement" << std::endl;
+
   if (times.first_route_time > instance->max_collection_time() ||
       times.second_route_time > instance->max_collection_time()) {
     return false;
@@ -140,5 +148,6 @@ bool InterSwap::CheckMovement(SolutionPtr solution, InterSwapTimes times, std::s
       return false;
     }
   }
+  std::cout << "Salida Check" << std::endl;
   return true;
 }

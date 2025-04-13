@@ -12,7 +12,7 @@
 
 std::pair<bool, SolutionPtr> IntraReinsertion::GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   // std::cout << *solution;
-  // std::cout << "Entrada IntraSwap" << std::endl;
+  std::cout << "Entrada IntraReinsertion" << std::endl;
   int pr;
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
@@ -26,13 +26,13 @@ std::pair<bool, SolutionPtr> IntraReinsertion::GetLocalOptimum(SolutionPtr solut
         }
         IntraReinsertionMovement candidate = {vehicle->id(), i, j};
         double new_time = GetNewTime(solution, candidate, instance);
-        if (!(new_time < best_neighbor_time)) {
+        if (!(IsLess(new_time, best_neighbor_time))) {
           continue;
         }
         // std::cout << "CANDIDATO: Vehiculo " << vehicle->id() << ", delete: " << vehicle->route()[i]->id() << ", insert in:" << vehicle->route()[j]->id() << std::endl;
-        std::cout << new_time << std::endl;
         if (CheckMovement(solution, candidate, instance)) {
-        // //  std::cout << "CANDIDATO: Vehiculo " << vehicle->id() << ", delete: " << vehicle->route()[i]->id() << ", insert in:" << vehicle->route()[j]->id() << std::endl;
+          std::cout << "CANDIDATO: Vehiculo " << vehicle->id() << ", delete: " << vehicle->route()[i]->id() << ", insert in:" << vehicle->route()[j]->id() << std::endl;
+          // std::cout << new_time - best_neighbor_time << std::endl;
           // std::cout << "Es buena!" << std::endl;
           movement_ = {vehicle->id(), i, j};
           best_neighbor_time = new_time;
@@ -42,7 +42,7 @@ std::pair<bool, SolutionPtr> IntraReinsertion::GetLocalOptimum(SolutionPtr solut
   }
   std::cout << best_neighbor_time << std::endl;
   // std::cin >> pr;
-  if (best_neighbor_time < solution->total_time()) {
+  if (IsLess(best_neighbor_time, solution->total_time())) {
     // std::cout << "Mejora: Vehiculo " << movement_.vehicle_id << ", delete: " << movement_.delete_pos << ", insert in:" << movement_.insert_pos << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& route = best_neighbor->vehicles()[movement_.vehicle_id - 1]->route();

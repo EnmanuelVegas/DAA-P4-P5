@@ -13,19 +13,37 @@
 
 #include "local_search.h"
 
+struct InterReinsertionMovement {
+  int delete_vehicle_id = -1;
+  int insert_vehicle_id = -1;
+  int delete_zone_id = -1;
+  int insert_zone_id = -1;
+};
+
+struct InterReinsertionTimes {
+  InterReinsertionMovement movement = InterReinsertionMovement();
+  double whole_time = -1;
+  double delete_route_time = -1;
+  double insert_route_time = -1;
+};
+
+
 class InterReinsertion : public LocalSearch {
  public:
-  InterReinsertion() { }
+  InterReinsertion() : movement_(InterReinsertionMovement()) { }
 
   ~InterReinsertion() { }
 
-  std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Inter reinsertion.\n"; }
 
-
  private:
+  InterReinsertionTimes GetNewTime(SolutionPtr solution, InterReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
 
+  bool CheckMovement(SolutionPtr solution, InterReinsertionTimes times, std::shared_ptr<VRPInstance> instance);
+
+  InterReinsertionMovement movement_;
 };
 
 #endif

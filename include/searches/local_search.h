@@ -16,6 +16,7 @@
 #include <memory>
 #include <vector>
 #include <limits>
+#include <iomanip>
 #include <algorithm>  // Para std::sort
 #include <random>     // Para generar números aleatorios
 
@@ -24,6 +25,7 @@
 #include "../zone.h"
 #include "../task.h"
 #include "../solution.h"
+#include "../tools/utils.h"
 
 class LocalSearch {
  public:

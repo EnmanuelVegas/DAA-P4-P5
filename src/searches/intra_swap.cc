@@ -11,7 +11,7 @@
 #include "../../include/searches/intra_swap.h"
 
 std::pair<bool, SolutionPtr> IntraSwap::GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  // std::cout << "Entrada IntraSwap" << std::endl;
+  std::cout << "Entrada IntraSwap" << std::endl;
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
     int route_size{int(vehicle->route().size())};
@@ -24,7 +24,7 @@ std::pair<bool, SolutionPtr> IntraSwap::GetLocalOptimum(SolutionPtr solution, st
         }
         IntraSwapMovement candidate = {vehicle->id(), i, j};
         double new_time = GetNewTime(solution, candidate, instance);
-        if (!(new_time < best_neighbor_time)) {
+        if (!(IsLess(new_time, best_neighbor_time))) {
           continue;
         }
         if (CheckMovement(solution, candidate, instance)) {
@@ -34,7 +34,10 @@ std::pair<bool, SolutionPtr> IntraSwap::GetLocalOptimum(SolutionPtr solution, st
       }
     }
   }
-  if (best_neighbor_time < solution->total_time()) {
+  if (IsLess(best_neighbor_time, solution->total_time())) {
+    // std::cout << "Vehiculo: " << movement_.vehicle_id << " " << movement_.first_zone_id << " " << movement_.second_zone_id << std::endl;
+    // // std::cout << std::fixed << std::setprecision(15);
+    // std::cout << "solution time: " << solution->total_time() << ". New time: " << best_neighbor_time << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& route = best_neighbor->vehicles()[movement_.vehicle_id - 1]->route();
     std::swap(route[movement_.first_zone_id], route[movement_.second_zone_id]);

@@ -23,7 +23,6 @@
 
 constexpr double kEpsilon = 1e-9;
 
-
 struct ProgramOptions {
   bool show_help{false};
   bool multi_run{false};
@@ -45,6 +44,10 @@ inline auto CenterText = [](const std::string& text, int width) {
   int right_padding = padding - left_padding;
   return std::string(left_padding, ' ') + text + std::string(right_padding, ' ');
 };
+
+bool IsLess(double a, double b, double epsilon = kEpsilon);
+
+double RoundToFourDecimals(double value);
 
 double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> second);
 
