@@ -20,6 +20,14 @@ struct InterSwapMovement {
   int second_route_zone_id = -1;
 };
 
+struct InterSwapTimes {
+  InterSwapMovement movement = InterSwapMovement();
+  double whole_time = -1;
+  double first_route_time = -1;
+  double second_route_time = -1;
+};
+
+
 class InterSwap : public LocalSearch {
  public:
   InterSwap() : movement_(InterSwapMovement()) { }
@@ -31,9 +39,9 @@ class InterSwap : public LocalSearch {
   std::string type() { return "Inter swap.\n"; }
 
  private:
-  double GetNewTime(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+  InterSwapTimes GetNewTime(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
 
-  bool CheckMovement(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+  bool CheckMovement(SolutionPtr solution, InterSwapTimes times, std::shared_ptr<VRPInstance> instance);
  
   InterSwapMovement movement_;
 };

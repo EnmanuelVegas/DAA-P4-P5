@@ -107,7 +107,7 @@ void VRPInstance::ComputeDistances() {
   //   }
   //   std::cout << std::endl;
   // }
-  // return;
+  return;
 }
 
 double VRPInstance::CalculateTime(int actual_id, int destination_id) {

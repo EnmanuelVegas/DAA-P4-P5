@@ -98,10 +98,10 @@ void Solution::UpdateTotalTime(int vehicle_id, VRPInstancePtr instance) {
   // std::cout << "Max " << instance->collection_capacity() << std::endl;
   VehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
   // std::cout << "Desde dentro" << std::endl;
-  for (auto& zone : vehicle->route()) {
-    std::cout << zone->id() << " ";
-  } 
-  std::cout << std::endl;
+  // for (auto& zone : vehicle->route()) {
+  //   std::cout << zone->id() << " ";
+  // } 
+  // std::cout << std::endl;
 
   
   // std::cout << "Total " << this->total_time_ << std::endl;
