@@ -34,7 +34,6 @@ class IntraSwap : public LocalSearch {
 
   bool CheckMovement(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance);
 
-  private:
   IntraSwapMovement movement_;
 };
 

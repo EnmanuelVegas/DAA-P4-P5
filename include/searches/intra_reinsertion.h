@@ -13,17 +13,29 @@
 
 #include "local_search.h"
 
+struct IntraReinsertionMovement {
+  int vehicle_id = -1;
+  int delete_pos = -1;
+  int insert_pos = -1;
+};
+
+
 class IntraReinsertion : public LocalSearch {
  public:
-  IntraReinsertion() { }
+  IntraReinsertion() : movement_(IntraReinsertionMovement()) { }
 
   ~IntraReinsertion() { }
 
-  std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Intra reinsertion.\n"; }
 
  private:
+ double GetNewTime(SolutionPtr solution, IntraReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
+
+ bool CheckMovement(SolutionPtr solution, IntraReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
+
+ IntraReinsertionMovement movement_;
 
 };
 
