@@ -27,21 +27,24 @@ struct InterReinsertionTimes {
   double insert_route_time = -1;
 };
 
-
 class InterReinsertion : public LocalSearch {
  public:
-  InterReinsertion() : movement_(InterReinsertionMovement()) { }
+  InterReinsertion() : movement_(InterReinsertionMovement()) {}
 
-  ~InterReinsertion() { }
+  ~InterReinsertion() {}
 
-  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Inter reinsertion.\n"; }
 
  private:
-  InterReinsertionTimes GetNewTime(SolutionPtr solution, InterReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
+  InterReinsertionTimes GetNewTime(SolutionPtr solution,
+                                   InterReinsertionMovement movement,
+                                   std::shared_ptr<VRPInstance> instance);
 
-  bool CheckMovement(SolutionPtr solution, InterReinsertionTimes times, std::shared_ptr<VRPInstance> instance);
+  bool CheckMovement(SolutionPtr solution, InterReinsertionTimes times,
+                     std::shared_ptr<VRPInstance> instance);
 
   InterReinsertionMovement movement_;
 };

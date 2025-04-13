@@ -18,7 +18,6 @@ VRPTransshipments::VRPTransshipments(std::shared_ptr<VRPInstance> instance,
 }
 
 SolutionPtr VRPTransshipments::ComputeRoutes() {
-  SolutionPtr collection_solution = route_generator_.GenerateCollectionRoutes();
-  // route_generator_.GenerateTransferRoutes(collection_solution->ta);
-  return collection_solution;
+  SolutionPtr problem_solution = route_generator_.GenerateSolution();
+  return problem_solution;
 }

@@ -49,6 +49,8 @@ class VRPInstance {
 
   ZonePtrPair transfer_stations();
 
+  ZonePtr single_transfer_station(int id);
+
   ZonePtr dumpsite() { return zones_[max_zones_ + 3]; }
 
   double GetDistance(int actual_id, int destination_id);

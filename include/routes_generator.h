@@ -33,11 +33,8 @@ class RoutesGenerator {
   RoutesGenerator(std::shared_ptr<VRPInstance> instance, int candidate_size, int seed = std::random_device{}())
       : candidates_size_(candidate_size), instance_(instance), gen_(seed), search_selector_(seed) { }
 
-  SolutionPtr GenerateCollectionRoutes();
+  SolutionPtr GenerateSolution();
 
-  SolutionPtr GenerateTransferRoutes(std::vector<TaskPtr> tasks);
-
-  SolutionPtr RandomVND(SolutionPtr solution);
 
   double CalculateRoutesTime(SolutionPtr vehicles);
 
@@ -54,8 +51,14 @@ class RoutesGenerator {
   // void PrintTable();
 
  private:
-  SolutionPtr GenerateSingleRoute();
+  SolutionPtr BuildCollectionRoutes();
+
+  SolutionPtr BuildTransferRoutes(SolutionPtr solution);
+
+  SolutionPtr RandomVND(SolutionPtr solution);
+
   std::shared_ptr<VRPInstance> instance_;
+  Solution final_solution_;
   SearchMethodSelector search_selector_;
   std::mt19937 gen_;
   int candidates_size_;

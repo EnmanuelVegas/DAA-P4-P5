@@ -74,6 +74,14 @@ ZonePtrPair VRPInstance::transfer_stations() {
   return {zones_[max_zones_ + 1], zones_[max_zones_ + 2]};
 }
 
+ZonePtr VRPInstance::single_transfer_station(int id) {
+  if ((id != max_zones_ + 1) && (id != max_zones_ + 1)) {
+    return nullptr;
+  }
+  return zones_[id];
+}
+
+
 double VRPInstance::GetDistance(int actual_id, int destination_id) {
   // std::cout << (destination_id > this->zones_.size()) << std::endl;
   if ((destination_id <= 0 || destination_id > this->zones_.size() + 4 - 1) ||

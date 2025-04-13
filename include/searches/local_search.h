@@ -12,31 +12,31 @@
 #define LOCAL_SEARCH_H
 
 #include <algorithm>
-#include <fstream>
-#include <memory>
-#include <vector>
-#include <limits>
-#include <iomanip>
 #include <algorithm>  // Para std::sort
-#include <random>     // Para generar números aleatorios
+#include <fstream>
+#include <iomanip>
+#include <limits>
+#include <memory>
+#include <random>  // Para generar números aleatorios
+#include <vector>
 
+#include "../solution.h"
+#include "../task.h"
+#include "../tools/utils.h"
 #include "../vehicle.h"
 #include "../vrp_instance.h"
 #include "../zone.h"
-#include "../task.h"
-#include "../solution.h"
-#include "../tools/utils.h"
 
 class LocalSearch {
  public:
-  LocalSearch() { }
+  LocalSearch() {}
 
-  virtual ~LocalSearch() { }
+  virtual ~LocalSearch() {}
 
-  virtual std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
+  virtual std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
 
   virtual std::string type() = 0;
-
 };
 
 #endif

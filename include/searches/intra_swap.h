@@ -21,18 +21,21 @@ struct IntraSwapMovement {
 
 class IntraSwap : public LocalSearch {
  public:
-  IntraSwap() : movement_(IntraSwapMovement()) { }
+  IntraSwap() : movement_(IntraSwapMovement()) {}
 
-  ~IntraSwap() { }
+  ~IntraSwap() {}
 
-  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Intra swap.\n"; }
 
  private:
-  double GetNewTime(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+  double GetNewTime(SolutionPtr solution, IntraSwapMovement movement,
+                    std::shared_ptr<VRPInstance> instance);
 
-  bool CheckMovement(SolutionPtr solution, IntraSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+  bool CheckMovement(SolutionPtr solution, IntraSwapMovement movement,
+                     std::shared_ptr<VRPInstance> instance);
 
   IntraSwapMovement movement_;
 };

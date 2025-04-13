@@ -62,6 +62,33 @@ void Solution::PushVehicle(VehiclePtr vehicle) {
   return;
 }
 
+void Solution::AssignTransportVehicles(std::vector<VehiclePtr> vehicles) {
+  for (auto& vehicle : vehicles) {
+    this->transport_vehicles_.push_back(vehicle);
+  }
+  return;
+}
+
+bool Solution::IsBetter(SolutionPtr another) {
+  std::cout << "Prueba" << std::endl;
+  if (another == nullptr) {
+    return false;
+  }
+  std::cout << "Prueba" << std::endl;
+  int vehicles_quantity = vehicles_.size() + transport_vehicles_.size();
+  int other_vehicles_quantity = another->vehicles().size() + another->transport_vehicles().size();
+  if (other_vehicles_quantity < vehicles_quantity) {
+    return true;
+  }
+  double solution_time = this->total_time_;
+  double other_time = another->total_time();
+  if (other_time < solution_time) {
+    return true;
+  }
+  return false;
+}
+
+
 void Solution::BuildTasks(VRPInstancePtr instance) {
 //   for (auto& vehicle : this->vehicles_) {
 //     double distance{0};

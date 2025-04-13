@@ -19,25 +19,25 @@ struct IntraReinsertionMovement {
   int insert_pos = -1;
 };
 
-
 class IntraReinsertion : public LocalSearch {
  public:
-  IntraReinsertion() : movement_(IntraReinsertionMovement()) { }
+  IntraReinsertion() : movement_(IntraReinsertionMovement()) {}
 
-  ~IntraReinsertion() { }
+  ~IntraReinsertion() {}
 
-  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Intra reinsertion.\n"; }
 
  private:
- double GetNewTime(SolutionPtr solution, IntraReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
+  double GetNewTime(SolutionPtr solution, IntraReinsertionMovement movement,
+                    std::shared_ptr<VRPInstance> instance);
 
- bool CheckMovement(SolutionPtr solution, IntraReinsertionMovement movement, std::shared_ptr<VRPInstance> instance);
+  bool CheckMovement(SolutionPtr solution, IntraReinsertionMovement movement,
+                     std::shared_ptr<VRPInstance> instance);
 
- IntraReinsertionMovement movement_;
-
+  IntraReinsertionMovement movement_;
 };
-
 
 #endif

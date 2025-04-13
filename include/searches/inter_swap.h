@@ -27,22 +27,24 @@ struct InterSwapTimes {
   double second_route_time = -1;
 };
 
-
 class InterSwap : public LocalSearch {
  public:
-  InterSwap() : movement_(InterSwapMovement()) { }
+  InterSwap() : movement_(InterSwapMovement()) {}
 
-  ~InterSwap() { }
+  ~InterSwap() {}
 
-  std::pair<bool, SolutionPtr> GetLocalOptimum(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "Inter swap.\n"; }
 
  private:
-  InterSwapTimes GetNewTime(SolutionPtr solution, InterSwapMovement movement, std::shared_ptr<VRPInstance> instance);
+  InterSwapTimes GetNewTime(SolutionPtr solution, InterSwapMovement movement,
+                            std::shared_ptr<VRPInstance> instance);
 
-  bool CheckMovement(SolutionPtr solution, InterSwapTimes times, std::shared_ptr<VRPInstance> instance);
- 
+  bool CheckMovement(SolutionPtr solution, InterSwapTimes times,
+                     std::shared_ptr<VRPInstance> instance);
+
   InterSwapMovement movement_;
 };
 
