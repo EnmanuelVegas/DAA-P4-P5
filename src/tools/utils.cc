@@ -124,7 +124,8 @@ double ComputeEuclideanDistance(std::pair<int, int> first, std::pair<int, int> s
   double x_value = first.first - second.first;
   double y_value = first.second - second.second;
   double distance = std::sqrt(std::pow(x_value, 2) + std::pow(y_value, 2));
-  return std::round(distance * 10000.0) / 10000.0; // Redondear a 4 decimales
+  return RoundToFourDecimals(distance);
+  // return distance;
 }
 
 bool IsLess(double a, double b, double epsilon) {
