@@ -38,7 +38,7 @@ void PrintFile(const std::string& filename);
 
 std::vector<std::string> GetFiles(const std::string& path);
 
-inline auto CenterText = [](const std::string& text, int width) {
+inline auto CenterText = [](const std::string& text, int width = 15) {
   int padding = width - text.size();
   int left_padding = padding / 2;
   int right_padding = padding - left_padding;

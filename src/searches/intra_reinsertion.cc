@@ -13,7 +13,7 @@
 std::pair<bool, SolutionPtr> IntraReinsertion::GetBestNeighbor(
     SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   // std::cout << *solution;
-  std::cout << "Entrada IntraReinsertion" << std::endl;
+  // std::cout << "Entrada IntraReinsertion" << std::endl;
   int pr;
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
@@ -34,9 +34,9 @@ std::pair<bool, SolutionPtr> IntraReinsertion::GetBestNeighbor(
         // << vehicle->route()[i]->id() << ", insert in:" <<
         // vehicle->route()[j]->id() << std::endl;
         if (CheckMovement(solution, candidate, instance)) {
-          std::cout << "CANDIDATO: Vehiculo " << vehicle->id()
-                    << ", delete: " << vehicle->route()[i]->id()
-                    << ", insert in:" << vehicle->route()[j]->id() << std::endl;
+          // std::cout << "CANDIDATO: Vehiculo " << vehicle->id()
+          //           << ", delete: " << vehicle->route()[i]->id()
+          //           << ", insert in:" << vehicle->route()[j]->id() << std::endl;
           // std::cout << new_time - best_neighbor_time << std::endl;
           // std::cout << "Es buena!" << std::endl;
           movement_ = {vehicle->id(), i, j};

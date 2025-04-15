@@ -10,8 +10,6 @@
 
 #include "../../include/tools/utils.h"
 
-
-
 std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
   std::vector<std::string_view> args(argv + 1, argv + argc);
   ProgramOptions options;
@@ -43,46 +41,6 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
   }
   return options;
 }
-
-//       opciones.modo = std::string(args[++contador_argumentos]);
-//       if (opciones.modo != "normal" && opciones.modo != "debug") {
-//         throw std::invalid_argument("Modo no válido\n");
-//       }
-//       contador_argumentos++;
-//       if (args[contador_argumentos] == "-a" |
-//           args[contador_argumentos] == "--algoritmo") {
-//         opciones.algoritmo = std::string(args[++contador_argumentos]);
-//         std::string algoritmo = opciones.algoritmo;
-//         if (algoritmo != "busqueda_binaria" && algoritmo != "hanoi" &&
-//             algoritmo != "quicksort" && algoritmo != "mergesort") {
-//           throw std::invalid_argument("Algoritmo no válido\n");
-//         }
-//         contador_argumentos++;
-//         if (argc <= contador_argumentos) {
-//           return std::nullopt;
-//         }
-//         if (opciones.modo == "debug") {
-//           opciones.tamano_instancia =
-//               std::stoi(std::string(args[contador_argumentos++]));
-//         }
-//       } else {
-//         throw std::invalid_argument("Falta el argumento --a");
-//       }
-//     } else if (args[contador_argumentos] == "-h" ||
-//                args[contador_argumentos] == "--help") {
-//       opciones.mostrar_ayuda = true;
-//       ImprimirArchivo("./texts/ayuda.txt");
-//     } else if (args[contador_argumentos] != "-o" ||
-//                args[contador_argumentos] == "--output") {
-//       throw std::invalid_argument("Argumento no soportado.\n");
-//     }
-//     if (args[contador_argumentos] == "-o" ||
-//         args[contador_argumentos] == "--output") {
-//       opciones.imprimir_fichero = true;
-//     }
-
-//   return opciones;
-// }
 
 
 void PrintFile(const std::string& filename) {
@@ -142,4 +100,3 @@ int SpaceIndex(std::string& string_find) {
   int separator_index = string_find.find(" ");
   return separator_index;
 }
-  

@@ -13,33 +13,52 @@
 SolutionPtr RoutesGenerator::GenerateSolution() {
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
-  for (int i{0}; i < 5; i++) {  // CAMBIAR A 5 Y 100
-    // std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
-    SolutionPtr best_local = nullptr;
-    double best_local_time{std::numeric_limits<double>::max()};
-    for (int j{0}; j < 100; j++) {
-      SolutionPtr solution = BuildCollectionRoutes();
-      // std::cout << "ORIGINAL:\n" << *solution;
-      solution = RandomVND(solution);
-      solution->BuildTasks(instance_);
-      solution = BuildTransferRoutes(solution);
-      if (solution->IsBetter(best_local)) {
-        best_local = solution;
-        best_local_time = best_local->total_time();
-      }
+  int counter{0};
+  int not_improved{0};
+  while (counter++ < 1000) {
+    SolutionPtr solution = BuildCollectionRoutes();
+    solution = RandomVND(solution);
+    solution->BuildTasks(instance_);
+    solution = BuildTransferRoutes(solution);
+    if (solution->IsBetter(best_solution)) {
+      best_solution = solution;
+      best_time = best_solution->total_time();
+      not_improved = 0;
     }
-    // double solution_time{CalculateRoutesTime(best_local)};
-    // std::cout << "Local best: " << best_local_time << "\n";
-    if (best_local->IsBetter(best_solution)) {
-      best_solution = best_local;
-      best_time = best_local_time;
+    if(not_improved >= 100) {
+      break;
     }
   }
-  // std::cout << "Best global solution:\n";
-  // std::cout << best_solution->total_time() << std::endl;
-  // best_solution->BuildTasks(this->instance_);
-  // std::cout << *best_solution << std::endl;
   return best_solution;
+  // SolutionPtr best_solution;
+  // double best_time{std::numeric_limits<double>::max()};
+  // for (int i{0}; i < 5; i++) {  // CAMBIAR A 5 Y 100
+  //   // std::cout << "\nGRASP: Iteration " << i + 1<< ":\n";
+  //   SolutionPtr best_local = nullptr;
+  //   double best_local_time{std::numeric_limits<double>::max()};
+  //   for (int j{0}; j < 100; j++) {
+  //     SolutionPtr solution = BuildCollectionRoutes();
+  //     // std::cout << "ORIGINAL:\n" << *solution;
+  //     solution = RandomVND(solution);
+  //     solution->BuildTasks(instance_);
+  //     solution = BuildTransferRoutes(solution);
+  //     if (solution->IsBetter(best_local)) {
+  //       best_local = solution;
+  //       best_local_time = best_local->total_time();
+  //     }
+  //   }
+  //   // double solution_time{CalculateRoutesTime(best_local)};
+  //   // std::cout << "Local best: " << best_local_time << "\n";
+  //   if (best_local->IsBetter(best_solution)) {
+  //     best_solution = best_local;
+  //     best_time = best_local_time;
+  //   }
+  // }
+  // std::cout << "Best global solution:\n";
+  // // std::cout << best_solution->total_time() << std::endl;
+  // // best_solution->BuildTasks(this->instance_);
+  // std::cout << *best_solution << std::endl;
+  // return best_solution;
 }
 
 SolutionPtr RoutesGenerator::BuildCollectionRoutes() {
@@ -68,9 +87,7 @@ SolutionPtr RoutesGenerator::BuildCollectionRoutes() {
         AddNormalStop(last_stop, closest, current_vehicle);
         zones.erase(find(zones.begin(), zones.end(), closest));
       } else if (return_depot_time <= current_vehicle->remaining_time()) {
-        ZonePtr closest_transfer = SelectClosestTransferStation(
-            last_stop->id());  // REVISAR CON EL PSEUDOCÓDIGO: last_stop o
-                               // closest_zone?
+        ZonePtr closest_transfer = SelectClosestTransferStation(last_stop->id());
         AddTransferStop(last_stop, closest_transfer, current_vehicle,
                         collection_capacity, max_time);
       } else {
@@ -97,8 +114,7 @@ SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
   std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
-    std::shared_ptr<LocalSearch> search_method =
-        search_selector_.SelectMethod();
+    std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
     result += "Cambiamos a " + search_method->type();
     bool improved_local{false};
     while (true) {

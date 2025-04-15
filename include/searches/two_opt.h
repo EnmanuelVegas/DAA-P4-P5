@@ -13,16 +13,25 @@
 
 #include "local_search.h"
 
+struct TwoOptMovement {
+  int vehicle_id = -1;
+  int delete_pos = -1;
+  int insert_pos = -1;
+};
+
 class TwoOpt : public LocalSearch {
  public:
-  TwoOpt() { }
+  TwoOpt() : movement_(TwoOptMovement()) { }
 
   ~TwoOpt() { }
 
-  std::pair<bool, SolutionPtr> Apply(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+
+  std::string type() { return "2-opt.\n"; }
 
  private:
+  bool CheckMovement(SolutionPtr solution, TwoOptMovement movement, std::shared_ptr<VRPInstance> instance);
 
+  TwoOptMovement movement_;
 };
-
 #endif

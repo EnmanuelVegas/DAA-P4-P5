@@ -1,0 +1,67 @@
+2382.86
+2380.38
+2380.38
+2380.38
+
+--- LOCAL SEARCH ---
+Improved solutions:
+Cambiamos a Intra reinsertion.
+- Time: 2387.838000 --> 2382.856800 
+- Time: 2382.856800 --> 2380.383600 
+Reset!
+Cambiamos a Inter swap.
+Cambiamos a Inter reinsertion.
+Cambiamos a Intra swap.
+Cambiamos a Intra reinsertion.
+Best global solution:
+-> Collection Vehicles: 6
+*** Vehicle Nº 1 ***
+Remaining Time: 4.467
+Remaining Capacity: 900
+Route: 21 6 3 22 10 4 22 21 
+*** Vehicle Nº 2 ***
+Remaining Time: 57.857
+Remaining Capacity: 900
+Route: 21 9 14 22 19 8 22 21 
+*** Vehicle Nº 3 ***
+Remaining Time: 50.7638
+Remaining Capacity: 900
+Route: 21 11 16 23 2 20 23 21 
+*** Vehicle Nº 4 ***
+Remaining Time: 150.211
+Remaining Capacity: 900
+Route: 21 18 17 23 15 23 21 
+*** Vehicle Nº 5 ***
+Remaining Time: 40.2332
+Remaining Capacity: 900
+Route: 21 5 22 7 1 22 21 
+*** Vehicle Nº 6 ***
+Remaining Time: 196.085
+Remaining Capacity: 900
+Route: 21 12 13 23 21 
+-> Transport Vehicles: 2
+*** Vehicle Nº 1 ***
+Remaining Time: 358.345
+Remaining Capacity: 809
+Route: 24 22 22 22 23 22 22 22 24 
+*** Vehicle Nº 2 ***
+Remaining Time: 358.345
+Remaining Capacity: 2241
+Route: 24 23 23 23 23 24 
+-> Tasks: 
+(317, 22, 168.374)
+(757, 22, 185.317)
+(784, 22, 225.284)
+(351, 23, 301.505)
+(642, 22, 393.859)
+(708, 22, 411.483)
+(732, 22, 447.249)
+(659, 23, 182.505)
+(746, 23, 187.832)
+(735, 23, 255.631)
+(719, 23, 400.952)
+Whole time: 2380.38 + 243.31 = 2623.69
+
+   Instance    | Nº vehicles  |   Best Time   
+---------------------------------------------
+   instance1   |       6       |2380.383600

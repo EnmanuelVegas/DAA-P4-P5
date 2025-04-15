@@ -12,7 +12,7 @@
 
 std::pair<bool, SolutionPtr> IntraSwap::GetBestNeighbor(
     SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  std::cout << "Entrada IntraSwap" << std::endl;
+  // std::cout << "Entrada IntraSwap" << std::endl;
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
     int route_size{int(vehicle->route().size())};

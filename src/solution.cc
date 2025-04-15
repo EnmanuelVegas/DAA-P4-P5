@@ -108,11 +108,10 @@ bool Solution::IsBetter(SolutionPtr another) {
 
 void Solution::BuildTasks(VRPInstancePtr instance) {
   for (auto& vehicle : this->vehicles_) {
-    double distance{0};
     double time{0};
+    double waste_collected{0};
     int route_size = int(vehicle->route().size());
     for (int j{1}; j < route_size; j++) { // Start from 1 to avoid adding depot.
-      double waste_collected{0};
       ZonePtr current_stop = vehicle->route()[j];
       ZonePtr last_stop = vehicle->route()[j - 1];
       time += instance->CalculateTime(last_stop->id(), current_stop->id());

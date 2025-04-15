@@ -10,7 +10,7 @@
 
 #include "../../include/searches/two_opt.h"
 
-std::pair<bool, SolutionPtr> TwoOpt::Apply(
+std::pair<bool, SolutionPtr> TwoOpt::GetBestNeighbor(
     SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   SolutionPtr local_optimal = std::make_shared<Solution>(*solution);
   bool improved = false;

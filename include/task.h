@@ -34,10 +34,7 @@ class Task {
 
   double time() { return time_; }
 
-  friend std::ostream& operator<<(std::ostream& os, const Task& task) {
-    os << "(" << task.waste_ << ", " << task.transfer_id_ << ", " << task.time_ << ")" << std::endl; 
-    return os;
-  }
+  friend std::ostream& operator<<(std::ostream& os, const Task& task);
 
  protected:
   double waste_;
