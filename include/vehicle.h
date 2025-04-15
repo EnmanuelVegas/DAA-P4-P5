@@ -26,7 +26,8 @@ class Vehicle {
  public:
   Vehicle(int id = 0, int time = 0, int capacity = 0) 
   : id_(id), remaining_time_(time), remaining_capacity_(capacity), 
-  max_capacity_(capacity), max_time_(time), modified_(false), route_() { }
+  max_capacity_(capacity), max_time_(time), modified_(false),
+  route_(std::vector<ZonePtr>(0)), tasks_(std::vector<TaskPtr>(0)) { }
 
   Vehicle(const Vehicle& other);
 
@@ -36,13 +37,15 @@ class Vehicle {
 
   void UpdateTime(double time) { remaining_time_ -= time; }
 
+  void DiminishCapacity(double waste) { this->remaining_capacity_ -= waste; }
+
   void RestoreTime();
 
   void RestoreCapacity();
 
   double TimeUsed();
 
-  void AddTask(double waste, int transfer_id, double time);
+  void AssignTask(TaskPtr task);
 
   int id() const { return id_; }
 
@@ -57,8 +60,6 @@ class Vehicle {
   void MarkAsModified() { modified_ = true; return; }
 
   std::vector<ZonePtr> route() const { return route_; }
-
-  std::vector<TaskPtr> tasks() const { return tasks_; }
 
   std::vector<ZonePtr>& route() { return route_; }
 

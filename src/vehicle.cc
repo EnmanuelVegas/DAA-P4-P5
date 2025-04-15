@@ -18,7 +18,7 @@ Vehicle::Vehicle(const Vehicle& other) : id_(other.id_), remaining_time_(other.r
   max_time_(other.max_time_) {
   // Copia profunda de la ruta
   for (const auto& zone : other.route_) {
-  route_.push_back(std::make_shared<Zone>(*zone));
+    route_.push_back(std::make_shared<Zone>(*zone));
   }
   // Copia profunda de las tareas
   for (const auto& task : other.tasks_) {
@@ -37,7 +37,7 @@ Vehicle& Vehicle::operator=(const Vehicle& other) {
     max_time_ = other.max_time_;
     // Limpiar las colecciones actuales
     route_.clear();
-    tasks_.clear();
+    // tasks_.clear();
     // Copia profunda de la ruta
     for (const auto& zone : other.route_) {
       route_.push_back(std::make_shared<Zone>(*zone));
@@ -66,9 +66,8 @@ void Vehicle::RestoreTime() {
   return;
 }
 
-void Vehicle::AddTask(double waste, int transfer_id, double time) {
-  TaskPtr new_task = std::make_shared<Task>(waste, transfer_id, time);
-  this->tasks_.push_back(new_task);
+void Vehicle::AssignTask(TaskPtr task) {
+  this->tasks_.push_back(task);
   return;
 }
 

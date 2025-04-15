@@ -36,7 +36,7 @@ class Solution {
 
   std::vector<VehiclePtr> transport_vehicles() { return transport_vehicles_; }
 
-  void AssignTransportVehicles(std::vector<VehiclePtr> vehicles);
+  void AssignTransportVehicles(std::vector<VehiclePtr>& vehicles);
 
   double total_time() const { return this->total_time_; } 
 

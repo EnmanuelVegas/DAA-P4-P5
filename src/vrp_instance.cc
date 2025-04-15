@@ -75,10 +75,10 @@ ZonePtrPair VRPInstance::transfer_stations() {
 }
 
 ZonePtr VRPInstance::single_transfer_station(int id) {
-  if ((id != max_zones_ + 1) && (id != max_zones_ + 1)) {
+  if ((id - 1 != max_zones_ + 1) && (id - 1 != max_zones_ + 2)) {
     return nullptr;
   }
-  return zones_[id];
+  return zones_[id - 1];
 }
 
 

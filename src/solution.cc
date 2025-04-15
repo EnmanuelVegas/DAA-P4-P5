@@ -15,6 +15,9 @@ Solution::Solution(const Solution& other) : Solution() {
   for (const auto& vehicle : other.vehicles_) {
     vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
   }
+  for (const auto& vehicle : other.transport_vehicles_) {
+    vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
+  }
   improvements_counter_ = other.improvements_counter_;
 }
 
@@ -27,24 +30,35 @@ Solution& Solution::operator=(const Solution& other) {
     for (const auto& vehicle : other.vehicles_) {
       vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
     }
+    for (const auto& vehicle : other.transport_vehicles_) {
+      vehicles_.push_back(std::make_shared<Vehicle>(*vehicle)); // Copia profunda de cada vehículo
+    }
   }
   return *this;
 }
 
 
 std::ostream& operator<<(std::ostream& os, const Solution& solution) {
-  os << "-> Vehicles used: " << solution.vehicles_.size() << std::endl;
+  os << "-> Collection Vehicles: " << solution.vehicles_.size() << std::endl;
+  double collection_time{0};
   for (auto& vehicle : solution.vehicles_) {
     os << *vehicle;
+    collection_time += vehicle->TimeUsed();
   }
-  double whole_time{0};
-  for (auto& vehicle : solution.vehicles_) {
-    whole_time += vehicle->TimeUsed();
+  os << "-> Transport Vehicles: " << solution.transport_vehicles_.size() << std::endl;
+  double transport_time{0};
+  for (auto& vehicle : solution.transport_vehicles_) {
+    os << *vehicle;
+    transport_time += vehicle->TimeUsed();
+  }
+  os << "-> Tasks: " << std::endl;
+  for (auto& vehicle : solution.transport_vehicles_) {
     for (auto& task : vehicle->tasks()) {
       os << *task;
     }
   }
-  os << "Whole time: " << whole_time << "\n";
+  os << "Whole time: " << collection_time << " + " << transport_time << " = "
+     << collection_time + transport_time << std::endl;
   return os;
 }
 
@@ -62,27 +76,30 @@ void Solution::PushVehicle(VehiclePtr vehicle) {
   return;
 }
 
-void Solution::AssignTransportVehicles(std::vector<VehiclePtr> vehicles) {
+void Solution::AssignTransportVehicles(std::vector<VehiclePtr>& vehicles) {
   for (auto& vehicle : vehicles) {
+    // std::cout << *vehicle;
     this->transport_vehicles_.push_back(vehicle);
+    // std::cout << this->transport_vehicles_.size();
   }
   return;
 }
 
 bool Solution::IsBetter(SolutionPtr another) {
-  std::cout << "Prueba" << std::endl;
   if (another == nullptr) {
-    return false;
-  }
-  std::cout << "Prueba" << std::endl;
-  int vehicles_quantity = vehicles_.size() + transport_vehicles_.size();
-  int other_vehicles_quantity = another->vehicles().size() + another->transport_vehicles().size();
-  if (other_vehicles_quantity < vehicles_quantity) {
     return true;
   }
+  // int vehicles_quantity = vehicles_.size() + transport_vehicles_.size();
+  // int other_vehicles_quantity = another->vehicles().size() + another->transport_vehicles().size();
+  // if (vehicles_quantity < other_vehicles_quantity) {
+  //   return true;
+  // }
+  // else if (vehicles_quantity > other_vehicles_quantity) {
+  //   return false;
+  // }
   double solution_time = this->total_time_;
   double other_time = another->total_time();
-  if (other_time < solution_time) {
+  if (solution_time < other_time) {
     return true;
   }
   return false;
@@ -90,34 +107,24 @@ bool Solution::IsBetter(SolutionPtr another) {
 
 
 void Solution::BuildTasks(VRPInstancePtr instance) {
-//   for (auto& vehicle : this->vehicles_) {
-//     double distance{0};
-//     double time{0};
-
-//     for (int j{1}; j < route_size; j++) { // Start from 1 to avoid adding depot.
-//       ZonePtr current_stop = vehicle->route()[j];
-//       ZonePtr last_stop = vehicle->route()[j - 1];
-//       if (instance->IsTransferStation(current_stop)) {
-//         waste_collected = 0;
-//       }
-//       waste_collected += current_stop->waste_quantity();
-//       vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
-//       vehicle->UpdateTime(current_stop->process_time());
-//       if (waste_collected > instance->collection_capacity() ||
-//           vehicle->remaining_time() < 0) {
-//         return false;
-//       }
-//     }
-
-//     for (auto& zone : vehicle->route()) {
-//       if (instance->IsTransferStation(zone)) {
-//         TaskPtr new_task = std::make_shared<Task>()
-//         this->tasks_.push_back(new_task);
-//         continue;
-//       }
-//       distance += zone->
-//     }
-//   }
+  for (auto& vehicle : this->vehicles_) {
+    double distance{0};
+    double time{0};
+    int route_size = int(vehicle->route().size());
+    for (int j{1}; j < route_size; j++) { // Start from 1 to avoid adding depot.
+      double waste_collected{0};
+      ZonePtr current_stop = vehicle->route()[j];
+      ZonePtr last_stop = vehicle->route()[j - 1];
+      time += instance->CalculateTime(last_stop->id(), current_stop->id());
+      if (instance->IsTransferStation(current_stop)) {
+        TaskPtr new_task = std::make_shared<Task>(waste_collected, current_stop->id(), time);
+        this->tasks_.push_back(new_task);
+        waste_collected = 0;
+      }
+      waste_collected += current_stop->waste_quantity();
+      time += current_stop->process_time();
+    }
+  }
   return;
 }
 

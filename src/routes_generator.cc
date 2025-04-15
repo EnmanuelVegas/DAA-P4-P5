@@ -11,8 +11,6 @@
 #include "../include/routes_generator.h"
 
 SolutionPtr RoutesGenerator::GenerateSolution() {
-  // std::vector<VehiclePtr> best_solution = this->GenerateGreedy();
-  SolutionPtr first_solution;
   SolutionPtr best_solution;
   double best_time{std::numeric_limits<double>::max()};
   for (int i{0}; i < 5; i++) {  // CAMBIAR A 5 Y 100
@@ -23,28 +21,16 @@ SolutionPtr RoutesGenerator::GenerateSolution() {
       SolutionPtr solution = BuildCollectionRoutes();
       // std::cout << "ORIGINAL:\n" << *solution;
       solution = RandomVND(solution);
-      // solution = BuildTransferRoutes(solution);
-      double solution_time{CalculateRoutesTime(solution)};
-      // if (solution->IsBetter(best_local)) {
-      //   best_local = solution;
-      //   best_local_time = best_local->total_time();
-      // }
-
-      if (solution_time < best_local_time) {
+      solution->BuildTasks(instance_);
+      solution = BuildTransferRoutes(solution);
+      if (solution->IsBetter(best_local)) {
         best_local = solution;
-        best_local_time = solution_time;
+        best_local_time = best_local->total_time();
       }
-      // std::cout << solution_time << std::endl; // VERIFY RANDOMNESS
     }
     // double solution_time{CalculateRoutesTime(best_local)};
     // std::cout << "Local best: " << best_local_time << "\n";
-
-    // if (best_local->IsBetter(best_solution)) {
-    //   best_solution = best_local;
-    //   best_time = best_local_time;
-    // }
-
-    if (best_local_time < best_time) {
+    if (best_local->IsBetter(best_solution)) {
       best_solution = best_local;
       best_time = best_local_time;
     }
@@ -140,21 +126,27 @@ SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
   return solution;
 }
 
-// struct Task {
-//   int id;
-//   double arrival_time;
-//   double waste_amount;
-// };
-
-// using TaskPtr = std::shared_ptr<Task>;
-// using VehicleSet = std::vector<VehiclePtr>;
-
-VehiclePtr ChooseVehicle(std::vector<VehiclePtr>& vehicles, TaskPtr task, VRPInstancePtr instance) {
+VehiclePtr ChooseVehicle(std::vector<VehiclePtr>& vehicles, TaskPtr task, VRPInstancePtr instance, double max_duration) {
   for (auto& vehicle : vehicles) {
-    if (vehicle->remaining_capacity() >= task->waste() &&
-        vehicle->remaining_time() >= instance->CalculateTime(vehicle->route().back()->id(), task->transfer_id())) {
-      return vehicle;
+    if (!vehicle->tasks().empty()) {
+      int last_task_stop = vehicle->tasks().back()->transfer_id();
+      double last_task_time = vehicle->tasks().back()->time();
+      double current_task_time = task->time();
+      double travel_time = instance->CalculateTime(last_task_stop, task->transfer_id());
+      if (travel_time > (current_task_time - last_task_time)) {
+        continue;
+      }
     }
+    if (vehicle->remaining_capacity() < task->waste()) {
+      continue;
+    }
+    double whole_time = vehicle->TimeUsed();
+    whole_time += instance->CalculateTime(vehicle->route().back()->id(), task->transfer_id());
+    whole_time += instance->CalculateTime(task->transfer_id(), instance->dumpsite()->id());
+    if (whole_time > max_duration) {
+      continue;
+    }
+    return vehicle;
   }
   return nullptr;
 }
@@ -163,48 +155,39 @@ SolutionPtr RoutesGenerator::BuildTransferRoutes(SolutionPtr solution) {
   double max_capacity = instance_->transport_capacity();
   double max_duration = instance_->max_transport_time();
   auto tasks = solution->tasks();
-  // Step 1: Sort tasks by arrival time
   std::sort(tasks.begin(), tasks.end(), [](const TaskPtr& a, const TaskPtr& b) {
     return a->time() < b->time();
   });
   std::vector<VehiclePtr> transport_vehicles(0);
-  // Step 3: Calculate the minimum waste amount
   double min_waste = std::numeric_limits<double>::max();
   for (const auto& task : tasks) {
     min_waste = std::min(min_waste, task->waste());
   }
-  // Step 4: Process tasks
   while (!tasks.empty()) {
     TaskPtr task = tasks.front();
     tasks.erase(tasks.begin());
-    // Step 7: Choose a vehicle for the task
-    VehiclePtr vehicle = ChooseVehicle(transport_vehicles, task, instance_);
+    VehiclePtr vehicle = ChooseVehicle(transport_vehicles, task, instance_, max_duration);
     if (!vehicle) {
-      // Step 9: Create a new vehicle
       int new_vehicle_id = transport_vehicles.size() + 1;
       vehicle = std::make_shared<Vehicle>(new_vehicle_id, max_duration, max_capacity);
-      // Step 10: Add landfill and task to the route
       vehicle->AddStop(instance_->dumpsite());
       vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
-      // Step 11: Update vehicle capacity
+      vehicle->DiminishCapacity(task->waste());
       vehicle->UpdateTime(instance_->CalculateTime(instance_->dumpsite()->id(), task->transfer_id()));
-      // Step 13: Add the new vehicle to the set
       transport_vehicles.push_back(vehicle);
     } else {
-      // Step 15: Add the task to the vehicle's route
       vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
-      // Step 16: Update vehicle capacity
+      vehicle->DiminishCapacity(task->waste());
       vehicle->UpdateTime(instance_->CalculateTime(vehicle->route().back()->id(), task->transfer_id()));
-      // Step 18: Check if the vehicle's capacity is below the minimum waste amount
       if (vehicle->remaining_capacity() < min_waste) {
         vehicle->AddStop(instance_->dumpsite());
         vehicle->RestoreCapacity();
       }
     }
+    vehicle->AssignTask(task);
   }
-  // Step 24: Ensure all routes end at the landfill
   for (auto& vehicle : transport_vehicles) {
-    if (vehicle->route().back() != instance_->dumpsite()) {
+    if (vehicle->route().back()->id() != instance_->dumpsite()->id()) {
       vehicle->AddStop(instance_->dumpsite());
     }
   }
@@ -296,8 +279,8 @@ void RoutesGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer,
       instance_->CalculateTime(last->id(), transfer->id());
   vehicle->UpdateTime(visit_transfer_time);
 
-  vehicle->AddTask(capacity - vehicle->remaining_capacity(), transfer->id(),
-                   max_time - vehicle->remaining_time());
+  // vehicle->AddTask(capacity - vehicle->remaining_capacity(), transfer->id(),
+  //                  max_time - vehicle->remaining_time());
   vehicle->AddStop(transfer);
   vehicle->RestoreCapacity();
   return;
