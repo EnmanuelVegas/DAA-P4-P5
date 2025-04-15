@@ -161,9 +161,9 @@ void Solution::UpdateTotalTime(int vehicle_id, VRPInstancePtr instance) {
 bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
   // std::cout << "Max " << instance->collection_capacity() << std::endl;
   VehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
-  // this->total_time_ -= vehicle->TimeUsed();
+  this->total_time_ -= vehicle->TimeUsed();
   vehicle->RestoreCapacity();
-  // vehicle->RestoreTime();
+  vehicle->RestoreTime();
   int route_size = int(vehicle->route().size());
   double waste_collected{0};
   for (int j{1}; j < route_size; j++) { // Start from 1 to avoid adding depot.
@@ -174,14 +174,14 @@ bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
     }
     waste_collected += current_stop->waste_quantity();
     // std::cout << current_stop->id() << " -> " << waste_collected << std::endl;
-    // vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
-    // vehicle->UpdateTime(current_stop->process_time());
-    if (waste_collected > instance->collection_capacity()) {// ||
-        // vehicle->remaining_time() < 0) {
+    vehicle->UpdateTime(instance->CalculateTime(last_stop->id(), current_stop->id()));
+    vehicle->UpdateTime(current_stop->process_time());
+    if (waste_collected > instance->collection_capacity() ||
+        vehicle->remaining_time() < 0) {
       return false;
     }
   }
   // vehicle->MarkAsModified();
-  // this->total_time_ += vehicle->TimeUsed();
+  this->total_time_ += vehicle->TimeUsed();
   return true;
 }

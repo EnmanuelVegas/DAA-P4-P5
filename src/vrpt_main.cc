@@ -40,8 +40,6 @@ int main(int argc, char* argv[]) {
       // chrono_timer.StartStopwatch();
       solutions.push_back(solver->ComputeRoutes());
       // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";
-
-
     }
     PrintSolutionSummary(solutions, files);
   } catch (const std::exception& error) {

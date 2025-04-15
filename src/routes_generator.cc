@@ -111,8 +111,7 @@ SolutionPtr RoutesGenerator::BuildCollectionRoutes() {
 
 SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
   int old_time = solution->total_time();
-  std::string result = "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
-  // std::cout << "\n--- LOCAL SEARCH ---\nImproved solutions:\n";
+  std::string result = "\n--- Random VND ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
     std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
     result += "Cambiamos a " + search_method->type();

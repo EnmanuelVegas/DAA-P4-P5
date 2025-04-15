@@ -16,6 +16,7 @@
 #include "./inter_reinsertion.h"
 #include "./intra_swap.h"
 #include "./inter_swap.h"
+#include "./two_opt.h"
 
 class SearchMethodSelector {
  public:
