@@ -16,7 +16,6 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
   int counter{0};
   int not_improved{0};
   while (counter++ < this->multistart_rep_) {
-    std::cout << counter << std::endl;
     SolutionPtr solution = BuildCollectionRoutes();
     solution = RandomVND(solution);
     solution->BuildTasks(instance_);

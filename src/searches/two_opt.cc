@@ -11,7 +11,7 @@
 #include "../../include/searches/two_opt.h"
 
 std::pair<bool, SolutionPtr> TwoOpt::GetBestNeighbor(SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
-  std::cout << *solution;
+  // std::cout << *solution;
   SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
   for (auto& vehicle : solution->vehicles()) {
     auto& route = vehicle->route();
@@ -24,11 +24,11 @@ std::pair<bool, SolutionPtr> TwoOpt::GetBestNeighbor(SolutionPtr solution, std::
         }
         SolutionPtr new_solution = std::make_shared<Solution>(*solution);
         auto& new_route = new_solution->vehicles()[vehicle->id() - 1]->route();
-        std::cout << "Unimos en la ruta " << vehicle->id() << " a " << new_route[i]->id() << " con " << new_route[j]->id() << std::endl;
+        // std::cout << "Unimos en la ruta " << vehicle->id() << " a " << new_route[i]->id() << " con " << new_route[j]->id() << std::endl;
         std::reverse(new_route.begin() + i, new_route.begin() + j + 1);
         if (new_solution->IsRouteFeasible(vehicle->id(), instance)) {
           if (IsLess(new_solution->total_time(), best_neighbor->total_time())) {
-            std::cout << "MEJORISIMA" << std::endl;
+            // std::cout << "MEJORISIMA" << std::endl;
             best_neighbor = new_solution;
           }
         }
@@ -36,7 +36,7 @@ std::pair<bool, SolutionPtr> TwoOpt::GetBestNeighbor(SolutionPtr solution, std::
     }
   }
   if (IsLess(best_neighbor->total_time(), solution->total_time())) {
-    std::cout << *best_neighbor;
+    // std::cout << *best_neighbor;
     return {true, best_neighbor};
   }
   return {false, solution};
