@@ -57,7 +57,9 @@ std::pair<bool, SolutionPtr> InterReinsertion::GetBestNeighbor(
     }
   }
   if (IsLess(best_neighbor_time, solution->total_time())) {
-    // std::cout << "Entrada If final" << std::endl;
+    // std::cout << "El vehiculo " << movement_.delete_vehicle_id << " al vehiculo " << movement_.insert_vehicle_id <<
+    //  " la zona " << solution->vehicles()[movement_.delete_vehicle_id - 1]->route()[movement_.delete_zone_id]->id()
+    //   << " a  " << solution->vehicles()[movement_.insert_vehicle_id - 1]->route()[movement_.insert_zone_id]->id() << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& first_route =
         best_neighbor->vehicles()[movement_.delete_vehicle_id - 1]->route();
@@ -68,7 +70,6 @@ std::pair<bool, SolutionPtr> InterReinsertion::GetBestNeighbor(
     second_route.insert(second_route.begin() + movement_.insert_zone_id, zone);
     best_neighbor->UpdateTotalTime(movement_.delete_vehicle_id, instance);
     best_neighbor->UpdateTotalTime(movement_.insert_vehicle_id, instance);
-    // std::cout << "alida If final" << std::endl;
     return {true, best_neighbor};
   }
   return {false, solution};

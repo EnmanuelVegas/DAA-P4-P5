@@ -16,6 +16,7 @@ SolutionPtr RoutesGenerator::GenerateSolution() {
   int counter{0};
   int not_improved{0};
   while (counter++ < 1000) {
+    // std::cout << counter << std::endl;
     SolutionPtr solution = BuildCollectionRoutes();
     solution = RandomVND(solution);
     solution->BuildTasks(instance_);
@@ -25,10 +26,11 @@ SolutionPtr RoutesGenerator::GenerateSolution() {
       best_time = best_solution->total_time();
       not_improved = 0;
     }
-    if(not_improved >= 100) {
+    if (not_improved >= 100) {
       break;
     }
   }
+  std::cout << *best_solution;
   return best_solution;
   // SolutionPtr best_solution;
   // double best_time{std::numeric_limits<double>::max()};
@@ -110,34 +112,35 @@ SolutionPtr RoutesGenerator::BuildCollectionRoutes() {
 }
 
 SolutionPtr RoutesGenerator::RandomVND(SolutionPtr solution) {
+  search_selector_.Reset();
   int old_time = solution->total_time();
-  std::string result = "\n--- Random VND ---\nImproved solutions:\n";
+  // std::cout << "\n--- Random VND ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
     std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
-    result += "Cambiamos a " + search_method->type();
+    // std::cout << "Cambiamos a " + search_method->type();
     bool improved_local{false};
     while (true) {
       std::pair<bool, SolutionPtr> search_result{
           search_method->GetBestNeighbor(solution, this->instance_)};
       if (search_result.first) {
-        result += "- Time: ";
-        result += std::to_string(solution->total_time()) + " --> ";
+        // std::cout << "- Time: ";
+        // std::cout << std::to_string(solution->total_time()) + " --> ";
         solution = search_result.second;
-        result += std::to_string(solution->total_time()) + " \n";
+        // std::cout << std::to_string(solution->total_time()) + " \n";
         improved_local = true;
         continue;
       } else if (improved_local) {
-        result += "Reset!\n";
-        this->search_selector_.Reset();
-        break;
+          // std::cout << "Reset!\n";
+          this->search_selector_.Reset();
+          break;
       } else {
         break;
       }
     }
   }
-  if (solution->total_time() < old_time) {
-    std::cout << result;
-  }
+  // if (solution->total_time() < old_time) {
+  //   std::cout << result;
+  // }
   return solution;
 }
 
@@ -209,8 +212,6 @@ SolutionPtr RoutesGenerator::BuildTransferRoutes(SolutionPtr solution) {
   solution->AssignTransportVehicles(transport_vehicles);
   return solution;
 }
-
-
 
 double RoutesGenerator::CalculateRoutesTime(SolutionPtr solution) {
   double total_time{0};

@@ -36,11 +36,9 @@ std::pair<bool, SolutionPtr> IntraSwap::GetBestNeighbor(
     }
   }
   if (IsLess(best_neighbor_time, solution->total_time())) {
-    // std::cout << "Vehiculo: " << movement_.vehicle_id << " " <<
-    // movement_.first_zone_id << " " << movement_.second_zone_id << std::endl;
-    // // std::cout << std::fixed << std::setprecision(15);
-    // std::cout << "solution time: " << solution->total_time() << ". New time:
-    // " << best_neighbor_time << std::endl;
+    // std::cout << "Del vehiculo " << movement_.vehicle_id << " la zona " << 
+    // solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.first_zone_id]->id()
+    // << " swap con " << solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.second_zone_id]->id() << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& route = best_neighbor->vehicles()[movement_.vehicle_id - 1]->route();
     std::swap(route[movement_.first_zone_id], route[movement_.second_zone_id]);

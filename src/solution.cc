@@ -47,15 +47,17 @@ std::ostream& operator<<(std::ostream& os, const Solution& solution) {
   }
   os << "-> Transport Vehicles: " << solution.transport_vehicles_.size() << std::endl;
   double transport_time{0};
-  for (auto& vehicle : solution.transport_vehicles_) {
-    os << *vehicle;
-    transport_time += vehicle->TimeUsed();
-  }
-  os << "-> Tasks: " << std::endl;
-  for (auto& vehicle : solution.transport_vehicles_) {
-    for (auto& task : vehicle->tasks()) {
-      os << *task;
+  if (solution.transport_vehicles_.size() > 0) {
+    for (auto& vehicle : solution.transport_vehicles_) {
+      os << *vehicle;
+      transport_time += vehicle->TimeUsed();
     }
+    os << "-> Tasks: " << std::endl;
+    for (auto& vehicle : solution.transport_vehicles_) {
+      for (auto& task : vehicle->tasks()) {
+        os << *task;
+      }
+    }  
   }
   os << "Whole time: " << collection_time << " + " << transport_time << " = "
      << collection_time + transport_time << std::endl;

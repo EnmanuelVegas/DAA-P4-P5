@@ -14,12 +14,10 @@ std::pair<bool, SolutionPtr> IntraReinsertion::GetBestNeighbor(
     SolutionPtr solution, std::shared_ptr<VRPInstance> instance) {
   // std::cout << *solution;
   // std::cout << "Entrada IntraReinsertion" << std::endl;
-  int pr;
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
     int route_size{int(vehicle->route().size())};
-    for (int i{1}; i < route_size - 1;
-         i++) {  // From 1 to route size - 2 to avoid mixing the depots
+    for (int i{1}; i < route_size - 1; i++) {  // From 1 to route size - 2 to avoid mixing the depots
       for (int j{1}; j < route_size - 1; j++) {
         if ((instance->IsTransferStation(vehicle->route()[i])) ||
             (instance->IsTransferStation(vehicle->route()[j])) || i == j) {
@@ -45,9 +43,13 @@ std::pair<bool, SolutionPtr> IntraReinsertion::GetBestNeighbor(
       }
     }
   }
-  std::cout << best_neighbor_time << std::endl;
+  // std::cout << best_neighbor_time << std::endl;
   // std::cin >> pr;
   if (IsLess(best_neighbor_time, solution->total_time())) {
+    // std::cout << "Del vehiculo " << movement_.vehicle_id << " la zona " << 
+    // solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.delete_pos]->id() <<
+    //  " a la pos. " << solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.insert_pos]->id() << std::endl;
+
     // std::cout << "Mejora: Vehiculo " << movement_.vehicle_id << ", delete: "
     // << movement_.delete_pos << ", insert in:" << movement_.insert_pos <<
     // std::endl;
