@@ -23,10 +23,11 @@
 #include <memory>
 
 #include "./utils.h"
-#include "../vrp_transshipments.h"
 #include "../vrp_instance.h"
+#include "../solution.h"
 
 class Solution;
+
 typedef std::shared_ptr<Solution> SolutionPtr;
 
 void PrintSolutionSummary(std::vector<SolutionPtr>& solutions, std::vector<std::string>& filenames);

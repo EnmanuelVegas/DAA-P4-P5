@@ -39,20 +39,20 @@ Solution& Solution::operator=(const Solution& other) {
 
 
 std::ostream& operator<<(std::ostream& os, const Solution& solution) {
-  os << "-> Collection Vehicles: " << solution.vehicles_.size() << std::endl;
+  os << "-> COLLECTION: " << solution.vehicles_.size() << std::endl;
   double collection_time{0};
   for (auto& vehicle : solution.vehicles_) {
     os << *vehicle;
     collection_time += vehicle->TimeUsed();
   }
-  os << "-> Transport Vehicles: " << solution.transport_vehicles_.size() << std::endl;
+  os << "-> TRANSPORT: " << solution.transport_vehicles_.size() << std::endl;
   double transport_time{0};
   if (solution.transport_vehicles_.size() > 0) {
     for (auto& vehicle : solution.transport_vehicles_) {
       os << *vehicle;
       transport_time += vehicle->TimeUsed();
     }
-    os << "-> Tasks: " << std::endl;
+    os << "-> Tasks: " << solution.tasks_.size() << std::endl;
     for (auto& vehicle : solution.transport_vehicles_) {
       for (auto& task : vehicle->tasks()) {
         os << *task;

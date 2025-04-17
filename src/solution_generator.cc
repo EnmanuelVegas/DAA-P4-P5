@@ -29,7 +29,7 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
       break;
     }
   }
-  // std::cout << *best_solution;
+  std::cout << *best_solution;
   return best_solution;
 }
 
@@ -118,7 +118,10 @@ SolutionPtr SolutionGenerator::RandomVND(SolutionPtr solution) {
 
 VehiclePtr ChooseVehicle(std::vector<VehiclePtr>& vehicles, TaskPtr task,
                          VRPInstancePtr instance, double max_duration) {
+  VehiclePtr chosen = nullptr;
+  double insertion_cost{std::numeric_limits<double>::max()};
   for (auto& vehicle : vehicles) {
+    // Condition a)
     if (!vehicle->tasks().empty()) {
       int last_task_stop = vehicle->tasks().back()->transfer_id();
       double last_task_time = vehicle->tasks().back()->time();
@@ -129,20 +132,31 @@ VehiclePtr ChooseVehicle(std::vector<VehiclePtr>& vehicles, TaskPtr task,
         continue;
       }
     }
+    // Condition b)
     if (vehicle->remaining_capacity() < task->waste()) {
       continue;
     }
-    double whole_time = vehicle->TimeUsed();
-    whole_time += instance->CalculateTime(vehicle->route().back()->id(),
-                                          task->transfer_id());
-    whole_time += instance->CalculateTime(task->transfer_id(),
+    double zone_time_transport = instance->CalculateTime(vehicle->route().back()->id(),
+                                                         task->transfer_id());
+    double arrival_time = vehicle->TimeUsed() + zone_time_transport;
+    double waiting_time = task->time() - arrival_time;
+    double new_cost = vehicle->TimeUsed();
+    new_cost += zone_time_transport;
+    if (waiting_time > 0) {
+      new_cost += waiting_time;
+    }
+    new_cost += instance->CalculateTime(task->transfer_id(),
                                           instance->dumpsite()->id());
-    if (whole_time > max_duration) {
+    // Condition c)
+    if (new_cost > max_duration) {
       continue;
     }
-    return vehicle;
+    if (new_cost < insertion_cost) {
+      chosen = vehicle;
+      insertion_cost = new_cost;
+    }
   }
-  return nullptr;
+  return chosen;
 }
 
 SolutionPtr SolutionGenerator::BuildTransferRoutes(SolutionPtr solution) {
@@ -160,25 +174,35 @@ SolutionPtr SolutionGenerator::BuildTransferRoutes(SolutionPtr solution) {
   while (!tasks.empty()) {
     TaskPtr task = tasks.front();
     tasks.erase(tasks.begin());
-    VehiclePtr vehicle =
-        ChooseVehicle(transport_vehicles, task, instance_, max_duration);
-    if (!vehicle) {
+    double new_zone_time{0}, arrival_time{0}, waiting_time{0};
+    VehiclePtr vehicle = ChooseVehicle(transport_vehicles, task, instance_, max_duration);
+    if (vehicle == nullptr) {
       int new_vehicle_id = transport_vehicles.size() + 1;
-      vehicle =
-          std::make_shared<Vehicle>(new_vehicle_id, max_duration, max_capacity);
+      vehicle = std::make_shared<Vehicle>(new_vehicle_id, max_duration, max_capacity);
       vehicle->AddStop(instance_->dumpsite());
       vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
       vehicle->DiminishCapacity(task->waste());
-      vehicle->UpdateTime(instance_->CalculateTime(instance_->dumpsite()->id(),
-                                                   task->transfer_id()));
+      new_zone_time = instance_->CalculateTime(vehicle->route().back()->id(), task->transfer_id());
+      arrival_time = vehicle->TimeUsed() + new_zone_time;
+      waiting_time = task->time() - arrival_time;
+      vehicle->UpdateTime(new_zone_time);
+      if (waiting_time > 0) {
+        vehicle->UpdateTime(waiting_time);        
+      }
       transport_vehicles.push_back(vehicle);
     } else {
       vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
       vehicle->DiminishCapacity(task->waste());
-      vehicle->UpdateTime(instance_->CalculateTime(
-          vehicle->route().back()->id(), task->transfer_id()));
+      new_zone_time = instance_->CalculateTime(vehicle->route().back()->id(), task->transfer_id());
+      arrival_time = vehicle->TimeUsed() + new_zone_time;
+      waiting_time = task->time() - arrival_time;
+      vehicle->UpdateTime(new_zone_time);
+      if (waiting_time > 0) {
+        vehicle->UpdateTime(waiting_time);        
+      }
       if (vehicle->remaining_capacity() < min_waste) {
         vehicle->AddStop(instance_->dumpsite());
+        vehicle->UpdateTime(instance_->CalculateTime(vehicle->route().back()->id(), instance_->dumpsite()->id()));
         vehicle->RestoreCapacity();
       }
     }

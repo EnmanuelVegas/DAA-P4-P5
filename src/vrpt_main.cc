@@ -17,6 +17,7 @@
 
 #include "../include/tools/results.h"
 #include "../include/tools/timer.h"
+#include "../include/solution_generator.h"
 
 int main(int argc, char* argv[]) {
   auto options_container = ParseArguments(argc, argv);
