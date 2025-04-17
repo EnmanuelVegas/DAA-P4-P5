@@ -22,16 +22,22 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
       options.show_help = true;
       return options;
     }
-    if (args[arguments_counter] == "-m" || args[arguments_counter] == "--multi") {
-      options.multi_run = true;
-      arguments_counter++;
-    }
     options.instances_source = std::string(args[arguments_counter++]);
-    if (args[arguments_counter++] == "-s") {
+    if (args[arguments_counter] == "-g" || args[arguments_counter] == "-grasp" ) {
+      arguments_counter++;
       options.grasp_size = std::stoi(std::string(args[arguments_counter++]));
     }
     else {
-      throw std::invalid_argument("Expected -s (GRASP size)!");
+      throw std::invalid_argument("Expected -g (GRASP size)!");
+    }
+    if (args[arguments_counter] == "-m" || args[arguments_counter] == "--multi") {
+      options.multistart_quantity = std::stoi(std::string(args[++arguments_counter]));
+    }
+    else {
+      throw std::invalid_argument("Expected -m (MULTISTART quantity)!");
+    }
+    if (options.grasp_size < 1 || options.multistart_quantity < 1) {
+      throw std::invalid_argument("Arguments must be higher than 0!");
     }
   }
   catch (const std::exception& error) {

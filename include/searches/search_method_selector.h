@@ -4,25 +4,25 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file routes_generator.h: Declaracion de la clase 'RoutesGenerator'.
+ * @file solution_generator.h: Declaracion de la clase 'SolutionGenerator'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
 #ifndef SEARCH_METHOD_SELECTOR_H
 #define SEARCH_METHOD_SELECTOR_H
 
-#include "./local_search.h"
-#include "./intra_reinsertion.h"
 #include "./inter_reinsertion.h"
-#include "./intra_swap.h"
 #include "./inter_swap.h"
+#include "./intra_reinsertion.h"
+#include "./intra_swap.h"
+#include "./local_search.h"
 #include "./two_opt.h"
 
 class SearchMethodSelector {
  public:
   SearchMethodSelector(int seed = std::random_device{}());
 
-  ~SearchMethodSelector() { }
+  ~SearchMethodSelector() {}
 
   std::shared_ptr<LocalSearch> SelectMethod();
 

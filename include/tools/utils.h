@@ -25,11 +25,9 @@ constexpr double kEpsilon = 1e-9;
 
 struct ProgramOptions {
   bool show_help{false};
-  bool multi_run{false};
   std::string instances_source{""};
-  // bool imprimir_fichero = false;
+  int multistart_quantity{0};
   int grasp_size{0};
-  // std::string algoritmo = "quicksort";
 };
 
 std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]);

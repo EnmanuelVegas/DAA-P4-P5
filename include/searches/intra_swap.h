@@ -4,7 +4,7 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file routes_generator.h: Declaracion de la clase 'RoutesGenerator'.
+ * @file solution_generator.h: Declaracion de la clase 'SolutionGenerator'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 

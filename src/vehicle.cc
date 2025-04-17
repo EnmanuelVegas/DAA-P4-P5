@@ -10,12 +10,15 @@
 
 #include "../include/vehicle.h"
 
-#include "../include/routes_generator.h"
+#include "../include/solution_generator.h"
 #include "../include/zone.h"
 
-Vehicle::Vehicle(const Vehicle& other) : id_(other.id_), remaining_time_(other.remaining_time_),
-  remaining_capacity_(other.remaining_capacity_), max_capacity_(other.max_capacity_),
-  max_time_(other.max_time_) {
+Vehicle::Vehicle(const Vehicle& other)
+    : id_(other.id_),
+      remaining_time_(other.remaining_time_),
+      remaining_capacity_(other.remaining_capacity_),
+      max_capacity_(other.max_capacity_),
+      max_time_(other.max_time_) {
   // Copia profunda de la ruta
   for (const auto& zone : other.route_) {
     route_.push_back(std::make_shared<Zone>(*zone));
@@ -71,19 +74,16 @@ void Vehicle::AssignTask(TaskPtr task) {
   return;
 }
 
-double Vehicle::TimeUsed() {
-  return this->max_time_ - this->remaining_time_;
-}
+double Vehicle::TimeUsed() { return this->max_time_ - this->remaining_time_; }
 
 void Vehicle::UpdateRouteTime(double time_diff) {
   // std::cout << "TIME DIFF: " << time_diff << std::endl;
   // std::cout << "REMAIN: " << remaining_time_ << std::endl;
 
-  remaining_time_ = remaining_time_ - time_diff; 
+  remaining_time_ = remaining_time_ - time_diff;
   // std::cout << "CURRENT: " << remaining_time_ << std::endl;
   return;
 }
-
 
 std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
   os << "*** Vehicle Nº " << vehicle.id_ << " ***" << "\n";

@@ -4,7 +4,7 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file routes_generator.h: Declaracion de la clase 'RoutesGenerator'.
+ * @file solution_generator.h: Declaracion de la clase 'SolutionGenerator'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
@@ -21,16 +21,18 @@ struct TwoOptMovement {
 
 class TwoOpt : public LocalSearch {
  public:
-  TwoOpt() : movement_(TwoOptMovement()) { }
+  TwoOpt() : movement_(TwoOptMovement()) {}
 
-  ~TwoOpt() { }
+  ~TwoOpt() {}
 
-  std::pair<bool, SolutionPtr> GetBestNeighbor(SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
+  std::pair<bool, SolutionPtr> GetBestNeighbor(
+      SolutionPtr solution, std::shared_ptr<VRPInstance> instance);
 
   std::string type() { return "2-opt.\n"; }
 
  private:
-  bool CheckMovement(SolutionPtr solution, TwoOptMovement movement, std::shared_ptr<VRPInstance> instance);
+  bool CheckMovement(SolutionPtr solution, TwoOptMovement movement,
+                     std::shared_ptr<VRPInstance> instance);
 
   TwoOptMovement movement_;
 };

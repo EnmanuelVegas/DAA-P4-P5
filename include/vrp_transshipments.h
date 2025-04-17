@@ -4,7 +4,7 @@
  * Grado en Ingeniería Informática
  * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file routes_generator.h: Declaracion de la clase 'RoutesGenerator'.
+ * @file solution_generator.h: Declaracion de la clase 'SolutionGenerator'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
@@ -15,7 +15,7 @@
 #include <set>
 #include <vector>
 
-#include "routes_generator.h"
+#include "solution_generator.h"
 #include "vrp_instance.h"
 
 /*
@@ -23,8 +23,8 @@
  */
 class VRPTransshipments {
  public:
-  VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size, 
-                    int seed = std::random_device{}());
+  VRPTransshipments(std::shared_ptr<VRPInstance> instance, int candidates_size,
+                    int multistart_quantity, int seed = std::random_device{}());
 
   // std::vector<Vehicle> ComputeUsedVehicles();
 
@@ -32,7 +32,7 @@ class VRPTransshipments {
 
  private:
   std::shared_ptr<VRPInstance> instance_;
-  RoutesGenerator route_generator_;
+  SolutionGenerator route_generator_;
   std::vector<Zone> zones_;
   std::vector<Zone> transport_zones_;
 };

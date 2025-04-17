@@ -12,11 +12,11 @@
  */
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
-#include "../include/tools/timer.h"
 #include "../include/tools/results.h"
+#include "../include/tools/timer.h"
 
 int main(int argc, char* argv[]) {
   auto options_container = ParseArguments(argc, argv);
@@ -32,14 +32,19 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> files = GetFiles(options.instances_source);
     std::vector<SolutionPtr> solutions = std::vector<SolutionPtr>(0);
     int grasp_size = options.grasp_size;
+    int multistart_quantity = options.multistart_quantity;
     std::shared_ptr<VRPInstance> instance;
-    std::shared_ptr<VRPTransshipments> solver;
+    std::shared_ptr<SolutionGenerator> solver;
     for (auto& input_file : files) {
       instance = std::make_shared<VRPInstance>(input_file);
-      solver = std::make_shared<VRPTransshipments>(instance, grasp_size);
+      // solver = std::make_shared<SolutionGenerator>(instance, grasp_size,
+      // multistart_quantity, 123);
+      solver = std::make_shared<SolutionGenerator>(instance, grasp_size,
+                                                   multistart_quantity);
       // chrono_timer.StartStopwatch();
-      solutions.push_back(solver->ComputeRoutes());
-      // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() << " milliseconds\n";
+      solutions.push_back(solver->GenerateSolution());
+      // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() <<
+      // " milliseconds\n";
     }
     PrintSolutionSummary(solutions, files);
   } catch (const std::exception& error) {
