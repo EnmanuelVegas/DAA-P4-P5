@@ -2,10 +2,15 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file solution_generator.h: Declaracion de la clase 'SolutionGenerator'.
- * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
+ * @file search_method_selector.h
+ * @brief Declaration of the `SearchMethodSelector` class.
+ *
+ * This file contains the definition of the `SearchMethodSelector` class, which
+ * manages the selection of local search methods for solving VRP.
+ *
+ * @date April 22, 2025
  */
 
 #ifndef SEARCH_METHOD_SELECTOR_H
@@ -18,16 +23,44 @@
 #include "./local_search.h"
 #include "./two_opt.h"
 
+/**
+ * @class SearchMethodSelector
+ * @brief Manages the selection of local search methods.
+ *
+ * The `SearchMethodSelector` class provides functionality to select and manage
+ * different local search methods for solving VRP.
+ */
 class SearchMethodSelector {
  public:
+  /**
+   * @brief Constructor with an optional random seed.
+   *
+   * @param seed Random seed for method selection.
+   */
   SearchMethodSelector(int seed = std::random_device{}());
 
+  /**
+   * @brief Default destructor.
+   */
   ~SearchMethodSelector() {}
 
+  /**
+   * @brief Selects a local search method.
+   *
+   * @return A shared pointer to the selected local search method.
+   */
   std::shared_ptr<LocalSearch> SelectMethod();
 
+  /**
+   * @brief Checks if there are no active search methods.
+   *
+   * @return true if no methods are active, false otherwise.
+   */
   bool IsEmpty();
 
+  /**
+   * @brief Resets the state of the search methods.
+   */
   void Reset();
 
  private:

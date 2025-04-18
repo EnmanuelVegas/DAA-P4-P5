@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'Vehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -15,19 +15,15 @@ std::pair<bool, SolutionPtr> InterReinsertion::GetBestNeighbor(
   // std::cout << *solution;
   // std::cout << "Entrada InterReinsertion" << std::endl;
   double best_neighbor_time = solution->total_time();
-  // SolutionPtr local_optimal = std::make_shared<Solution>(*solution);
-  int hola;
   int vehicles_size{int(solution->vehicles().size())};
   for (int i{0}; i < vehicles_size; i++) {
     auto vehicle = solution->vehicles()[i];
     int route_size{int(vehicle->route().size())};
-    for (int k{1}; k < route_size - 1;
-         k++) {  // From 1 to route size - 2 to avoid mixing the depots
+    for (int k{1}; k < route_size - 1; k++) {
       for (int l{0}; l < vehicles_size; l++) {
         auto other_vehicle = solution->vehicles()[l];
         int other_route_size{int(other_vehicle->route().size())};
-        for (int m{1}; m < other_route_size - 1;
-             m++) {  // From 1 to route size - 2 to avoid mixing the depots
+        for (int m{1}; m < other_route_size - 1; m++) {
           if (instance->IsTransferStation(vehicle->route()[k]) ||
               instance->IsTransferStation(other_vehicle->route()[m]) ||
               vehicle->id() == other_vehicle->id()) {
@@ -43,23 +39,24 @@ std::pair<bool, SolutionPtr> InterReinsertion::GetBestNeighbor(
           if (!(IsLess(new_times.whole_time, best_neighbor_time))) {
             continue;
           }
-          if (CheckMovement(solution, new_times, instance)) {
-            // std::cout << "CANDIDATO: Vehiculo " << i + 1 << ", otro " << l + 1
-            //           << ", first: " << vehicle->route()[k]->id()
-            //           << ", second:" << other_vehicle->route()[m]->id()
-            //           << std::endl;
+          if (IsLegalMovement(solution, new_times, instance)) {
+            // std::cout << "CANDIDATO: Vehiculo " << i + 1 << ", otro " << l +
+            // 1 << ", first: " << vehicle->route()[k]->id()
+            // << ", second:" << other_vehicle->route()[m]->id() << std::endl;
             movement_ = candidate;
             best_neighbor_time = new_times.whole_time;
-            // std::cin >> hola;
           }
         }
       }
     }
   }
   if (IsLess(best_neighbor_time, solution->total_time())) {
-    // std::cout << "El vehiculo " << movement_.delete_vehicle_id << " al vehiculo " << movement_.insert_vehicle_id <<
-    //  " la zona " << solution->vehicles()[movement_.delete_vehicle_id - 1]->route()[movement_.delete_zone_id]->id()
-    //   << " a  " << solution->vehicles()[movement_.insert_vehicle_id - 1]->route()[movement_.insert_zone_id]->id() << std::endl;
+    // std::cout << "El vehiculo " << movement_.delete_vehicle_id << " al
+    // vehiculo " << movement_.insert_vehicle_id <<
+    //  " la zona " << solution->vehicles()[movement_.delete_vehicle_id -
+    //  1]->route()[movement_.delete_zone_id]->id()
+    //   << " a  " << solution->vehicles()[movement_.insert_vehicle_id -
+    //   1]->route()[movement_.insert_zone_id]->id() << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& first_route =
         best_neighbor->vehicles()[movement_.delete_vehicle_id - 1]->route();
@@ -68,8 +65,8 @@ std::pair<bool, SolutionPtr> InterReinsertion::GetBestNeighbor(
     ZonePtr zone = first_route[movement_.delete_zone_id];
     first_route.erase(first_route.begin() + movement_.delete_zone_id);
     second_route.insert(second_route.begin() + movement_.insert_zone_id, zone);
-    best_neighbor->UpdateTotalTime(movement_.delete_vehicle_id, instance);
-    best_neighbor->UpdateTotalTime(movement_.insert_vehicle_id, instance);
+    best_neighbor->UpdateRouteTime(movement_.delete_vehicle_id, instance);
+    best_neighbor->UpdateRouteTime(movement_.insert_vehicle_id, instance);
     return {true, best_neighbor};
   }
   return {false, solution};
@@ -131,14 +128,12 @@ InterReinsertionTimes InterReinsertion::GetNewTime(
   // std::cout <<  "RESULT " << old_time - deleted_time + added_time <<
   // std::endl;
   times.whole_time = old_time - deleted_time + added_time;
-  // std::cout << "Salida Get New Time" << std::endl;
   return times;
 }
 
-bool InterReinsertion::CheckMovement(SolutionPtr solution,
-                                     InterReinsertionTimes times,
-                                     std::shared_ptr<VRPInstance> instance) {
-  // std::cout << "CheckMovement" << std::endl;
+bool InterReinsertion::IsLegalMovement(SolutionPtr solution,
+                                       InterReinsertionTimes times,
+                                       std::shared_ptr<VRPInstance> instance) {
   if (times.delete_route_time > instance->max_collection_time() ||
       times.insert_route_time > instance->max_collection_time()) {
     return false;
@@ -171,6 +166,5 @@ bool InterReinsertion::CheckMovement(SolutionPtr solution,
       return false;
     }
   }
-  // std::cout << "Salida Check" << std::endl;
   return true;
 }

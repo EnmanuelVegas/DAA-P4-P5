@@ -2,36 +2,52 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
- * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
- * @brief Utility methods for this project.
+ * Diseño y Análisis de Algoritmos (3º curso)
+ * @file results.h
+ * @brief Utility methods for handling and summarizing results.
+ *
+ * This file contains utility methods for processing and summarizing results
+ * in the context of the Vehicle Routing Problem (VRP).
+ *
+ * @date April 22, 2025
  */
 
-#ifndef RESULTS_H
-#define RESULTS_H
-
-#include <expected>
-#include <fstream>
-#include <iostream>
-#include <optional>
-#include <string_view>
-#include <vector>
-#include <filesystem>
-#include <algorithm>
-#include <regex>
-#include <cmath>
-#include <memory>
-
-#include "./utils.h"
-#include "../vrp_instance.h"
-#include "../solution.h"
-
-class Solution;
-
-typedef std::shared_ptr<Solution> SolutionPtr;
-
-void PrintSolutionSummary(std::vector<SolutionPtr>& solutions, std::vector<std::string>& filenames);
-
-void PrintHeader();
-
-#endif
+ #ifndef RESULTS_H
+ #define RESULTS_H
+ 
+ #include <algorithm>
+ #include <cmath>
+ #include <fstream>
+ #include <iostream>
+ #include <memory>
+ #include <regex>
+ #include <vector>
+ 
+ #include "../solution.h"
+ #include "../vrp_instance.h"
+ #include "./utils.h"
+ 
+ class Solution;
+ 
+ typedef std::shared_ptr<Solution> SolutionPtr;
+ 
+ /**
+  * @brief Prints a summary of the solutions.
+  *
+  * This function processes and prints a summary of the provided solutions
+  * along with their corresponding filenames.
+  *
+  * @param solutions A vector of solutions to summarize.
+  * @param filenames A vector of filenames corresponding to the solutions.
+  */
+ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
+                           std::vector<std::string>& filenames);
+ 
+ /**
+  * @brief Prints the header for the solution summary.
+  *
+  * This function prints the header used in the solution summary output.
+  */
+ void PrintHeader();
+ 
+ #endif

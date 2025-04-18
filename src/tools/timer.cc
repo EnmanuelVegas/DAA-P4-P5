@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file timer.cc: Fichero de definición de métodos de la clase Timer.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -21,7 +21,9 @@ double Timer::FinishStopwatch() {
 }
 
 double Timer::CalculateTimeDifference() {
-  double elapsed = std::chrono::duration_cast<std::chrono::microseconds>(finish_time_ - start_time_).count();
+  double elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
+                       finish_time_ - start_time_)
+                       .count();
   // return elapsed * kSecondsTransformator;
   return elapsed;
 }

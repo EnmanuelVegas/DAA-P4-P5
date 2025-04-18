@@ -2,19 +2,20 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
- * @file greedy_vehicle_route.cc: Definición de métodos de la clase 'VRPTransshipments'.
+ * @file greedy_vehicle_route.cc: Definición de métodos de la clase
+ * 'VRPTransshipments'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
  */
 
 #include "../include/vrp_instance.h"
 
-VRPInstance::VRPInstance(std::string& input_name) :
-                      zones_(std::vector<ZonePtr>(0)),
-                      distances_(std::vector<std::vector<double>>(0)) {
+VRPInstance::VRPInstance(std::string& input_name)
+    : zones_(std::vector<ZonePtr>(0)),
+      distances_(std::vector<std::vector<double>>(0)) {
   std::ifstream input_file{input_name};
-  if(!input_file.is_open()) {
+  if (!input_file.is_open()) {
     throw std::runtime_error("Cannot open input file!");
   }
   std::string line{""};
@@ -60,7 +61,7 @@ void VRPInstance::ReadZones(std::ifstream& filestream) {
   for (int i{0}; i < this->max_zones_; i++) {
     filestream >> id >> coord_x >> coord_y >> d1 >> d2;
     std::pair<int, int> coordinates{coord_x, coord_y};
-    std::pair<int, int> demands{d1, d2}; 
+    std::pair<int, int> demands{d1, d2};
     this->zones_.emplace_back(std::make_shared<Zone>(id, coordinates, demands));
   }
   return;
@@ -81,13 +82,13 @@ ZonePtr VRPInstance::single_transfer_station(int id) {
   return zones_[id - 1];
 }
 
-
 double VRPInstance::GetDistance(int actual_id, int destination_id) {
   // std::cout << (destination_id > this->zones_.size()) << std::endl;
   if ((destination_id <= 0 || destination_id > this->zones_.size() + 4 - 1) ||
-       actual_id <= 0 || actual_id > this->zones_.size() + 4 - 1) {
-      std::string error_positions = std::to_string(actual_id) + ", " + std::to_string(destination_id);
-      throw std::out_of_range("Not permited positions: " + error_positions + ".");
+      actual_id <= 0 || actual_id > this->zones_.size() + 4 - 1) {
+    std::string error_positions =
+        std::to_string(actual_id) + ", " + std::to_string(destination_id);
+    throw std::out_of_range("Not permited positions: " + error_positions + ".");
   }
   if (actual_id >= destination_id) {
     return distances_[actual_id - 1][destination_id - 1];
@@ -111,7 +112,8 @@ void VRPInstance::ComputeDistances() {
   // for (int i{0}; i < max_zones_ + 4; i++) {
   //   std::cout << std::setw(8) << i + 1 << " ";  // Ancho fijo de 5 caracteres
   //   for (int j{0}; j < max_zones_ + 4; j++) {
-  //     std::cout << std::setw(8) << distances_[i][j] << " ";  // Ancho fijo de 5 caracteres
+  //     std::cout << std::setw(8) << distances_[i][j] << " ";  // Ancho fijo de
+  //     5 caracteres
   //   }
   //   std::cout << std::endl;
   // }
@@ -123,6 +125,7 @@ double VRPInstance::CalculateTime(int actual_id, int destination_id) {
 }
 
 bool VRPInstance::IsTransferStation(ZonePtr zone) {
-  return (zone->id() == zones_[max_zones_ + 1]->id() ? true : ((zone->id() == zones_[max_zones_ + 2]->id()) ? true : false));
+  return (zone->id() == zones_[max_zones_ + 1]->id()
+              ? true
+              : ((zone->id() == zones_[max_zones_ + 2]->id()) ? true : false));
 }
-

@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'Vehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -16,8 +16,7 @@ std::pair<bool, SolutionPtr> IntraSwap::GetBestNeighbor(
   double best_neighbor_time = solution->total_time();
   for (auto& vehicle : solution->vehicles()) {
     int route_size{int(vehicle->route().size())};
-    for (int i{1}; i < route_size - 1;
-         i++) {  // From 1 to route size - 2 to avoid mixing the depots
+    for (int i{1}; i < route_size - 1; i++) {
       for (int j{i + 1}; j < route_size - 1; j++) {
         if ((instance->IsTransferStation(vehicle->route()[i])) ||
             (instance->IsTransferStation(vehicle->route()[j])) || i == j) {
@@ -28,7 +27,7 @@ std::pair<bool, SolutionPtr> IntraSwap::GetBestNeighbor(
         if (!(IsLess(new_time, best_neighbor_time))) {
           continue;
         }
-        if (CheckMovement(solution, candidate, instance)) {
+        if (IsLegalMovement(solution, candidate, instance)) {
           movement_ = {vehicle->id(), i, j};
           best_neighbor_time = new_time;
         }
@@ -36,13 +35,15 @@ std::pair<bool, SolutionPtr> IntraSwap::GetBestNeighbor(
     }
   }
   if (IsLess(best_neighbor_time, solution->total_time())) {
-    // std::cout << "Del vehiculo " << movement_.vehicle_id << " la zona " << 
-    // solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.first_zone_id]->id()
-    // << " swap con " << solution->vehicles()[movement_.vehicle_id - 1]->route()[movement_.second_zone_id]->id() << std::endl;
+    // std::cout << "Del vehiculo " << movement_.vehicle_id << " la zona " <<
+    // solution->vehicles()[movement_.vehicle_id -
+    // 1]->route()[movement_.first_zone_id]->id()
+    // << " swap con " << solution->vehicles()[movement_.vehicle_id -
+    // 1]->route()[movement_.second_zone_id]->id() << std::endl;
     SolutionPtr best_neighbor = std::make_shared<Solution>(*solution);
     auto& route = best_neighbor->vehicles()[movement_.vehicle_id - 1]->route();
     std::swap(route[movement_.first_zone_id], route[movement_.second_zone_id]);
-    best_neighbor->UpdateTotalTime(movement_.vehicle_id, instance);
+    best_neighbor->UpdateRouteTime(movement_.vehicle_id, instance);
     return {true, best_neighbor};
   }
   return {false, solution};
@@ -103,8 +104,9 @@ double IntraSwap::GetNewTime(SolutionPtr new_solution,
   return old_time - deleted_time + added_time;
 }
 
-bool IntraSwap::CheckMovement(SolutionPtr solution, IntraSwapMovement movement,
-                              std::shared_ptr<VRPInstance> instance) {
+bool IntraSwap::IsLegalMovement(SolutionPtr solution,
+                                IntraSwapMovement movement,
+                                std::shared_ptr<VRPInstance> instance) {
   auto route = solution->vehicles()[movement.vehicle_id - 1]->route();
   std::swap(route[movement.first_zone_id], route[movement.second_zone_id]);
   double waste{0};

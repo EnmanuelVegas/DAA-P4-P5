@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'Vehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -11,6 +11,8 @@
 #include "../include/solution.h"
 
 Solution::Solution(const Solution& other) : Solution() {
+  collection_time_ = other.collection_time_;
+  transport_time_ = other.transport_time_;
   total_time_ = other.total_time_;
   for (const auto& vehicle : other.vehicles_) {
     vehicles_.push_back(std::make_shared<CollectionVehicle>(*vehicle));
@@ -18,20 +20,21 @@ Solution::Solution(const Solution& other) : Solution() {
   for (const auto& vehicle : other.transport_vehicles_) {
     transport_vehicles_.push_back(std::make_shared<TransportVehicle>(*vehicle));
   }
-  improvements_counter_ = other.improvements_counter_;
 }
 
 // Operador de asignación para copia profunda
 Solution& Solution::operator=(const Solution& other) {
   if (this != &other) {
-    improvements_counter_ = other.improvements_counter_;
+    collection_time_ = other.collection_time_;
+    transport_time_ = other.transport_time_;
     total_time_ = other.total_time_;
     vehicles_.clear();
     for (const auto& vehicle : other.vehicles_) {
       vehicles_.push_back(std::make_shared<CollectionVehicle>(*vehicle));
     }
     for (const auto& vehicle : other.transport_vehicles_) {
-      transport_vehicles_.push_back(std::make_shared<TransportVehicle>(*vehicle));
+      transport_vehicles_.push_back(
+          std::make_shared<TransportVehicle>(*vehicle));
     }
   }
   return *this;
@@ -67,20 +70,21 @@ void Solution::PrintVehicleRoute(int vehicle_id) {
   for (const auto& zone : this->vehicles_[vehicle_id - 1]->route()) {
     std::cout << zone->id() << " ";
   }
-  std::cout << "\n";
+  std::cout << std::endl;
   return;
 }
 
-void Solution::PushVehicle(CollectionVehiclePtr vehicle) {
+void Solution::PushCollectionVehicle(CollectionVehiclePtr vehicle) {
   this->vehicles_.push_back(vehicle);
-  this->total_time_ += vehicle->TimeUsed();
+  this->collection_time_ += vehicle->TimeUsed();
   return;
 }
-void Solution::AssignTransportVehicles(std::vector<TransportVehiclePtr>& vehicles) {
+
+void Solution::AssignTransportVehicles(
+    std::vector<TransportVehiclePtr>& vehicles) {
   for (auto& vehicle : vehicles) {
-    // std::cout << *vehicle;
     this->transport_vehicles_.push_back(vehicle);
-    // std::cout << this->transport_vehicles_.size();
+    this->transport_time_ += vehicle->TimeUsed();
   }
   return;
 }
@@ -89,21 +93,15 @@ bool Solution::IsBetter(SolutionPtr another) {
   if (another == nullptr) {
     return true;
   }
-  // int vehicles_quantity = vehicles_.size() + transport_vehicles_.size();
-  // int other_vehicles_quantity = another->vehicles().size() +
-  // another->transport_vehicles().size(); if (vehicles_quantity <
-  // other_vehicles_quantity) {
-  //   return true;
-  // }
-  // else if (vehicles_quantity > other_vehicles_quantity) {
-  //   return false;
-  // }
-  double solution_time = this->total_time_;
-  double other_time = another->total_time();
-  if (solution_time < other_time) {
-    return true;
+  int vehicles_quantity = vehicles_.size() + transport_vehicles_.size();
+  int other_vehicles_quantity =
+      another->vehicles().size() + another->transport_vehicles().size();
+  if (vehicles_quantity != other_vehicles_quantity) {
+    return other_vehicles_quantity > vehicles_quantity ? true : false;
   }
-  return false;
+  double solution_time = this->collection_time();
+  double other_time = another->collection_time();
+  return other_time > solution_time ? true : false;
 }
 
 void Solution::BuildTasks(VRPInstancePtr instance) {
@@ -111,8 +109,7 @@ void Solution::BuildTasks(VRPInstancePtr instance) {
     double time{0};
     double waste_collected{0};
     int route_size = int(vehicle->route().size());
-    for (int j{1}; j < route_size;
-         j++) {  // Start from 1 to avoid adding depot.
+    for (int j{1}; j < route_size; j++) {
       ZonePtr current_stop = vehicle->route()[j];
       ZonePtr last_stop = vehicle->route()[j - 1];
       time += instance->CalculateTime(last_stop->id(), current_stop->id());
@@ -129,40 +126,26 @@ void Solution::BuildTasks(VRPInstancePtr instance) {
   return;
 }
 
-void Solution::UpdateTotalTime(int vehicle_id, VRPInstancePtr instance) {
-  // std::cout << "Max " << instance->collection_capacity() << std::endl;
+void Solution::UpdateRouteTime(int vehicle_id, VRPInstancePtr instance) {
   CollectionVehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
-  // std::cout << "Desde dentro" << std::endl;
-  // for (auto& zone : vehicle->route()) {
-  //   std::cout << zone->id() << " ";
-  // }
-  // std::cout << std::endl;
-
-  // std::cout << "Total " << this->total_time_ << std::endl;
-  this->total_time_ -= vehicle->TimeUsed();
-  // std::cout << "Total " << this->total_time_ << std::endl;
-  // std::cout << "CAR BEFORE: " << vehicle->remaining_time();
+  this->collection_time_ -= vehicle->TimeUsed();
   vehicle->RestoreTime();
   int route_size = int(vehicle->route().size());
   for (int j{1}; j < route_size; j++) {
     ZonePtr current_stop = vehicle->route()[j];
     ZonePtr last_stop = vehicle->route()[j - 1];
-    // std::cout << current_stop->id() << " -> " << waste_collected <<
-    // std::endl;
     vehicle->UpdateTime(
         instance->CalculateTime(last_stop->id(), current_stop->id()));
     vehicle->UpdateTime(current_stop->process_time());
-    // std::cout << "CAR: " << vehicle->remaining_time();
   }
-  this->total_time_ += vehicle->TimeUsed();
-  // std::cout << "After recalculation " << this->total_time_ << std::endl;
+  this->collection_time_ += vehicle->TimeUsed();
   return;
 }
 
 bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
   // std::cout << "Max " << instance->collection_capacity() << std::endl;
   CollectionVehiclePtr vehicle = this->vehicles_[vehicle_id - 1];
-  this->total_time_ -= vehicle->TimeUsed();
+  this->collection_time_ -= vehicle->TimeUsed();
   vehicle->RestoreCapacity();
   vehicle->RestoreTime();
   int route_size = int(vehicle->route().size());
@@ -184,6 +167,6 @@ bool Solution::IsRouteFeasible(int vehicle_id, VRPInstancePtr instance) {
       return false;
     }
   }
-  this->total_time_ += vehicle->TimeUsed();
+  this->collection_time_ += vehicle->TimeUsed();
   return true;
 }

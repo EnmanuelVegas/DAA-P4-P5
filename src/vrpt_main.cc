@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vrpt_main.cc: Programa cliente.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -15,9 +15,9 @@
 #include <memory>
 #include <string>
 
+#include "../include/solution_generator.h"
 #include "../include/tools/results.h"
 #include "../include/tools/timer.h"
-#include "../include/solution_generator.h"
 
 int main(int argc, char* argv[]) {
   auto options_container = ParseArguments(argc, argv);

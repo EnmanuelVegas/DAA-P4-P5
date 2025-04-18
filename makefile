@@ -1,7 +1,7 @@
 	# Universidad de La Laguna
 	# Escuela Superior de Ingeniería y Tecnología
 	# Grado en Ingeniería Informática
-	# Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+	# Diseño y Análisis de Algoritmos (3º curso)
 	# 
 	# @file makefile: Fichero de compilación automática para proyectos.
 	# @author Enmanuel Vegas (alu0101281698@ull.edu.es)

@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'Vehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -10,14 +10,13 @@
 
 #include "../include/zone.h"
 
-Zone::Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands) 
-: id_(id), coordinates_(coordinates) {
+Zone::Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands)
+    : id_(id), coordinates_(coordinates) {
   // std::cout << waste_quantity_ << std::endl;
   this->process_time_ = demands.first;
   this->waste_quantity_ = demands.second;
   return;
 }
-
 
 Zone::Zone(int id, std::string& input) : waste_quantity_(0), process_time_(0) {
   this->id_ = id;
@@ -29,9 +28,8 @@ Zone::Zone(int id, std::string& input) : waste_quantity_(0), process_time_(0) {
   return;
 }
 
-
 // CollectionZone::CollectionZone(int id, std::pair<int, int> coordinates,
-//                                std::pair<int, int> demands) : Zone(id, coordinates) {
+//                                std::pair<int, int> demands) : Zone(id,
+//                                coordinates) {
 //   this->demands_ = demands;
 // }
-

@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'CollectionVehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -14,10 +14,11 @@
 #include "../include/zone.h"
 
 CollectionVehicle::CollectionVehicle(const CollectionVehicle& other)
-    : Vehicle(other) { }
+    : Vehicle(other) {}
 
 // Operador de asignación para copia profunda
-CollectionVehicle& CollectionVehicle::operator=(const CollectionVehicle& other) {
+CollectionVehicle& CollectionVehicle::operator=(
+    const CollectionVehicle& other) {
   if (this != &other) {
     id_ = other.id_;
     remaining_time_ = other.remaining_time_;

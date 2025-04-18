@@ -2,7 +2,7 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Diseño y Análisis de Algoritmos (3º curso)
+ * Diseño y Análisis de Algoritmos (3º curso)
  *
  * @file vehicle.cc: Definición de métodos de la clase 'Vehicle'.
  * @author Enmanuel Vegas (alu0101281698@ull.edu.es)
@@ -40,9 +40,7 @@ std::shared_ptr<LocalSearch> SearchMethodSelector::SelectMethod() {
   return this->search_methods_[final_index];
 }
 
-bool SearchMethodSelector::IsEmpty() {
-  return active_elements_quantity_ == 0;
-}
+bool SearchMethodSelector::IsEmpty() { return active_elements_quantity_ == 0; }
 
 void SearchMethodSelector::Reset() {
   active_elements_quantity_ = search_methods_.size();
