@@ -44,8 +44,8 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
   SolutionPtr solution = std::make_shared<Solution>();
   int vehicle_index = 1;
   while (!zones.empty()) {
-    VehiclePtr current_vehicle =
-        std::make_shared<Vehicle>(vehicle_index, max_time, collection_capacity);
+    CollectionVehiclePtr current_vehicle =
+        std::make_shared<CollectionVehicle>(vehicle_index, max_time, collection_capacity);
     current_vehicle->AddStop(depot);
     while (true) {
       ZonePtr last_stop = current_vehicle->route().back();
@@ -116,45 +116,70 @@ SolutionPtr SolutionGenerator::RandomVND(SolutionPtr solution) {
   return solution;
 }
 
-VehiclePtr ChooseVehicle(std::vector<VehiclePtr>& vehicles, TaskPtr task,
-                         VRPInstancePtr instance, double max_duration) {
-  VehiclePtr chosen = nullptr;
+TransportVehiclePtr ChooseVehicle(std::vector<TransportVehiclePtr>& candidates,
+                                   TaskPtr task, VRPInstancePtr instance,
+                                   double max_duration) {
+  TransportVehiclePtr chosen = nullptr;
   double insertion_cost{std::numeric_limits<double>::max()};
-  for (auto& vehicle : vehicles) {
+  double zone_time_transport;
+  double arrival_time;
+  double waiting_time;
+
+  for (auto& candidate : candidates) {
     // Condition a)
-    if (!vehicle->tasks().empty()) {
-      int last_task_stop = vehicle->tasks().back()->transfer_id();
-      double last_task_time = vehicle->tasks().back()->time();
+    if (!candidate->tasks().empty()) {
+      int last_task_stop = candidate->tasks().back()->transfer_id();
+      double last_task_time = candidate->tasks().back()->time();
       double current_task_time = task->time();
-      double travel_time =
-          instance->CalculateTime(last_task_stop, task->transfer_id());
+      double travel_time = instance->CalculateTime(last_task_stop, task->transfer_id());
       if (travel_time > (current_task_time - last_task_time)) {
+        // std::cout << "CONDITION A\n";
         continue;
       }
     }
     // Condition b)
-    if (vehicle->remaining_capacity() < task->waste()) {
+    if (candidate->remaining_capacity() < task->waste()) {
+      // std::cout << "CONDITION B\n";
       continue;
     }
-    double zone_time_transport = instance->CalculateTime(vehicle->route().back()->id(),
-                                                         task->transfer_id());
-    double arrival_time = vehicle->TimeUsed() + zone_time_transport;
-    double waiting_time = task->time() - arrival_time;
-    double new_cost = vehicle->TimeUsed();
-    new_cost += zone_time_transport;
-    if (waiting_time > 0) {
-      new_cost += waiting_time;
-    }
-    new_cost += instance->CalculateTime(task->transfer_id(),
-                                          instance->dumpsite()->id());
     // Condition c)
-    if (new_cost > max_duration) {
-      continue;
+    double zone_travel_time = instance->CalculateTime(candidate->route().back()->id(), task->transfer_id());
+    double return_depot_time = instance->CalculateTime(task->transfer_id(), instance->dumpsite()->id());
+    waiting_time = task->time() - candidate->TimeUsed() - zone_travel_time;
+    if (waiting_time < 0) {
+      waiting_time = 0;
     }
-    if (new_cost < insertion_cost) {
-      chosen = vehicle;
-      insertion_cost = new_cost;
+    double available_time = candidate->TimeLeft() - (zone_travel_time + return_depot_time) - waiting_time;
+    double arrival_time = candidate->TimeUsed() + zone_travel_time;
+    if (available_time > 0 && arrival_time < task->time()) {
+    // Update
+    if (zone_travel_time < insertion_cost) {
+        chosen = candidate;
+        insertion_cost = zone_travel_time;
+      }
     }
+    // double tiempo_vehiculo_actual = 0;
+    // double tiempo_esperando = 0;
+    // zone_time_transport = instance->CalculateTime(candidate->route().back()->id(), task->transfer_id()) + instance->CalculateTime(task->transfer_id(), instance->dumpsite()->id());
+    // std::cout << candidate->TimeUsed() << std::endl;
+    // tiempo_esperando = task->time() - candidate->TimeUsed() - instance->CalculateTime(candidate->route().back()->id(), task->transfer_id());
+    // if (tiempo_esperando < 0) {
+    //   tiempo_esperando = 0;
+    // }
+    // tiempo_vehiculo_actual = instance->CalculateTime(candidate->route().back()->id(), task->transfer_id());
+    // // std::cout << candidate->TimeUsed() << " " << candidate->remaining_time() << " " << new_cost << " " << max_duration << "\n";
+    // // Si tiene suficiente capacidad
+    // if (candidate->remaining_capacity() > 
+    //     task->waste() 
+    //     // Y tiene suficiente tiempo
+    //     && candidate->TimeLeft() - zone_time_transport - tiempo_esperando > 0
+    //     // Y le da tiempo de llegar
+    //     && candidate->TimeUsed() + tiempo_vehiculo_actual < task->time()) {
+    //   if (tiempo_vehiculo_actual < insertion_cost) {
+    //     chosen = candidate;
+    //     insertion_cost = tiempo_vehiculo_actual;
+    //   }
+    // } 
   }
   return chosen;
 }
@@ -166,45 +191,49 @@ SolutionPtr SolutionGenerator::BuildTransferRoutes(SolutionPtr solution) {
   std::sort(tasks.begin(), tasks.end(), [](const TaskPtr& a, const TaskPtr& b) {
     return a->time() < b->time();
   });
-  std::vector<VehiclePtr> transport_vehicles(0);
+  std::vector<TransportVehiclePtr> transport_vehicles(0);
   double min_waste = std::numeric_limits<double>::max();
   for (const auto& task : tasks) {
     min_waste = std::min(min_waste, task->waste());
   }
+  double new_zone_time{0}, arrival_time{0}, waiting_time{0};
   while (!tasks.empty()) {
     TaskPtr task = tasks.front();
+    // std::cout << "Task: " << *task;
     tasks.erase(tasks.begin());
-    double new_zone_time{0}, arrival_time{0}, waiting_time{0};
-    VehiclePtr vehicle = ChooseVehicle(transport_vehicles, task, instance_, max_duration);
+    TransportVehiclePtr vehicle = ChooseVehicle(transport_vehicles, task, instance_, max_duration);
     if (vehicle == nullptr) {
       int new_vehicle_id = transport_vehicles.size() + 1;
-      vehicle = std::make_shared<Vehicle>(new_vehicle_id, max_duration, max_capacity);
+      vehicle = std::make_shared<TransportVehicle>(new_vehicle_id, max_duration, max_capacity);
       vehicle->AddStop(instance_->dumpsite());
-      vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
-      vehicle->DiminishCapacity(task->waste());
-      new_zone_time = instance_->CalculateTime(vehicle->route().back()->id(), task->transfer_id());
-      arrival_time = vehicle->TimeUsed() + new_zone_time;
-      waiting_time = task->time() - arrival_time;
-      vehicle->UpdateTime(new_zone_time);
-      if (waiting_time > 0) {
-        vehicle->UpdateTime(waiting_time);        
-      }
       transport_vehicles.push_back(vehicle);
-    } else {
-      vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
-      vehicle->DiminishCapacity(task->waste());
-      new_zone_time = instance_->CalculateTime(vehicle->route().back()->id(), task->transfer_id());
-      arrival_time = vehicle->TimeUsed() + new_zone_time;
-      waiting_time = task->time() - arrival_time;
-      vehicle->UpdateTime(new_zone_time);
-      if (waiting_time > 0) {
-        vehicle->UpdateTime(waiting_time);        
+    }
+    // std::cout << "Asignado a " << vehicle->id() << "\n";
+    new_zone_time = instance_->CalculateTime(vehicle->route().back()->id(),
+                                             task->transfer_id());
+    arrival_time = vehicle->TimeUsed() + new_zone_time;
+    waiting_time = task->time() - arrival_time;
+    double total_time = new_zone_time;
+    if (waiting_time > 0) {
+      total_time += waiting_time;
+    }
+    vehicle->AddStop(instance_->single_transfer_station(task->transfer_id()));
+    vehicle->DiminishCapacity(task->waste());
+    vehicle->UpdateTime(total_time);
+    if (vehicle->route().size() == 2) {
+      double depot_to_first_zone = instance_->CalculateTime(instance_->dumpsite()->id(), task->transfer_id());
+      std::cout << depot_to_first_zone << std::endl;
+      double departure_time = task->time() - depot_to_first_zone;
+      std::cout << departure_time << std::endl;
+      if (departure_time >= 0) {
+        vehicle->departure_time() = departure_time;
       }
-      if (vehicle->remaining_capacity() < min_waste) {
-        vehicle->AddStop(instance_->dumpsite());
-        vehicle->UpdateTime(instance_->CalculateTime(vehicle->route().back()->id(), instance_->dumpsite()->id()));
-        vehicle->RestoreCapacity();
-      }
+    }
+    if (vehicle->remaining_capacity() < min_waste) {
+      vehicle->AddStop(instance_->dumpsite());
+      vehicle->UpdateTime(instance_->CalculateTime(
+          vehicle->route().back()->id(), instance_->dumpsite()->id()));
+      vehicle->RestoreCapacity();
     }
     vehicle->AssignTask(task);
   }
@@ -276,7 +305,7 @@ ZonePtr SolutionGenerator::SelectClosestZone(ZonePtr zone,
 }
 
 void SolutionGenerator::AddNormalStop(ZonePtr last, ZonePtr closest,
-                                      VehiclePtr vehicle) {
+                                      CollectionVehiclePtr vehicle) {
   double visit_closest_time =
       instance_->CalculateTime(last->id(), closest->id());
   // std::cout << "la candidata es " << closest->id() << std::endl;
@@ -293,8 +322,8 @@ void SolutionGenerator::AddNormalStop(ZonePtr last, ZonePtr closest,
 }
 
 void SolutionGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer,
-                                        VehiclePtr vehicle, double capacity,
-                                        double max_time) {
+                                        CollectionVehiclePtr vehicle,
+                                        double capacity, double max_time) {
   double visit_transfer_time =
       instance_->CalculateTime(last->id(), transfer->id());
   vehicle->UpdateTime(visit_transfer_time);

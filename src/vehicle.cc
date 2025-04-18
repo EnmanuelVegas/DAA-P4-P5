@@ -23,10 +23,6 @@ Vehicle::Vehicle(const Vehicle& other)
   for (const auto& zone : other.route_) {
     route_.push_back(std::make_shared<Zone>(*zone));
   }
-  // Copia profunda de las tareas
-  for (const auto& task : other.tasks_) {
-    tasks_.push_back(std::make_shared<Task>(*task));
-  }
   return;
 }
 
@@ -44,10 +40,6 @@ Vehicle& Vehicle::operator=(const Vehicle& other) {
     // Copia profunda de la ruta
     for (const auto& zone : other.route_) {
       route_.push_back(std::make_shared<Zone>(*zone));
-    }
-    // Copia profunda de las tareas
-    for (const auto& task : other.tasks_) {
-      tasks_.push_back(std::make_shared<Task>(*task));
     }
   }
   return *this;
@@ -69,30 +61,12 @@ void Vehicle::RestoreTime() {
   return;
 }
 
-void Vehicle::AssignTask(TaskPtr task) {
-  this->tasks_.push_back(task);
-  return;
-}
-
-double Vehicle::TimeUsed() { return this->max_time_ - this->remaining_time_; }
+double Vehicle::TimeUsed() { return this->max_time_ - this->remaining_time(); }
 
 void Vehicle::UpdateRouteTime(double time_diff) {
   // std::cout << "TIME DIFF: " << time_diff << std::endl;
   // std::cout << "REMAIN: " << remaining_time_ << std::endl;
-
   remaining_time_ = remaining_time_ - time_diff;
   // std::cout << "CURRENT: " << remaining_time_ << std::endl;
   return;
-}
-
-std::ostream& operator<<(std::ostream& os, const Vehicle& vehicle) {
-  os << "*** Vehicle Nº " << vehicle.id_ << " ***" << "\n";
-  os << "Remaining Time: " << vehicle.remaining_time_ << "\n";
-  // os << "Remaining Capacity: " << vehicle.remaining_capacity_ << "\n";
-  os << "Route: ";
-  for (const auto& zone : vehicle.route_) {
-    os << zone->id() << " ";
-  }
-  os << "\n";
-  return os;
 }

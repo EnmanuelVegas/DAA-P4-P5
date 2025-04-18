@@ -12,11 +12,11 @@
 #define GREEDY_VEHICLE_ROUTE_H
 
 #include <algorithm>
-#include <algorithm>  // Para std::sort
+#include <algorithm>
 #include <fstream>
 #include <limits>
 #include <memory>
-#include <random>  // Para generar números aleatorios
+#include <random>
 #include <vector>
 
 #include "./searches/inter_reinsertion.h"
@@ -48,10 +48,12 @@ class SolutionGenerator {
 
   ZonePtr SelectClosestTransferStation(int zone_id);
 
-  void AddNormalStop(ZonePtr last, ZonePtr closest, VehiclePtr vehicle);
+  void AddNormalStop(ZonePtr last, ZonePtr closest,
+                     CollectionVehiclePtr vehicle);
 
-  void AddTransferStop(ZonePtr last, ZonePtr transfer, VehiclePtr vehicle,
-                       double capacity, double max_time);
+  void AddTransferStop(ZonePtr last, ZonePtr transfer,
+                       CollectionVehiclePtr vehicle, double capacity,
+                       double max_time);
 
   // void PrintTable();
 
