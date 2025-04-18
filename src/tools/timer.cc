@@ -12,18 +12,17 @@
 #include "../../include/tools/timer.h"
 
 void Timer::StartStopwatch() {
-  this->start_time_ = std::chrono::steady_clock::now();
+  this->start_time_ = std::chrono::high_resolution_clock::now();
 }
 
 double Timer::FinishStopwatch() {
-  this->finish_time_ = std::chrono::steady_clock::now();
+  this->finish_time_ = std::chrono::high_resolution_clock::now();
   return CalculateTimeDifference();
 }
 
 double Timer::CalculateTimeDifference() {
-  double elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
+  double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                        finish_time_ - start_time_)
                        .count();
-  // return elapsed * kSecondsTransformator;
-  return elapsed;
+                       return elapsed;
 }

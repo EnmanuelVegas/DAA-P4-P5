@@ -20,7 +20,8 @@ void PrintHeader() {
   std::cout << CenterText("CV time") + "|";
   std::cout << CenterText("TV time") + "|";
   std::cout << CenterText("Total time") + "|";
-  std::cout << std::endl << std::string(89, '-') << std::endl << "|";
+  std::cout << CenterText("CPU_time") + "|";
+  std::cout << std::endl << std::string(104, '-') << std::endl << "|";
   return;
 }
 
@@ -34,6 +35,7 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
   double cv_time_sum{0};
   double tv_time_sum{0};
   double total_time_sum{0};
+  double total_cpu_time{0};
   for (int i{0}; i < solutions.size(); i++) {
     std::string input_file = filenames[i];
     SolutionPtr solution = solutions[i];
@@ -47,6 +49,7 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
     std::cout << CenterText(std::to_string(solution->collection_time())) + "|";
     std::cout << CenterText(std::to_string(solution->transport_time())) + "|";
     std::cout << CenterText(std::to_string(solution->total_time())) + "|";
+    std::cout << solution->CPU_time() << "|";
     std::cout << std::endl << "|";
     // Sum values
     cv_sum += solution->vehicles().size();
@@ -54,6 +57,7 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
     cv_time_sum += solution->collection_time();
     tv_time_sum += solution->transport_time();
     total_time_sum += solution->total_time();
+    total_cpu_time += solution->CPU_time();
   }
   int instances_size = filenames.size();
   std::cout << std::string(89, '-') << std::endl << "|";
@@ -62,8 +66,8 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
   std::cout << CenterText(std::to_string(tv_sum / instances_size), 11) + "|";
   std::cout << CenterText(std::to_string(cv_time_sum / instances_size)) + "|";
   std::cout << CenterText(std::to_string(tv_time_sum / instances_size)) + "|";
-  std::cout << CenterText(std::to_string(total_time_sum / instances_size)) +
-                   "|";
+  std::cout << CenterText(std::to_string(total_time_sum / instances_size)) + "|";
+  std::cout << total_cpu_time / instances_size << "|";
   std::cout << std::endl << std::string(89, '-') << std::endl;
   return;
 }

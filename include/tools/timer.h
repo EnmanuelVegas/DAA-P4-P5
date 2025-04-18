@@ -18,7 +18,7 @@
 
 #include <chrono>
 
-typedef std::chrono::steady_clock::time_point timestamp;
+typedef std::chrono::high_resolution_clock::time_point timestamp;
 
 /**
 * @class Timer

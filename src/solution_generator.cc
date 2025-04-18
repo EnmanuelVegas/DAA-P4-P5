@@ -14,6 +14,8 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
   SolutionPtr best_solution;
   int counter{0};
   int not_improved{0};
+  Timer timer = Timer();
+  timer.StartStopwatch();
   while (counter++ < this->multistart_rep_) {
     SolutionPtr solution = BuildCollectionRoutes();
     solution = RandomVND(solution);
@@ -23,11 +25,12 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
       best_solution = solution;
       not_improved = 0;
     }
-    if (not_improved >= 100) {
+    if (not_improved >= this->multistart_rep_ * 0.1) {
       break;
     }
   }
-  // std::cout << *best_solution;
+  best_solution->CPU_time() = timer.FinishStopwatch();
+  std::cout << *best_solution;
   return best_solution;
 }
 
@@ -147,6 +150,12 @@ TransportVehiclePtr ChooseVehicle(std::vector<TransportVehiclePtr>& candidates,
     if (waiting_time < 0) {
       waiting_time = 0;
     }
+    // if (candidate->id() == 2) {
+    //   std::cout << *task;
+    //   std::cout << "waiting" << " " << waiting_time << std::endl;
+    //   std::cout << "zone_travel_time" << " " << zone_travel_time << std::endl;
+    //   std::cout << "left time" << " " << candidate->TimeLeft() << std::endl;
+    // }
     double available_time = candidate->TimeLeft() -
                             (zone_travel_time + return_depot_time) -
                             waiting_time;
@@ -158,35 +167,6 @@ TransportVehiclePtr ChooseVehicle(std::vector<TransportVehiclePtr>& candidates,
         insertion_cost = zone_travel_time;
       }
     }
-    // double tiempo_vehiculo_actual = 0;
-    // double tiempo_esperando = 0;
-    // zone_time_transport =
-    // instance->CalculateTime(candidate->route().back()->id(),
-    // task->transfer_id()) + instance->CalculateTime(task->transfer_id(),
-    // instance->dumpsite()->id()); std::cout << candidate->TimeUsed() <<
-    // std::endl; tiempo_esperando = task->time() - candidate->TimeUsed() -
-    // instance->CalculateTime(candidate->route().back()->id(),
-    // task->transfer_id()); if (tiempo_esperando < 0) {
-    //   tiempo_esperando = 0;
-    // }
-    // tiempo_vehiculo_actual =
-    // instance->CalculateTime(candidate->route().back()->id(),
-    // task->transfer_id());
-    // // std::cout << candidate->TimeUsed() << " " <<
-    // candidate->remaining_time() << " " << new_cost << " " << max_duration <<
-    // "\n";
-    // // Si tiene suficiente capacidad
-    // if (candidate->remaining_capacity() >
-    //     task->waste()
-    //     // Y tiene suficiente tiempo
-    //     && candidate->TimeLeft() - zone_time_transport - tiempo_esperando > 0
-    //     // Y le da tiempo de llegar
-    //     && candidate->TimeUsed() + tiempo_vehiculo_actual < task->time()) {
-    //   if (tiempo_vehiculo_actual < insertion_cost) {
-    //     chosen = candidate;
-    //     insertion_cost = tiempo_vehiculo_actual;
-    //   }
-    // }
   }
   return chosen;
 }
@@ -238,15 +218,15 @@ SolutionPtr SolutionGenerator::BuildTransferRoutes(SolutionPtr solution) {
       }
     }
     if (vehicle->remaining_capacity() < min_waste) {
+      vehicle->UpdateTime(instance_->CalculateTime(vehicle->route().back()->id(), instance_->dumpsite()->id()));
       vehicle->AddStop(instance_->dumpsite());
-      vehicle->UpdateTime(instance_->CalculateTime(
-          vehicle->route().back()->id(), instance_->dumpsite()->id()));
       vehicle->RestoreCapacity();
     }
     vehicle->AssignTask(task);
   }
   for (auto& vehicle : transport_vehicles) {
     if (vehicle->route().back()->id() != instance_->dumpsite()->id()) {
+      vehicle->UpdateTime(instance_->CalculateTime(vehicle->route().back()->id(), instance_->dumpsite()->id()));
       vehicle->AddStop(instance_->dumpsite());
     }
   }

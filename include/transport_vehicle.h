@@ -98,14 +98,14 @@ public:
   *
   * @return The remaining time left.
   */
-  double TimeLeft();
+  double TimeLeft() const;
 
   /**
   * @brief Calculates the time used by the transport vehicle.
   *
   * @return The time used.
   */
-  double TimeUsed();
+  double TimeUsed() const;
 
   /**
   * @brief Overloads the output stream operator for `TransportVehicle`.

@@ -49,8 +49,9 @@ public:
     transport_vehicles_(std::vector<TransportVehiclePtr>(0)),
     tasks_(std::vector<TaskPtr>(0)),
     total_time_(0),
+    CPU_time_(0),
     collection_time_(0),
-    transport_time_(0) {}
+    transport_time_(0) { }
 
   /**
   * @brief Copy constructor for `Solution`.
@@ -93,6 +94,13 @@ public:
   * @return A vector of tasks.
   */
   std::vector<TaskPtr> tasks() { return tasks_; }
+
+  /**
+  * @brief Retrieves the execution time of the solution.
+  *
+  */
+ double& CPU_time() { return CPU_time_; }
+
 
   /**
   * @brief Calculates the total time of the solution.
@@ -187,6 +195,7 @@ protected:
   double total_time_;
   double transport_time_;
   double collection_time_;
+  double CPU_time_;
 };
 
 #endif

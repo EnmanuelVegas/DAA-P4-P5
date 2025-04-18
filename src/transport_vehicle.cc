@@ -13,19 +13,20 @@
 #include "../include/solution_generator.h"
 #include "../include/zone.h"
 
-double TransportVehicle::TimeLeft() {
+double TransportVehicle::TimeLeft() const {
   return max_time_ - this->TimeUsed() + departure_time_;
 }
 
 // double TransportVehicle::remaining_time() const { return
 // this->remaining_time_ + departure_time_; }
 
-double TransportVehicle::TimeUsed() {
+double TransportVehicle::TimeUsed() const {
   return this->max_time_ - this->remaining_time();
 }
 
 TransportVehicle::TransportVehicle(const TransportVehicle& other)
     : Vehicle(other) {
+  this->departure_time_ = other.departure_time_;
   for (const auto& task : other.tasks_) {
     tasks_.push_back(std::make_shared<Task>(*task));
   }
@@ -39,13 +40,11 @@ TransportVehicle& TransportVehicle::operator=(const TransportVehicle& other) {
     remaining_capacity_ = other.remaining_capacity_;
     max_capacity_ = other.max_capacity_;
     max_time_ = other.max_time_;
-    // Limpiar las colecciones actuales
+    this->departure_time_ = other.departure_time_;
     route_.clear();
-    // Copia profunda de la ruta
     for (const auto& zone : other.route_) {
       route_.push_back(std::make_shared<Zone>(*zone));
     }
-    // Copia profunda de las tareas
     for (const auto& task : other.tasks_) {
       tasks_.push_back(std::make_shared<Task>(*task));
     }
@@ -60,7 +59,7 @@ void TransportVehicle::AssignTask(TaskPtr task) {
 
 std::ostream& operator<<(std::ostream& os, const TransportVehicle& vehicle) {
   os << "*** TransportVehicle Nº " << vehicle.id_ << " ***" << "\n";
-  os << "Remaining Time: " << vehicle.remaining_time_ << " y departures at "
+  os << "Remaining Time: " << vehicle.TimeLeft() << " and departures at "
      << vehicle.departure_time_ << "\n";
   // os << "Remaining Capacity: " << vehicle.remaining_capacity_ << "\n";
   os << "Route: ";

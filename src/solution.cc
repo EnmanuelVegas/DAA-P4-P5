@@ -14,6 +14,7 @@ Solution::Solution(const Solution& other) : Solution() {
   collection_time_ = other.collection_time_;
   transport_time_ = other.transport_time_;
   total_time_ = other.total_time_;
+  CPU_time_ = other.CPU_time_;
   for (const auto& vehicle : other.vehicles_) {
     vehicles_.push_back(std::make_shared<CollectionVehicle>(*vehicle));
   }
@@ -28,6 +29,7 @@ Solution& Solution::operator=(const Solution& other) {
     collection_time_ = other.collection_time_;
     transport_time_ = other.transport_time_;
     total_time_ = other.total_time_;
+    CPU_time_ = other.CPU_time_;
     vehicles_.clear();
     for (const auto& vehicle : other.vehicles_) {
       vehicles_.push_back(std::make_shared<CollectionVehicle>(*vehicle));
@@ -42,27 +44,29 @@ Solution& Solution::operator=(const Solution& other) {
 
 std::ostream& operator<<(std::ostream& os, const Solution& solution) {
   os << "-> COLLECTION: " << solution.vehicles_.size() << std::endl;
-  double collection_time{0};
+  // double collection_time{0};
   for (auto& vehicle : solution.vehicles_) {
     os << *vehicle;
-    collection_time += vehicle->TimeUsed();
+    // collection_time += vehicle->TimeUsed();
   }
   os << "-> TRANSPORT: " << solution.transport_vehicles_.size() << std::endl;
-  double transport_time{0};
+  // double transport_time{0};
   if (solution.transport_vehicles_.size() > 0) {
     for (auto& vehicle : solution.transport_vehicles_) {
       os << *vehicle;
-      transport_time += vehicle->TimeUsed();
+      // transport_time += vehicle->TimeUsed();
+      // transport_time -= vehicle->departure_time();
     }
     os << "-> Tasks: " << solution.tasks_.size() << std::endl;
     for (auto& vehicle : solution.transport_vehicles_) {
+      os << "* Assigned to " << vehicle->id() << ":\n";
       for (auto& task : vehicle->tasks()) {
-        os << *task;
+        os << "  " << *task;
       }
     }
   }
-  os << "Whole time: " << collection_time << " + " << transport_time << " = "
-     << collection_time + transport_time << std::endl;
+  os << "Whole time: " << solution.collection_time_ << " + " << solution.transport_time_ << " = "
+     << solution.total_time_ << std::endl;
   return os;
 }
 
@@ -85,6 +89,7 @@ void Solution::AssignTransportVehicles(
   for (auto& vehicle : vehicles) {
     this->transport_vehicles_.push_back(vehicle);
     this->transport_time_ += vehicle->TimeUsed();
+    this->transport_time_ -= vehicle->departure_time();
   }
   return;
 }
