@@ -18,7 +18,7 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
   timer.StartStopwatch();
   while (counter++ < this->multistart_rep_) {
     SolutionPtr solution = BuildCollectionRoutes();
-    solution = RandomVND(solution);
+    // solution = RandomVND(solution);
     solution->BuildTasks(instance_);
     solution = BuildTransferRoutes(solution);
     if (solution->IsBetter(best_solution)) {
@@ -50,6 +50,7 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
     current_vehicle->AddStop(depot);
     while (true) {
       ZonePtr last_stop = current_vehicle->route().back();
+      std::cout << std::endl << "Fuera: " << last_stop->id() << std::endl;
       ZonePtr closest = SelectClosestZone(last_stop, zones);
       if (closest == nullptr) {
         break;
@@ -266,18 +267,29 @@ ZonePtr SolutionGenerator::SelectClosestZone(ZonePtr zone,
   if (candidates.empty()) {
     return nullptr;
   }
-  // Crear un vector de pares (distancia, ZonePtr)
-  std::vector<std::pair<double, ZonePtr>> distances;
+  std::vector<std::tuple<double, int, ZonePtr>> distances;
+  int index = 0;
   for (const auto& candidate : candidates) {
     if (zone->id() != candidate->id()) {
       double distance = instance_->GetDistance(zone->id(), candidate->id());
-      distances.emplace_back(distance, candidate);
+      distances.emplace_back(distance, index, candidate);
     }
+    ++index;
   }
   std::sort(
       distances.begin(), distances.end(),
-      [](const std::pair<double, ZonePtr>& a,
-         const std::pair<double, ZonePtr>& b) { return a.first < b.first; });
+      [](const std::tuple<double, int, ZonePtr>& a,
+         const std::tuple<double, int, ZonePtr>& b) {
+        if (std::get<0>(a) == std::get<0>(b)) {
+          return std::get<1>(a) < std::get<1>(b);
+        }
+        return std::get<0>(a) < std::get<0>(b);
+      });
+
+  // for (auto& num : distances) {
+  //   std::cout << "(" << num.second->id() << " " << num.first << ") ";
+  // }
+      
   if (distances.size() > this->candidates_size_) {
     distances.resize(this->candidates_size_);
   }
@@ -286,10 +298,9 @@ ZonePtr SolutionGenerator::SelectClosestZone(ZonePtr zone,
   // for (auto& num : distances) {
   //   std::cout << num.second->id() << " ";
   // }
-  // std::cout << "Seleccionamos: " << distances[random_index].second->id();
-  // std::cout << "\n";
-  // std::cout << "Indice seleccionado: " << random_index << " ";
-  return distances[random_index].second;  // Retornar el ZonePtr seleccionado
+  // std::cout << "Seleccionamos: " << distances[random_index].second->id() << "\n";
+  // std::cout << "Indice seleccionado: " << random_index << "\n";
+  return std::get<2>(distances[random_index]);
 }
 
 void SolutionGenerator::AddNormalStop(ZonePtr last, ZonePtr closest,
@@ -316,8 +327,6 @@ void SolutionGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer,
       instance_->CalculateTime(last->id(), transfer->id());
   vehicle->UpdateTime(visit_transfer_time);
 
-  // vehicle->AddTask(capacity - vehicle->remaining_capacity(), transfer->id(),
-  //                  max_time - vehicle->remaining_time());
   vehicle->AddStop(transfer);
   vehicle->RestoreCapacity();
   return;

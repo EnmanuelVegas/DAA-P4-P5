@@ -17,6 +17,7 @@
 #define TIMER_H
 
 #include <chrono>
+#include <iostream>
 
 typedef std::chrono::high_resolution_clock::time_point timestamp;
 

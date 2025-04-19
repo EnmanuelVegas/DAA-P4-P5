@@ -38,14 +38,11 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<SolutionGenerator> solver;
     for (auto& input_file : files) {
       instance = std::make_shared<VRPInstance>(input_file);
-      // solver = std::make_shared<SolutionGenerator>(instance, grasp_size,
-      // multistart_quantity, 123);
-      solver = std::make_shared<SolutionGenerator>(instance, grasp_size,
-                                                   multistart_quantity);
-      // chrono_timer.StartStopwatch();
-      solutions.push_back(solver->GenerateSolution());
-      // std::cout << "-> Execution time: " << chrono_timer.FinishStopwatch() <<
-      // " milliseconds\n";
+      // std::cout << input_file << std::endl;
+      // for (int i{0}; i < 3; i++) {
+        solver = std::make_shared<SolutionGenerator>(instance, grasp_size, multistart_quantity); // 123, seed
+        solutions.push_back(solver->GenerateSolution());
+      // }
     }
     PrintSolutionSummary(solutions, files);
   } catch (const std::exception& error) {

@@ -21,8 +21,13 @@ double Timer::FinishStopwatch() {
 }
 
 double Timer::CalculateTimeDifference() {
-  double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       finish_time_ - start_time_)
-                       .count();
-                       return elapsed;
+  double elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(
+    finish_time_ - start_time_).count();
+  // double elapsed = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+  //   finish_time_ - start_time_)
+  //   .count();
+  // double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+  //                      finish_time_ - start_time_)
+  //                      .count();
+  return elapsed;
 }

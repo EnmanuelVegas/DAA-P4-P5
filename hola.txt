@@ -1,215 +1,240 @@
-esto es lo que me da la otra por cierto:
-
-ITERACIÓN 1
-La primera solución tiene  8 vehículos y se rueda durante 3268.73
 =================================================
 Los vehículos de recolección son: 6
-Al vehículo 1 le sobran 4.4669 minutos
+Al vehículo 1 le sobran 101.939 minutos
 Ruta vehículo 1
--1 5 2 21 9 3 21 -1 
+-1 13 17 22 18 22 -1 
 -----------------------------------------------
-Al vehículo 2 le sobran 6.03914 minutos
+Al vehículo 2 le sobran 21.8441 minutos
 Ruta vehículo 2
--1 4 13 21 18 7 21 -1 
+-1 6 9 21 3 5 21 -1 
 -----------------------------------------------
-Al vehículo 3 le sobran 50.764 minutos
+Al vehículo 3 le sobran 29.4629 minutos
 Ruta vehículo 3
--1 10 15 22 1 19 22 -1 
+-1 10 1 22 19 8 22 -1 
 -----------------------------------------------
-Al vehículo 4 le sobran 150.211 minutos
+Al vehículo 4 le sobran 40.1514 minutos
 Ruta vehículo 4
--1 17 16 22 14 22 -1 
+-1 4 14 22 0 12 21 -1 
 -----------------------------------------------
-Al vehículo 5 le sobran 92.1349 minutos
+Al vehículo 5 le sobran 59.6533 minutos
 Ruta vehículo 5
--1 8 21 6 0 21 -1 
+-1 2 15 21 16 21 -1 
 -----------------------------------------------
-Al vehículo 6 le sobran 196.085 minutos
+Al vehículo 6 le sobran 158.245 minutos
 Ruta vehículo 6
--1 11 12 22 -1 
+-1 7 11 21 -1 
 -----------------------------------------------
-Los vehículos de recolección están rodando durante 2380.3 minutos
+Los vehículos de recolección están rodando durante 2468.7 minutos
 =================================================
 Las Tripletas de las zonas de transferencia son:
 Tripleta número 1
-Cantidad de residuos: 393
-Identificador de la zona: 21
-Instante de llegada: 116.472
+Cantidad de residuos: 749
+Identificador de la zona: 22
+Instante de llegada: 177.007
 -----------------------------------------------
 Tripleta número 2
-Cantidad de residuos: 659
+Cantidad de residuos: 673
 Identificador de la zona: 22
-Instante de llegada: 182.505
+Instante de llegada: 209.001
 -----------------------------------------------
 Tripleta número 3
-Cantidad de residuos: 746
-Identificador de la zona: 22
-Instante de llegada: 187.832
+Cantidad de residuos: 710
+Identificador de la zona: 21
+Instante de llegada: 217.222
 -----------------------------------------------
 Tripleta número 4
-Cantidad de residuos: 784
+Cantidad de residuos: 687
 Identificador de la zona: 21
-Instante de llegada: 225.284
+Instante de llegada: 256.062
 -----------------------------------------------
 Tripleta número 5
-Cantidad de residuos: 681
-Identificador de la zona: 21
-Instante de llegada: 237.134
+Cantidad de residuos: 728
+Identificador de la zona: 22
+Instante de llegada: 265.128
 -----------------------------------------------
 Tripleta número 6
-Cantidad de residuos: 735
-Identificador de la zona: 22
-Instante de llegada: 255.631
------------------------------------------------
-Tripleta número 7
-Cantidad de residuos: 351
-Identificador de la zona: 22
-Instante de llegada: 301.505
------------------------------------------------
-Tripleta número 8
-Cantidad de residuos: 708
-Identificador de la zona: 21
-Instante de llegada: 359.581
------------------------------------------------
-Tripleta número 9
-Cantidad de residuos: 719
-Identificador de la zona: 22
-Instante de llegada: 400.952
------------------------------------------------
-Tripleta número 10
 Cantidad de residuos: 642
 Identificador de la zona: 21
-Instante de llegada: 445.677
------------------------------------------------
-Tripleta número 11
-Cantidad de residuos: 732
-Identificador de la zona: 21
-Instante de llegada: 447.249
------------------------------------------------
-
-=================================================
-Los vehículos de transporte son: 2
-Al vehículo 1 le sobran 56.8397 minutos y sale en el instante 0
-Ruta vehículo 1
--2 21 22 22 22 22 -2 
------------------------------------------------
-Al vehículo 2 le sobran 14.7249 minutos y sale en el instante 103.629
-Ruta vehículo 2
--2 21 21 21 22 21 21 -2 
------------------------------------------------
-Los vehículos de transporte están rodando durante 888.435 minutos
-El tiempo total de la solución es de 3268.73 minutos.
-=============================================
-Tiempo de ejecución: 0.0277397 segundos.
-
-
-
-
-
-
-
-
-
-
-
-
-ITERACIÓN 1
-La primera solución tiene  8 vehículos y se rueda durante 3316.53
-=================================================
-Los vehículos de recolección son: 6
-Al vehículo 1 le sobran 30.8637 minutos
-Ruta vehículo 1
--1 5 2 21 6 7 21 -1 
------------------------------------------------
-Al vehículo 2 le sobran 39.7787 minutos
-Ruta vehículo 2
--1 8 13 21 18 3 21 -1 
------------------------------------------------
-Al vehículo 3 le sobran 50.764 minutos
-Ruta vehículo 3
--1 10 15 22 1 19 22 -1 
------------------------------------------------
-Al vehículo 4 le sobran 77.0849 minutos
-Ruta vehículo 4
--1 11 12 22 14 22 -1 
------------------------------------------------
-Al vehículo 5 le sobran 36.3697 minutos
-Ruta vehículo 5
--1 4 0 21 9 21 -1 
------------------------------------------------
-Al vehículo 6 le sobran 269.211 minutos
-Ruta vehículo 6
--1 17 16 22 -1 
------------------------------------------------
-Los vehículos de recolección están rodando durante 2375.93 minutos
-=================================================
-Las Tripletas de las zonas de transferencia son:
-Tripleta número 1
-Cantidad de residuos: 659
-Identificador de la zona: 22
-Instante de llegada: 182.505
------------------------------------------------
-Tripleta número 2
-Cantidad de residuos: 757
-Identificador de la zona: 21
-Instante de llegada: 185.317
------------------------------------------------
-Tripleta número 3
-Cantidad de residuos: 746
-Identificador de la zona: 22
-Instante de llegada: 187.832
------------------------------------------------
-Tripleta número 4
-Cantidad de residuos: 784
-Identificador de la zona: 21
-Instante de llegada: 225.284
------------------------------------------------
-Tripleta número 5
-Cantidad de residuos: 735
-Identificador de la zona: 22
-Instante de llegada: 255.631
------------------------------------------------
-Tripleta número 6
-Cantidad de residuos: 685
-Identificador de la zona: 21
-Instante de llegada: 283.346
+Instante de llegada: 293.471
 -----------------------------------------------
 Tripleta número 7
-Cantidad de residuos: 351
+Cantidad de residuos: 353
 Identificador de la zona: 22
-Instante de llegada: 374.631
+Instante de llegada: 349.777
 -----------------------------------------------
 Tripleta número 8
-Cantidad de residuos: 719
-Identificador de la zona: 22
-Instante de llegada: 400.952
+Cantidad de residuos: 317
+Identificador de la zona: 21
+Instante de llegada: 392.062
 -----------------------------------------------
 Tripleta número 9
-Cantidad de residuos: 717
+Cantidad de residuos: 659
 Identificador de la zona: 21
-Instante de llegada: 411.937
+Instante de llegada: 411.564
 -----------------------------------------------
 Tripleta número 10
-Cantidad de residuos: 341
-Identificador de la zona: 21
-Instante de llegada: 415.346
+Cantidad de residuos: 727
+Identificador de la zona: 22
+Instante de llegada: 422.253
 -----------------------------------------------
 Tripleta número 11
-Cantidad de residuos: 656
+Cantidad de residuos: 616
 Identificador de la zona: 21
-Instante de llegada: 420.852
+Instante de llegada: 429.872
 -----------------------------------------------
 
 =================================================
-Los vehículos de transporte son: 2
-Al vehículo 1 le sobran 18.2429 minutos y sale en el instante 60.8498
+Los vehículos de transporte son: 3
+Al vehículo 1 le sobran 63.9194 minutos y sale en el instante 55.3518
 Ruta vehículo 1
--2 22 22 22 22 22 -2 
+-2 22 22 22 22 -2 
 -----------------------------------------------
-Al vehículo 2 le sobran 1.15404 minutos y sale en el instante 63.6613
+Al vehículo 2 le sobran 24.0404 minutos y sale en el instante 95.5672
 Ruta vehículo 2
 -2 21 21 21 21 21 21 -2 
 -----------------------------------------------
-Los vehículos de transporte están rodando durante 940.603 minutos
-El tiempo total de la solución es de 3316.53 minutos.
+Al vehículo 3 le sobran 236.689 minutos y sale en el instante 300.598
+Ruta vehículo 3
+-2 22 -2 
+-----------------------------------------------
+Los vehículos de transporte están rodando durante 1115.35 minutos
+El tiempo total de la solución es de 3584.06 minutos.
 =============================================
+Tiempo de ejecución: 0.000153418 segundos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ./vrpt_swts -f instancias/instance19.txt -a voraz
+=================================================
+Los vehículos de recolección son: 6
+Al vehículo 1 le sobran 69.6123 minutos
+Ruta vehículo 1
+-1 19 17 21 8 10 21 -1 
+-----------------------------------------------
+Al vehículo 2 le sobran 51.1917 minutos
+Ruta vehículo 2
+-1 18 13 21 16 2 22 -1 
+-----------------------------------------------
+Al vehículo 3 le sobran 2.30733 minutos
+Ruta vehículo 3
+-1 1 15 22 5 4 22 -1 
+-----------------------------------------------
+Al vehículo 4 le sobran 8.17294 minutos
+Ruta vehículo 4
+-1 12 0 22 11 14 21 -1 
+-----------------------------------------------
+Al vehículo 5 le sobran 5.42082 minutos
+Ruta vehículo 5
+-1 6 3 21 9 21 -1 
+-----------------------------------------------
+Al vehículo 6 le sobran 331.467 minutos
+Ruta vehículo 6
+-1 7 21 -1 
+-----------------------------------------------
+Los vehículos de recolección están rodando durante 2411.83 minutos
+=================================================
+Las Tripletas de las zonas de transferencia son:
+Tripleta número 1
+Cantidad de residuos: 335
+Identificador de la zona: 21
+Instante de llegada: 120.249
+-----------------------------------------------
+Tripleta número 2
+Cantidad de residuos: 731
+Identificador de la zona: 21
+Instante de llegada: 179.63
+-----------------------------------------------
+Tripleta número 3
+Cantidad de residuos: 640
+Identificador de la zona: 22
+Instante de llegada: 192.948
+-----------------------------------------------
+Tripleta número 4
+Cantidad de residuos: 700
+Identificador de la zona: 21
+Instante de llegada: 201.944
+-----------------------------------------------
+Tripleta número 5
+Cantidad de residuos: 724
+Identificador de la zona: 22
+Instante de llegada: 222.913
+-----------------------------------------------
+Tripleta número 6
+Cantidad de residuos: 623
+Identificador de la zona: 21
+Instante de llegada: 271.162
+-----------------------------------------------
+Tripleta número 7
+Cantidad de residuos: 644
+Identificador de la zona: 21
+Instante de llegada: 382.103
+-----------------------------------------------
+Tripleta número 8
+Cantidad de residuos: 742
+Identificador de la zona: 22
+Instante de llegada: 400.524
+-----------------------------------------------
+Tripleta número 9
+Cantidad de residuos: 706
+Identificador de la zona: 21
+Instante de llegada: 443.543
+-----------------------------------------------
+Tripleta número 10
+Cantidad de residuos: 310
+Identificador de la zona: 21
+Instante de llegada: 446.295
+-----------------------------------------------
+Tripleta número 11
+Cantidad de residuos: 679
+Identificador de la zona: 22
+Instante de llegada: 449.408
+-----------------------------------------------
+
+=================================================
+Los vehículos de transporte son: 4
+Al vehículo 1 le sobran 87.183 minutos y sale en el instante 0
+Ruta vehículo 1
+-2 21 21 21 21 -2 
+-----------------------------------------------
+Al vehículo 2 le sobran 47.5344 minutos y sale en el instante 71.2931
+Ruta vehículo 2
+-2 22 22 21 -2 
+-----------------------------------------------
+Al vehículo 3 le sobran 190.919 minutos y sale en el instante 278.869
+Ruta vehículo 3
+-2 22 21 21 -2 
+-----------------------------------------------
+Al vehículo 4 le sobran 236.689 minutos y sale en el instante 327.753
+Ruta vehículo 4
+-2 22 -2 
+-----------------------------------------------
+Los vehículos de transporte están rodando durante 1357.67 minutos
+El tiempo total de la solución es de 3769.5 minutos.
+=============================================
+Tiempo de ejecución: 0.000219859 segundos.
