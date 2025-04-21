@@ -18,7 +18,7 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
   timer.StartStopwatch();
   while (counter++ < this->multistart_rep_) {
     SolutionPtr solution = BuildCollectionRoutes();
-    // solution = RandomVND(solution);
+    solution = RandomVND(solution);
     solution->BuildTasks(instance_);
     solution = BuildTransferRoutes(solution);
     if (solution->IsBetter(best_solution)) {
@@ -30,7 +30,7 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
     }
   }
   best_solution->CPU_time() = timer.FinishStopwatch();
-  std::cout << *best_solution;
+  // std::cout << *best_solution;
   return best_solution;
 }
 
@@ -50,7 +50,7 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
     current_vehicle->AddStop(depot);
     while (true) {
       ZonePtr last_stop = current_vehicle->route().back();
-      std::cout << std::endl << "Fuera: " << last_stop->id() << std::endl;
+      // std::cout << std::endl << "Fuera: " << last_stop->id() << std::endl;
       ZonePtr closest = SelectClosestZone(last_stop, zones);
       if (closest == nullptr) {
         break;

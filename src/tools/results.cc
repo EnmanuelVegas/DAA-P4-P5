@@ -37,10 +37,10 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
   double total_time_sum{0};
   double total_cpu_time{0};
   for (int i{0}; i < filenames.size(); i++) {
-  // for (int j{0}; j < 3; ++j) {
+  for (int j{0}; j < 3; ++j) {
     std::string input_file = filenames[i];
-    SolutionPtr solution = solutions[i];
-    // SolutionPtr solution = solutions[i * 3 + j];
+    // SolutionPtr solution = solutions[i];
+    SolutionPtr solution = solutions[i * 3 + j];
     std::smatch match_name;
     std::regex_search(input_file, match_name, re);
     // Print Summary
@@ -60,7 +60,7 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
     tv_time_sum += solution->transport_time();
     total_time_sum += solution->total_time();
     total_cpu_time += solution->CPU_time();
-  // }
+  }
   }
   int instances_size = solutions.size();
   std::cout << std::string(89, '-') << std::endl << "|";

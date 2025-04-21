@@ -1,2 +1,11 @@
 
-Fichero AYUDA
+Uso: ./vrpt_routes [FILE | DIRECTORY] -g <LRC> -m <REPS>
+
+Programa para resolver el problema VRPT-STWS para el fichero FILE o para todos
+los ficheros especificados en la ruta DIRECTORY.
+
+Parámetros obligatorios:
+  -g, --grasp [LRC]        Tamaño de la lista restringida de candidatos,
+                           que estará formada por LRC candidatos.
+  -m, --multi [REPS]       Número de repeticiones para el MultiStart.
+

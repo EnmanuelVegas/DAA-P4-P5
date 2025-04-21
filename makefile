@@ -22,7 +22,7 @@ SRC=src
 OBJ=build
 SOURCES=$(shell find $(SRC) -name '*.cc')
 OBJECTS=$(patsubst $(SRC)/%.cc, $(OBJ)/%.o, $(SOURCES))
-EXECUTABLE=vrpt_transport
+EXECUTABLE=VRPT_SWTS_routes
 
 .PHONY: clean clmake all
 

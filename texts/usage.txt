@@ -1,6 +1,3 @@
 
-EMPLEO:
+Uso: ./vrpt_routes [FILE|DIRECTORY] -g <LRC> -m <REPETITIONS>
 
-./vrpt_transport instances/instance1.txt -s 3
-
-./vrpt_transport -m instances/instance1.txt -s 1

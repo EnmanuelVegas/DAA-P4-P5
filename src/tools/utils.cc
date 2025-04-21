@@ -23,9 +23,12 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
       options.show_help = true;
       return options;
     }
+    if (argc != 6) {
+      throw std::invalid_argument("Quantity of arguments not correct!\n");
+    }
     options.instances_source = std::string(args[arguments_counter++]);
     if (args[arguments_counter] == "-g" ||
-        args[arguments_counter] == "-grasp") {
+        args[arguments_counter] == "--grasp") {
       arguments_counter++;
       options.grasp_size = std::stoi(std::string(args[arguments_counter++]));
     } else {
