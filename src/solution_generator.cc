@@ -50,7 +50,6 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
     current_vehicle->AddStop(depot);
     while (true) {
       ZonePtr last_stop = current_vehicle->route().back();
-      // std::cout << std::endl << "Fuera: " << last_stop->id() << std::endl;
       ZonePtr closest = SelectClosestZone(last_stop, zones);
       if (closest == nullptr) {
         break;
@@ -230,19 +229,6 @@ SolutionPtr SolutionGenerator::BuildTransferRoutes(SolutionPtr solution) {
   return solution;
 }
 
-double SolutionGenerator::CalculateRoutesTime(SolutionPtr solution) {
-  double total_time{0};
-  for (auto& vehicle : solution->vehicles()) {
-    total_time += instance_->max_collection_time() - vehicle->remaining_time();
-    // Otra forma de calcularlo: Recalculando todos los tiempos de la ruta.
-    // std::vector<ZonePtr> route = vehicle->route();
-    // for (auto& stop : route) {
-    //   total_time += CalculateTime(...);
-    // }
-  }
-  return total_time;
-}
-
 double SolutionGenerator::ReturnToDepotTime(ZonePtr actual_zone,
                                             ZonePtr closest) {
   // time_1 = Current zone to closest collection zone.
@@ -302,14 +288,6 @@ void SolutionGenerator::AddNormalStop(ZonePtr last, ZonePtr closest,
                                       CollectionVehiclePtr vehicle) {
   double visit_closest_time =
       instance_->CalculateTime(last->id(), closest->id());
-  // std::cout << "la candidata es " << closest->id() << std::endl;
-  // std::cout << "el tiempo para llegar hasta ella es de " <<
-  // visit_closest_time << " minutos y tenemos " << vehicle->remaining_time() <<
-  // " minutos." << std::endl; std::cout << "el tiempo para volver si la
-  // añadimos es de  " << tiempo_en_regresar << " minutos y tenemos " <<
-  // vehicle->remaining_time() << " minutos." << std::endl; std::cout << "la
-  // carga que añade es de " << closest->waste_quantity() << " y la capacidad
-  // restante del camión es de " << vehicle->remaining_capacity() << std::endl;
   vehicle->AddStop(closest);  // It also substracts the capacity.
   vehicle->UpdateTime(visit_closest_time + closest->process_time());
   return;
@@ -328,7 +306,6 @@ void SolutionGenerator::AddTransferStop(ZonePtr last, ZonePtr transfer,
 }
 
 ZonePtr SolutionGenerator::SelectClosestTransferStation(int zone_id) {
-  // if (zones.size() == 0) { return anchor; }
   double distance_first = instance_->GetDistance(
       zone_id, instance_->transfer_stations().first->id());
   double distance_second = instance_->GetDistance(

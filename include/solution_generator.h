@@ -72,14 +72,6 @@ public:
   SolutionPtr GenerateSolution();
 
   /**
-  * @brief Calculates the total time of all routes in the solution.
-  *
-  * @param vehicles A pointer to the solution containing the routes.
-  * @return The total time of all routes.
-  */
-  double CalculateRoutesTime(SolutionPtr vehicles);
-
-  /**
   * @brief Calculates the time required to return to the depot.
   *
   * @param actual_zone The current zone.

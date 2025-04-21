@@ -12,7 +12,6 @@
 
 Zone::Zone(int id, std::pair<int, int> coordinates, std::pair<int, int> demands)
     : id_(id), coordinates_(coordinates) {
-  // std::cout << waste_quantity_ << std::endl;
   this->process_time_ = demands.first;
   this->waste_quantity_ = demands.second;
   return;
@@ -27,9 +26,3 @@ Zone::Zone(int id, std::string& input) : waste_quantity_(0), process_time_(0) {
   coordinates_.second = std::stoi(coordinates_string.substr(space_index + 1));
   return;
 }
-
-// CollectionZone::CollectionZone(int id, std::pair<int, int> coordinates,
-//                                std::pair<int, int> demands) : Zone(id,
-//                                coordinates) {
-//   this->demands_ = demands;
-// }
