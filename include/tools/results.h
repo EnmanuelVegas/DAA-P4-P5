@@ -48,6 +48,6 @@
   *
   * This function prints the header used in the solution summary output.
   */
- void PrintHeader();
+ void PrintHeader(int table_width);
  
  #endif

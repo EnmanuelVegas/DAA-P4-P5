@@ -12,22 +12,23 @@
 
 #include <iomanip>  // Necesario para std::setprecision
 
-void PrintHeader() {
-  std::cout << std::endl << std::string(89, '-') << std::endl << "|";
+void PrintHeader(int table_width) {
+  std::cout << std::endl << std::string(table_width, '-') << std::endl << "|";
   std::cout << CenterText("Instance") + "|";
   std::cout << CenterText("CV", 11) + "|";
   std::cout << CenterText("TV", 11) + "|";
   std::cout << CenterText("CV time") + "|";
   std::cout << CenterText("TV time") + "|";
   std::cout << CenterText("Total time") + "|";
-  std::cout << CenterText("CPU_time") + "|";
-  std::cout << std::endl << std::string(104, '-') << std::endl << "|";
+  std::cout << CenterText("CPU_time", 13) + "|";
+  std::cout << std::endl << std::string(table_width, '-') << std::endl << "|";
   return;
 }
 
 void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
                           std::vector<std::string>& filenames) {
-  PrintHeader();
+  int table_width = 103;
+  PrintHeader(table_width);
   std::regex re("(instance\\d+)\\.txt");
   double cv_sum{0};
   double zones_sum{0};
@@ -37,21 +38,20 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
   double total_time_sum{0};
   double total_cpu_time{0};
   for (int i{0}; i < filenames.size(); i++) {
-  for (int j{0}; j < 3; ++j) {
+  // for (int j{0}; j < 3; ++j) {
     std::string input_file = filenames[i];
-    // SolutionPtr solution = solutions[i];
-    SolutionPtr solution = solutions[i * 3 + j];
+    SolutionPtr solution = solutions[i];
+    // SolutionPtr solution = solutions[i * 3 + j];
     std::smatch match_name;
     std::regex_search(input_file, match_name, re);
     // Print Summary
     std::cout << CenterText(match_name[1].str()) + "|";
     std::cout << CenterText(std::to_string(solution->vehicles().size()), 11) + "|";
-    std::cout << CenterText(
-                     std::to_string(solution->transport_vehicles().size()), 11) + "|";
+    std::cout << CenterText(std::to_string(solution->transport_vehicles().size()), 11) + "|";
     std::cout << CenterText(std::to_string(solution->collection_time())) + "|";
     std::cout << CenterText(std::to_string(solution->transport_time())) + "|";
     std::cout << CenterText(std::to_string(solution->total_time())) + "|";
-    std::cout << solution->CPU_time() << "|";
+    std::cout << CenterText(std::to_string(solution->CPU_time()), 13) << "|";
     std::cout << std::endl << "|";
     // Sum values
     cv_sum += solution->vehicles().size();
@@ -60,17 +60,17 @@ void PrintSolutionSummary(std::vector<SolutionPtr>& solutions,
     tv_time_sum += solution->transport_time();
     total_time_sum += solution->total_time();
     total_cpu_time += solution->CPU_time();
-  }
+  // }
   }
   int instances_size = solutions.size();
-  std::cout << std::string(89, '-') << std::endl << "|";
+  std::cout << std::string(table_width, '-') << std::endl << "|";
   std::cout << CenterText("Average") + "|";
   std::cout << CenterText(std::to_string(cv_sum / instances_size), 11) + "|";
   std::cout << CenterText(std::to_string(tv_sum / instances_size), 11) + "|";
   std::cout << CenterText(std::to_string(cv_time_sum / instances_size)) + "|";
   std::cout << CenterText(std::to_string(tv_time_sum / instances_size)) + "|";
   std::cout << CenterText(std::to_string(total_time_sum / instances_size)) + "|";
-  std::cout << total_cpu_time / instances_size << "|";
-  std::cout << std::endl << std::string(89, '-') << std::endl;
+  std::cout << CenterText(std::to_string(total_cpu_time / instances_size), 13) << "|";
+  std::cout << std::endl << std::string(table_width, '-') << std::endl;
   return;
 }
