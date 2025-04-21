@@ -74,7 +74,7 @@ std::vector<std::string> GetFiles(const std::string& path) {
   }
   if (!fs::exists(root_path) || !fs::is_directory(root_path)) {
     std::cerr << "Directory does not exist or is not valid.\n";
-    return files;
+    throw std::invalid_argument("Invalid file / directory!\n");
   }
   for (const auto& file : fs::directory_iterator(root_path)) {
     if (fs::is_regular_file(file.path())) {
