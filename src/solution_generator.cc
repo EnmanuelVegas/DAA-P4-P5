@@ -87,21 +87,22 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
 SolutionPtr SolutionGenerator::RandomVND(SolutionPtr solution) {
   search_selector_.Reset();
   int old_time = solution->total_time();
-  // std::cout << "\n--- Random VND ---\nImproved solutions:\n";
+  // std::string result = "\n--- Random VND ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
-    std::shared_ptr<LocalSearch> search_method =
-        search_selector_.SelectMethod();
-    // std::cout << "Cambiamos a " + search_method->type();
+    std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
+    // result += "Cambiamos a " + search_method->type();
     bool improved_local{false};
     while (true) {
-      std::pair<bool, SolutionPtr> search_result{
-          search_method->GetBestNeighbor(solution, this->instance_)};
+      std::pair<bool, SolutionPtr> search_result{search_method->GetBestNeighbor(solution, this->instance_)};
       if (search_result.first) {
+        // result +=  "- Time: ";
+        // result +=  std::to_string(solution->total_time()) + " --> ";
         solution = search_result.second;
+        // result +=  std::to_string(solution->total_time()) + " \n";
         improved_local = true;
         continue;
       } else if (improved_local) {
-        // std::cout << "Reset!\n";
+        // result += "Reset!\n";
         this->search_selector_.Reset();
         break;
       } else {
@@ -151,12 +152,6 @@ TransportVehiclePtr ChooseVehicle(std::vector<TransportVehiclePtr>& candidates,
     if (waiting_time < 0) {
       waiting_time = 0;
     }
-    // if (candidate->id() == 2) {
-    //   std::cout << *task;
-    //   std::cout << "waiting" << " " << waiting_time << std::endl;
-    //   std::cout << "zone_travel_time" << " " << zone_travel_time << std::endl;
-    //   std::cout << "left time" << " " << candidate->TimeLeft() << std::endl;
-    // }
     double available_time = candidate->TimeLeft() -
                             (zone_travel_time + return_depot_time) -
                             waiting_time;
