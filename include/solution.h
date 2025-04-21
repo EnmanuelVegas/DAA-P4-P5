@@ -124,6 +124,12 @@ public:
   double transport_time() const { return this->transport_time_; }
 
 
+  /**
+   * @brief detects empty routes and delete them
+   *
+   */
+  void CleanCollectionRoutes(VRPInstancePtr instance);
+
  /**
   * @brief Assigns transport vehicles to the solution.
   *

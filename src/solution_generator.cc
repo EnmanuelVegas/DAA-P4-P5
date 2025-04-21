@@ -19,13 +19,14 @@ SolutionPtr SolutionGenerator::GenerateSolution() {
   while (counter++ < this->multistart_rep_) {
     SolutionPtr solution = BuildCollectionRoutes();
     solution = RandomVND(solution);
+    solution->CleanCollectionRoutes(instance_);
     solution->BuildTasks(instance_);
     solution = BuildTransferRoutes(solution);
     if (solution->IsBetter(best_solution)) {
       best_solution = solution;
       not_improved = 0;
     }
-    if (not_improved >= this->multistart_rep_ * 0.1) {
+    if (not_improved >= this->multistart_rep_ * 0.15) {
       break;
     }
   }

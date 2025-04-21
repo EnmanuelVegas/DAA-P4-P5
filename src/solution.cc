@@ -84,6 +84,32 @@ void Solution::PushCollectionVehicle(CollectionVehiclePtr vehicle) {
   return;
 }
 
+
+void Solution::CleanCollectionRoutes(VRPInstancePtr instance) {
+  std::vector<int> delete_indexes(0);
+  for (auto& vehicle : this->vehicles_) {
+    bool empty = true;
+    for (auto& zone : vehicle->route()) {
+      if (!instance->IsTransferStation(zone) && zone->id() != instance->depot()->id()) {
+        empty = false;
+        break;
+      }
+    }
+    if (empty) {
+      delete_indexes.push_back(vehicle->id() - 1);
+    }
+  }
+  // if (delete_indexes.size() > 0) {
+    // std::cout << *this;
+    for (auto index : delete_indexes) {
+      this->collection_time_ -= this->vehicles_[index]->TimeUsed();
+      vehicles_.erase(vehicles_.begin() + index);
+    }
+    // std::cout << *this;
+  // }
+  return;  
+}
+
 void Solution::AssignTransportVehicles(
     std::vector<TransportVehiclePtr>& vehicles) {
   for (auto& vehicle : vehicles) {
