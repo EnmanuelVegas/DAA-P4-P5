@@ -23,14 +23,9 @@ SearchMethodSelector::SearchMethodSelector(int seed) : gen_(seed) {
 }
 
 std::shared_ptr<LocalSearch> SearchMethodSelector::SelectMethod() {
-  std::uniform_int_distribution<> dis(1, active_elements_quantity_);
-  int random_index = dis(this->gen_);
   int final_index{0};
   for (int i{0}; i < used_flags_.size(); i++) {
     if (used_flags_[i] == 1) {
-      random_index--;
-    }
-    if (random_index == 0) {
       used_flags_[i] = 0;
       active_elements_quantity_--;
       final_index = i;
@@ -38,6 +33,22 @@ std::shared_ptr<LocalSearch> SearchMethodSelector::SelectMethod() {
     }
   }
   return this->search_methods_[final_index];
+  
+  // std::uniform_int_distribution<> dis(1, active_elements_quantity_);
+  // int random_index = dis(this->gen_);
+  // int final_index{0};
+  // for (int i{0}; i < used_flags_.size(); i++) {
+  //   if (used_flags_[i] == 1) {
+  //     random_index--;
+  //   }
+  //   if (random_index == 0) {
+  //     used_flags_[i] = 0;
+  //     active_elements_quantity_--;
+  //     final_index = i;
+  //     break;
+  //   }
+  // }
+  // return this->search_methods_[final_index];
 }
 
 bool SearchMethodSelector::IsEmpty() { return active_elements_quantity_ == 0; }

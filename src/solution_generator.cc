@@ -85,35 +85,56 @@ SolutionPtr SolutionGenerator::BuildCollectionRoutes() {
 }
 
 SolutionPtr SolutionGenerator::RandomVND(SolutionPtr solution) {
+  // ESTA ES LA PARTE DEL CODIGO QUE SE HA MODIFICADO PARA CUMPLIR LA TAREA 3
   search_selector_.Reset();
   int old_time = solution->total_time();
   // std::string result = "\n--- Random VND ---\nImproved solutions:\n";
   while (!this->search_selector_.IsEmpty()) {
     std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
     // result += "Cambiamos a " + search_method->type();
-    bool improved_local{false};
-    while (true) {
-      std::pair<bool, SolutionPtr> search_result{search_method->GetBestNeighbor(solution, this->instance_)};
-      if (search_result.first) {
-        // result +=  "- Time: ";
-        // result +=  std::to_string(solution->total_time()) + " --> ";
-        solution = search_result.second;
-        // result +=  std::to_string(solution->total_time()) + " \n";
-        improved_local = true;
-        continue;
-      } else if (improved_local) {
-        // result += "Reset!\n";
-        this->search_selector_.Reset();
-        break;
-      } else {
-        break;
-      }
+    // bool improved_local{false};
+    std::pair<bool, SolutionPtr> search_result{search_method->GetBestNeighbor(solution, this->instance_)};
+    if (search_result.first) {
+      // result +=  "- Time: ";
+      // result +=  std::to_string(solution->total_time()) + " --> ";
+      solution = search_result.second;
+      // result +=  std::to_string(solution->total_time()) + " \n";
+      continue;
     }
   }
   // if (solution->total_time() < old_time) {
   //   std::cout << result;
   // }
   return solution;
+  // search_selector_.Reset();
+  // int old_time = solution->total_time();
+  // // std::string result = "\n--- Random VND ---\nImproved solutions:\n";
+  // while (!this->search_selector_.IsEmpty()) {
+  //   std::shared_ptr<LocalSearch> search_method = search_selector_.SelectMethod();
+  //   // result += "Cambiamos a " + search_method->type();
+  //   bool improved_local{false};
+  //   while (true) {
+  //     std::pair<bool, SolutionPtr> search_result{search_method->GetBestNeighbor(solution, this->instance_)};
+  //     if (search_result.first) {
+  //       // result +=  "- Time: ";
+  //       // result +=  std::to_string(solution->total_time()) + " --> ";
+  //       solution = search_result.second;
+  //       // result +=  std::to_string(solution->total_time()) + " \n";
+  //       improved_local = true;
+  //       continue;
+  //     } else if (improved_local) {
+  //       // result += "Reset!\n";
+  //       this->search_selector_.Reset();
+  //       break;
+  //     } else {
+  //       break;
+  //     }
+  //   }
+  // }
+  // // if (solution->total_time() < old_time) {
+  // //   std::cout << result;
+  // // }
+  // return solution;
 }
 
 TransportVehiclePtr ChooseVehicle(std::vector<TransportVehiclePtr>& candidates,
