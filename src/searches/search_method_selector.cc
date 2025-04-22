@@ -23,6 +23,7 @@ SearchMethodSelector::SearchMethodSelector(int seed) : gen_(seed) {
 }
 
 std::shared_ptr<LocalSearch> SearchMethodSelector::SelectMethod() {
+  // AQUI TAMBIÉN SE MODIFICA CÓDIGO PARA LA SELECCIÓN SECUENCIAL DE LOS ENTORNOS.
   int final_index{0};
   for (int i{0}; i < used_flags_.size(); i++) {
     if (used_flags_[i] == 1) {
