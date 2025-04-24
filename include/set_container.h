@@ -16,6 +16,8 @@
 #ifndef SET_CONTAINER_H
 #define SET_CONTAINER_H
 
+#include <limits>
+
 #include "element_set.h"
 
 class SetContainer;
@@ -43,13 +45,15 @@ class SetContainer {
 
   void AddSet(ElementSetPtr set);
 
+  void DeleteSet(ElementSetPtr delete_set);
+
   std::vector<ElementSetPtr> sets() const { return sets_; }
 
   std::vector<ElementSetPtr>& sets() { return sets_; }
 
   int Size() { return sets_.size(); }
 
-  double GravityCenter();
+  ElementSetPtr GravityCenter();
 
   /**
    * @brief Overloads the output stream operator for `ElementSet`.
@@ -60,7 +64,7 @@ class SetContainer {
    * @param solution The `ElementSet` instance to output.
    * @return A reference to the output stream.
    */
-  friend std::ostream& operator<<(std::ostream& os, const SetContainer& set);
+  friend std::ostream& operator<<(std::ostream& os, const SetContainer& container);
 
  protected:
   std::vector<ElementSetPtr> sets_;

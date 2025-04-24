@@ -130,7 +130,7 @@ double RoundToTwoDecimals(double value);
  * @param second The coordinates of the second element.
  * @return The Euclidean distance between the two elements.
  */
-double ComputeEuclideanDistance(double first, double second);
+double ComputeEuclideanDistance(std::vector<double> first, std::vector<double> second);
 
 /**
  * @brief Finds the index of the first space in a string.

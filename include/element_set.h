@@ -20,6 +20,8 @@
 #include <vector>
 #include <iostream>
 
+#include "./tools/utils.h"
+
 class ElementSet;
 
 typedef std::shared_ptr<ElementSet> ElementSetPtr;

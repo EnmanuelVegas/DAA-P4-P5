@@ -87,9 +87,16 @@ std::vector<std::string> GetFiles(const std::string& path) {
   return files;
 }
 
-double ComputeEuclideanDistance(double first,
-                                double second) {
-  double distance = std::sqrt(std::pow(first - second, 2));
+double ComputeEuclideanDistance(std::vector<double> first,
+                                std::vector<double> second) {
+  if (first.size() != second.size()) {
+    throw std::invalid_argument("Vectors do not have same length!");
+  }
+  double distance{0};
+  for (int i{0}; i < first.size() && i < second.size(); i++) {
+    distance += std::pow(first[i] - second[i], 2);
+  }
+  distance = std::sqrt(distance);
   return RoundToTwoDecimals(distance);
 }
 
@@ -99,8 +106,7 @@ bool IsLess(double a, double b, double epsilon) {
 }
 
 double RoundToTwoDecimals(double value) {
-  // TODO check it actually rounds to 2 decimals
-  return std::round(value * 10000.0) / 100.0;
+  return std::round(value * 100.0) / 100.0;
 }
 
 int SpaceIndex(std::string& string_find) {

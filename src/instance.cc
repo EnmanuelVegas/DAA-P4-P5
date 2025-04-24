@@ -11,9 +11,8 @@
 #include "../include/instance.h"
 
 Instance::Instance(std::string& input_name)
-    : input_sets_(std::make_shared<SetContainer>()),
+    : input_set_(std::make_shared<SetContainer>()),
       distances_(std::vector<std::vector<double>>(0)) {
-  // solution_size_(0) {
   std::ifstream input_file{input_name};
     if (!input_file.is_open()) {
     throw std::runtime_error("Cannot open input file!");
@@ -29,12 +28,15 @@ Instance::Instance(std::string& input_name)
       input_file >> element_value;
       new_set->AddElement(element_value);
     }
-    input_sets_->AddSet(new_set);
+    input_set_->AddSet(new_set);
   }
   // ComputeDistances();
-  for (auto& set : input_sets_->sets()) {
+  for (auto& set : input_set_->sets()) {
     std::cout << *set;
   }
+  ElementSetPtr prueba = input_set_->GravityCenter();
+  // std::cout << "CENTRO:" << std::endl;
+  // std::cout << *prueba;
   input_file.close();
   return;
 }

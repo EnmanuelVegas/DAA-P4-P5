@@ -23,15 +23,8 @@
 #include <random>
 #include <vector>
 
-// #include "./searches/inter_reinsertion.h"
-// #include "./searches/inter_swap.h"
-// #include "./searches/intra_reinsertion.h"
-// #include "./searches/intra_swap.h"
-// #include "./searches/search_method_selector.h"
-// #include "./tools/timer.h"
-// #include "./tools/utils.h"
-// #include "solution.h"
-#include "element_set.h"
+#include "./searches/search_method_selector.h"
+#include "set_container.h"
 #include "instance.h"
 
 /**
@@ -59,8 +52,9 @@ class SolutionGenerator {
       : candidates_size_(candidate_size),
         multistart_rep_(multistart_rep),
         instance_(instance),
-        gen_(seed) {}  //,
+        gen_(seed) { }  //,
                        // search_selector_(seed) {}
+  
 
   /**
    * @brief Generates a solution for the VRP.
@@ -70,7 +64,11 @@ class SolutionGenerator {
    *
    * @return A elementer to the generated solution.
    */
-  ElementSetPtr GenerateSolution();
+  SetContainerPtr GenerateSolution();
+
+  SetContainerPtr GenerateGreedy();
+
+  ElementSetPtr GetFurthestSet(SetContainerPtr input_elements, ElementSetPtr center);
 
  private:
   /**
@@ -81,7 +79,7 @@ class SolutionGenerator {
    * @param solution The initial solution.
    * @return A elementer to the optimized solution.
    */
-  ElementSetPtr RandomVND(ElementSetPtr solution);
+  SetContainerPtr RandomVND(SetContainerPtr solution);
 
   std::shared_ptr<Instance> instance_;
   ElementSetPtr solution_set_;

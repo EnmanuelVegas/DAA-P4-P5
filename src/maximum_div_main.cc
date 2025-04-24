@@ -16,8 +16,8 @@
 #include <string>
 
 #include "../include/element_set.h"
+#include "../include/set_container.h"
 #include "../include/solution_generator.h"
-// #include "../include/tools/results.h"
 #include "../include/tools/timer.h"
 
 int main(int argc, char* argv[]) {
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   }
   try {
     std::vector<std::string> files = GetFiles(options.instances_source);
-    std::vector<ElementSetPtr> solutions = std::vector<ElementSetPtr>(0);
+    std::vector<SetContainerPtr> solutions = std::vector<SetContainerPtr>(0);
     int grasp_size = options.grasp_size;
     int multistart_quantity = options.multistart_quantity;
     std::shared_ptr<Instance> instance;

@@ -36,23 +36,11 @@ class Instance {
  public:
   Instance(std::string& input_name);
 
-//   /**
-//    * @brief Calculates the distance between two zones.
-//    *
-//    * @param actual_id The ID of the starting zone.
-//    * @param destination_id The ID of the destination zone.
-//    * @return The distance between the two zones.
-//    */
-//   double GetDistance(ElementPtr actual, ElementPtr destination);
+  SetContainerPtr input_set() { return input_set_; }
 
-//  private:
-//   /**
-//    * @brief Computes the distances between all zones in the VRP instance.
-//    */
-//   void ComputeDistances();
-
-  int solution_size_;
-  SetContainerPtr input_sets_;
+ private:
+  // int solution_size_;
+  SetContainerPtr input_set_;
   std::vector<std::vector<double>> distances_;
 };
 
