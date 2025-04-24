@@ -12,11 +12,7 @@
 
 SearchMethodSelector::SearchMethodSelector(int seed) : gen_(seed) {
   search_methods_ = std::vector<std::shared_ptr<LocalSearch>>(0);
-  search_methods_.push_back(std::make_shared<InterReinsertion>());
-  search_methods_.push_back(std::make_shared<IntraReinsertion>());
-  search_methods_.push_back(std::make_shared<IntraSwap>());
   search_methods_.push_back(std::make_shared<InterSwap>());
-  search_methods_.push_back(std::make_shared<TwoOpt>());
   used_flags_ = std::vector<int>(search_methods_.size(), 1);
   active_elements_quantity_ = search_methods_.size();
   return;

@@ -10,18 +10,14 @@
  * This file contains the definition of the `SearchMethodSelector` class, which
  * manages the selection of local search methods for solving VRP.
  *
- * @date April 22, 2025
+ * @date  April 29, 2025
  */
 
 #ifndef SEARCH_METHOD_SELECTOR_H
 #define SEARCH_METHOD_SELECTOR_H
 
-#include "./inter_reinsertion.h"
 #include "./inter_swap.h"
-#include "./intra_reinsertion.h"
-#include "./intra_swap.h"
 #include "./local_search.h"
-#include "./two_opt.h"
 
 /**
  * @class SearchMethodSelector
@@ -47,7 +43,7 @@ class SearchMethodSelector {
   /**
    * @brief Selects a local search method.
    *
-   * @return A shared pointer to the selected local search method.
+   * @return A shared elementer to the selected local search method.
    */
   std::shared_ptr<LocalSearch> SelectMethod();
 

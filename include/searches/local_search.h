@@ -9,9 +9,9 @@
  *
  * This file contains the definition of the `LocalSearch` base class, which
  * provides an interface for implementing various local search methods in the
- * context of the Vehicle Routing Problem (VRP).
+ * context of the Maximum Diversity Problem.
  *
- * @date April 22, 2025
+ * @date  April 29, 2025
  */
 
 #ifndef LOCAL_SEARCH_H
@@ -23,12 +23,7 @@
 #include <random>
 #include <vector>
 
-#include "../solution.h"
-#include "../task.h"
 #include "../tools/utils.h"
-#include "../vehicle.h"
-#include "../vrp_instance.h"
-#include "../zone.h"
 
 /**
  * @class LocalSearch
@@ -57,15 +52,15 @@ class LocalSearch {
    * @return A pair indicating whether a better neighbor was found and the
    * corresponding solution.
    */
-  virtual std::pair<bool, SolutionPtr> GetBestNeighbor(
-      SolutionPtr solution, std::shared_ptr<VRPInstance> instance) = 0;
+  // virtual std::pair<bool, SolutionPtr> GetBestNeighbor(
+  //     SolutionPtr solution, std::shared_ptr<Instance> instance) = 0;
 
-  /**
-   * @brief Returns the type of local search.
-   *
-   * @return A string describing the type of local search.
-   */
-  virtual std::string type() = 0;
+  // /**
+  //  * @brief Returns the type of local search.
+  //  *
+  //  * @return A string describing the type of local search.
+  //  */
+  // virtual std::string type() = 0;
 };
 
 #endif
