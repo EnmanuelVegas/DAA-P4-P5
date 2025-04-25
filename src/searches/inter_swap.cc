@@ -12,8 +12,8 @@
 
 #include <iomanip>
 
-// std::pair<bool, SolutionPtr> InterSwap::GetBestNeighbor(
-//     SolutionPtr solution, std::shared_ptr<Instance> instance) {
+std::pair<bool, SetContainerPtr> InterSwap::GetBestNeighbor(
+        SetContainerPtr solution, SetContainerPtr candidates) {
 //   // // std::cout << *solution;
 //   // // std::cout << "Entrada InterSwap" << std::endl;
 //   // double best_neighbor_time = solution->total_time();
@@ -71,7 +71,7 @@
 //   //   return {true, best_neighbor};
 //   // }
 //   // return {false, solution};
-// }
+}
 
 // bool InterSwap::IsLegalMovement(SolutionPtr solution, InterSwapTimes times,
 //                                 std::shared_ptr<Instance> instance) {

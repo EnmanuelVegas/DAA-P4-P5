@@ -20,6 +20,12 @@
 
 #include "local_search.h"
 
+struct InterSwapMovement {
+  int from_set_index = -1;
+  int to_set_index = - 1;
+  int from_pos = -1;
+  int to_pos = - 1;
+};
 
 
 /**
@@ -33,24 +39,24 @@ class InterSwap : public LocalSearch {
  public:
   /**
    * @brief Default constructor.
-//    */
-//   InterSwap() : movement_(InterSwapMovement()) {}
+   */
+  InterSwap() : movement_(InterSwapMovement()) {}
 
-//   /**
-//    * @brief Default destructor.
-//    */
-//   ~InterSwap() {}
+  /**
+   * @brief Default destructor.
+   */
+  ~InterSwap() {}
 
-//   /**
-//    * @brief Finds the best neighbor using swap movements.
-//    *
-//    * @param solution Current solution.
-//    * @param instance VRP problem instance.
-//    * @return A pair indicating whether a better neighbor was found and the
-//    * corresponding solution.
-//    */
-//   std::pair<bool, SolutionPtr> GetBestNeighbor(
-//       SolutionPtr solution, std::shared_ptr<Instance> instance);
+  /**
+   * @brief Finds the best neighbor using swap movements.
+   *
+   * @param solution Current solution.
+   * @param instance VRP problem instance.
+   * @return A pair indicating whether a better neighbor was found and the
+   * corresponding solution.
+   */
+  std::pair<bool, SetContainerPtr> GetBestNeighbor(
+     SetContainerPtr solution, SetContainerPtr candidates);
 
 //   /**
 //    * @brief Returns the type of local search.
@@ -82,7 +88,7 @@ class InterSwap : public LocalSearch {
 //   bool IsLegalMovement(SolutionPtr solution, InterSwapTimes times,
 //                        std::shared_ptr<Instance> instance);
 
-//   InterSwapMovement movement_;
+  InterSwapMovement movement_;
 };
 
 #endif

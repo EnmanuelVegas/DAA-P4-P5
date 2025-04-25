@@ -66,9 +66,9 @@ class SolutionGenerator {
    */
   SetContainerPtr GenerateSolution();
 
-  SetContainerPtr GenerateGreedy();
+  SetContainerPtr BuildSolution();
 
-  ElementSetPtr GetFurthestSet(SetContainerPtr input_elements, ElementSetPtr center);
+  ElementSetPtr GetFurthestSet(SetContainerPtr candidates, ElementSetPtr center);
 
  private:
   /**
@@ -79,7 +79,7 @@ class SolutionGenerator {
    * @param solution The initial solution.
    * @return A elementer to the optimized solution.
    */
-  SetContainerPtr RandomVND(SetContainerPtr solution);
+  SetContainerPtr ApplyLocalSearch(SetContainerPtr solution);
 
   std::shared_ptr<Instance> instance_;
   ElementSetPtr solution_set_;

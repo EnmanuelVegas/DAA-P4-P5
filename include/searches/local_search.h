@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "../tools/utils.h"
+#include "../set_container.h"
 
 /**
  * @class LocalSearch
@@ -52,8 +53,8 @@ class LocalSearch {
    * @return A pair indicating whether a better neighbor was found and the
    * corresponding solution.
    */
-  // virtual std::pair<bool, SolutionPtr> GetBestNeighbor(
-  //     SolutionPtr solution, std::shared_ptr<Instance> instance) = 0;
+  virtual std::pair<bool, SetContainerPtr> GetBestNeighbor(
+      SetContainerPtr solution, SetContainerPtr candidates) = 0;
 
   // /**
   //  * @brief Returns the type of local search.

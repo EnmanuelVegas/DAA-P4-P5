@@ -11,8 +11,8 @@
 #include "../include/solution_generator.h"
 
 SetContainerPtr SolutionGenerator::GenerateSolution() {
-  SetContainerPtr best_solution = GenerateGreedy();
-
+  SetContainerPtr best_solution = BuildSolution();
+  best_solution = ApplyLocalSearch(best_solution);
   return best_solution;
   // int counter{0};
   // int not_improved{0};
@@ -38,7 +38,7 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
 }
 
 
-SetContainerPtr SolutionGenerator::GenerateGreedy() {
+SetContainerPtr SolutionGenerator::BuildSolution() {
   SetContainerPtr solution = std::make_shared<SetContainer>();
   SetContainerPtr input_elements = this->instance_->input_set(); 
   ElementSetPtr center = input_elements->GravityCenter();
@@ -52,8 +52,14 @@ SetContainerPtr SolutionGenerator::GenerateGreedy() {
   return solution;
 }
 
-SetContainerPtr SolutionGenerator::RandomVND(SetContainerPtr solution) {
-  SetContainerPtr improved = std::make_shared<SetContainer>();
+SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
+  std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>();
+  std::pair<bool, SetContainerPtr> search_result = search_method->GetBestNeighbor(
+                                                            solution,
+                                                            instance_->input_set());
+  if (search_result.first) {
+    solution = search_result.second;
+  }
   // ESTA ES LA PARTE DEL CODIGO QUE SE HA MODIFICADO PARA CUMPLIR LA TAREA 3
   // search_selector_.Reset();
   // int old_time = solution->total_time();
@@ -111,96 +117,43 @@ SetContainerPtr SolutionGenerator::RandomVND(SetContainerPtr solution) {
   return improved;
 }
 
-ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr input_elements, 
+ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates, 
                                                 ElementSetPtr center) {
-  if (input_elements->Size() == 0) {
+  
+  if (candidates->sets().empty()) {
     return nullptr;
   }
-  ElementSetPtr furthest = nullptr;
-  double furthest_distance{0};
-  for (auto& set : input_elements->sets()) {
-    double distance = ComputeEuclideanDistance(set->elements(), center->elements());
-    if (distance > furthest_distance) {
-      furthest = set;
+  std::vector<std::tuple<double, int, ElementSetPtr>> distances;
+  int index = 0;
+  for (const auto& candidate : candidates->sets()) {
+    if (candidate != center) {
+      double distance = ComputeEuclideanDistance(center->elements(), candidate->elements());
+      distances.emplace_back(distance, index, candidate);
     }
+    ++index;
   }
-  return furthest;
+  std::sort(distances.begin(), distances.end(),
+            [](const std::tuple<double, int, ElementSetPtr>& a,
+               const std::tuple<double, int, ElementSetPtr>& b) {
+              if (std::get<0>(a) == std::get<0>(b)) {
+                return std::get<1>(a) < std::get<1>(b);
+              }
+              return std::get<0>(a) < std::get<0>(b);
+            });
+
+  // for (auto& num : distances) {
+  //   std::cout << "(" << num.second->id() << " " << num.first << ") ";
+  // }
+
+  if (distances.size() > this->candidates_size_) {
+    distances.resize(this->candidates_size_);
+  }
+  std::uniform_int_distribution<> dis(0, distances.size() - 1);
+  int random_index = dis(this->gen_);
+  // for (auto& num : distances) {
+  //   std::cout << num.second->id() << " ";
+  // }
+  std::cout << "Seleccionamos: " << *std::get<2>(distances[random_index]) <<
+  "\n"; std::cout << "Indice seleccionado: " << random_index << "\n";
+  return std::get<2>(distances[random_index]);
 }
-// ElementSetPtr SelectRandomFurthest(const ElementSetPtr& input_elements, const ElementSetPtr& center) {
-//   if (input_elements->Size() == 0) {
-//     return nullptr;
-//   }
-
-//   // Vector para almacenar los 3 conjuntos más alejados
-//   std::vector<std::pair<double, ElementSetPtr>> furthest_sets;
-
-//   for (auto& set : input_elements->sets()) {
-//     double distance = ComputeEuclideanDistance(set->elements(), center->elements());
-
-//     // Si aún no tenemos 3 elementos, agregamos directamente
-//     if (furthest_sets.size() < 3) {
-//       furthest_sets.emplace_back(distance, set);
-//     } else {
-//       // Si ya tenemos 3 elementos, verificamos si este es más lejano que el más cercano en la lista
-//       auto min_it = std::min_element(furthest_sets.begin(), furthest_sets.end(),
-//                                      [](const auto& a, const auto& b) { return a.first < b.first; });
-//       if (distance > min_it->first) {
-//         *min_it = {distance, set}; // Reemplazamos el más cercano con el nuevo conjunto
-//       }
-//     }
-//   }
-
-//   // Seleccionar aleatoriamente uno de los 3 conjuntos más alejados
-//   if (!furthest_sets.empty()) {
-//     std::random_device rd;
-//     std::mt19937 gen(rd());
-//     std::uniform_int_distribution<> dist(0, furthest_sets.size() - 1);
-//     int random_index = dist(gen);
-//     return furthest_sets[random_index].second;
-//   }
-
-//   return nullptr;
-// }
-
-
-// ZonePtr SolutionGenerator::SelectClosestZone(ZonePtr zone,
-//                                              std::vector<ZonePtr>&
-//                                              candidates) {
-//   if (candidates.empty()) {
-//     return nullptr;
-//   }
-//   std::vector<std::tuple<double, int, ZonePtr>> distances;
-//   int index = 0;
-//   for (const auto& candidate : candidates) {
-//     if (zone->id() != candidate->id()) {
-//       double distance = instance_->GetDistance(zone->id(), candidate->id());
-//       distances.emplace_back(distance, index, candidate);
-//     }
-//     ++index;
-//   }
-//   std::sort(distances.begin(), distances.end(),
-//             [](const std::tuple<double, int, ZonePtr>& a,
-//                const std::tuple<double, int, ZonePtr>& b) {
-//               if (std::get<0>(a) == std::get<0>(b)) {
-//                 return std::get<1>(a) < std::get<1>(b);
-//               }
-//               return std::get<0>(a) < std::get<0>(b);
-//             });
-
-//   // for (auto& num : distances) {
-//   //   std::cout << "(" << num.second->id() << " " << num.first << ") ";
-//   // }
-
-//   if (distances.size() > this->candidates_size_) {
-//     distances.resize(this->candidates_size_);
-//   }
-//   std::uniform_int_distribution<> dis(0, distances.size() - 1);
-//   int random_index = dis(this->gen_);
-//   // for (auto& num : distances) {
-//   //   std::cout << num.second->id() << " ";
-//   // }
-//   // std::cout << "Seleccionamos: " << distances[random_index].second->id()
-//   <<
-//   // "\n"; std::cout << "Indice seleccionado: " << random_index << "\n";
-//   return std::get<2>(distances[random_index]);
-// }
