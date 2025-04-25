@@ -53,8 +53,6 @@ class ElementSet {
 
   int Size() { return elements_.size(); }
 
-  double GravityCenter();
-
   /**
    * @brief Overloads the output stream operator for `ElementSet`.
    *

@@ -36,7 +36,7 @@ class Instance {
  public:
   Instance(std::string& input_name);
 
-  SetContainerPtr input_set() { return input_set_; }
+  SetContainerPtr& input_set() { return input_set_; }
 
  private:
   // int solution_size_;

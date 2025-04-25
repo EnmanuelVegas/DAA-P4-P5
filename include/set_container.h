@@ -47,9 +47,11 @@ class SetContainer {
 
   void DeleteSet(ElementSetPtr delete_set);
 
-  std::vector<ElementSetPtr> sets() const { return sets_; }
+  void RecalculateInnerDistance();
 
   std::vector<ElementSetPtr>& sets() { return sets_; }
+
+  double inner_distance() const { return inner_distance_; }
 
   int Size() { return sets_.size(); }
 
@@ -68,6 +70,7 @@ class SetContainer {
 
  protected:
   std::vector<ElementSetPtr> sets_;
+  double inner_distance_;
 };
 
 #endif

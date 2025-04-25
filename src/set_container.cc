@@ -16,6 +16,12 @@
 #include "../include/set_container.h"
 
 void SetContainer::AddSet(ElementSetPtr set) {
+  double added_distance{0};
+  for (int i{0}; i < sets_.size(); i++) {
+    added_distance += ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
+  }
+  // std::cout << "Sumamos " << added_distance << std::endl;
+  inner_distance_ += added_distance;
   this->sets_.push_back(set);
 }
 
@@ -25,8 +31,27 @@ void SetContainer::DeleteSet(ElementSetPtr delete_set) {
   }
   auto it = std::find(sets_.begin(), sets_.end(), delete_set);
   if (it != sets_.end()) {
+    for (int i{0}; i < sets_.size(); i++) {
+      inner_distance_ -= ComputeEuclideanDistance(delete_set->elements(), sets_[i]->elements());
+    }
     sets_.erase(it);
   }
+  return;
+}
+
+void SetContainer::RecalculateInnerDistance() {
+  inner_distance_ = 0;
+  for (int i{0}; i < sets_.size(); i++) {
+    // std::cout << "Distancia de " << *sets_[i] << " con ";
+    for (int j{i + 1}; j < sets_.size(); j++) {
+      if (i == j) { continue; }
+      // std::cout << *sets_[j] << ": ";
+      inner_distance_ += ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements());
+      // std::cout << ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements()) << std::endl;
+    }
+  }
+  // // std::cout << inner_distance_ << std::endl;
+  return;
 }
 
 

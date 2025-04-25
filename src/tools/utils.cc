@@ -100,8 +100,8 @@ double ComputeEuclideanDistance(std::vector<double> first,
   return RoundToTwoDecimals(distance);
 }
 
-bool IsLess(double a, double b, double epsilon) {
-  return (b - a) > epsilon;
+bool IsGreater(double a, double b, double epsilon) {
+  return (a - b) > epsilon;
   // return (b - a) > 0;
 }
 

@@ -53,15 +53,14 @@ class LocalSearch {
    * @return A pair indicating whether a better neighbor was found and the
    * corresponding solution.
    */
-  virtual std::pair<bool, SetContainerPtr> GetBestNeighbor(
-      SetContainerPtr solution, SetContainerPtr candidates) = 0;
+  virtual bool GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candidates) = 0;
 
-  // /**
-  //  * @brief Returns the type of local search.
-  //  *
-  //  * @return A string describing the type of local search.
-  //  */
-  // virtual std::string type() = 0;
+  /**
+   * @brief Returns the type of local search.
+   *
+   * @return A string describing the type of local search.
+   */
+  virtual std::string type() = 0;
 };
 
 #endif

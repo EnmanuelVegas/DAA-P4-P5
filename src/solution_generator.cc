@@ -12,6 +12,7 @@
 
 SetContainerPtr SolutionGenerator::GenerateSolution() {
   SetContainerPtr best_solution = BuildSolution();
+  std::cout << best_solution->inner_distance();
   best_solution = ApplyLocalSearch(best_solution);
   return best_solution;
   // int counter{0};
@@ -33,7 +34,7 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
   //   }
   // }
   // best_solution->CPU_time() = timer.FinishStopwatch();
-  // // std::cout << *best_solution;
+  std::cout << *best_solution;
   // return best_solution;
 }
 
@@ -53,36 +54,13 @@ SetContainerPtr SolutionGenerator::BuildSolution() {
 }
 
 SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
+  std::cout << "Antes: " << solution->inner_distance() << std::endl;
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>();
-  std::pair<bool, SetContainerPtr> search_result = search_method->GetBestNeighbor(
-                                                            solution,
-                                                            instance_->input_set());
-  if (search_result.first) {
-    solution = search_result.second;
+  bool search_result = true;
+  while (search_result) {
+    search_result = search_method->GetBestNeighbor(solution, instance_->input_set());
+    std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
   }
-  // ESTA ES LA PARTE DEL CODIGO QUE SE HA MODIFICADO PARA CUMPLIR LA TAREA 3
-  // search_selector_.Reset();
-  // int old_time = solution->total_time();
-  // // std::string result = "\n--- Random VND ---\nImproved solutions:\n";
-  // while (!this->search_selector_.IsEmpty()) {
-  //   std::shared_ptr<LocalSearch> search_method =
-  //       search_selector_.SelectMethod();
-  //   // result += "Cambiamos a " + search_method->type();
-  //   // bool improved_local{false};
-  //   std::pair<bool, SolutionPtr> search_result{
-  //       search_method->GetBestNeighbor(solution, this->instance_)};
-  //   if (search_result.first) {
-  //     // result +=  "- Time: ";
-  //     // result +=  std::to_string(solution->total_time()) + " --> ";
-  //     solution = search_result.second;
-  //     // result +=  std::to_string(solution->total_time()) + " \n";
-  //     continue;
-  //   }
-  // }
-  // // if (solution->total_time() < old_time) {
-  // //   std::cout << result;
-  // // }
-  // return solution;
   // search_selector_.Reset();
   // int old_time = solution->total_time();
   // // std::string result = "\n--- Random VND ---\nImproved solutions:\n";
@@ -114,7 +92,7 @@ SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
   // //   std::cout << result;
   // // }
   // return solution;
-  return improved;
+  return solution;
 }
 
 ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates, 
@@ -126,10 +104,8 @@ ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates,
   std::vector<std::tuple<double, int, ElementSetPtr>> distances;
   int index = 0;
   for (const auto& candidate : candidates->sets()) {
-    if (candidate != center) {
-      double distance = ComputeEuclideanDistance(center->elements(), candidate->elements());
-      distances.emplace_back(distance, index, candidate);
-    }
+    double distance = ComputeEuclideanDistance(center->elements(), candidate->elements());
+    distances.emplace_back(distance, index, candidate);
     ++index;
   }
   std::sort(distances.begin(), distances.end(),
@@ -138,11 +114,11 @@ ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates,
               if (std::get<0>(a) == std::get<0>(b)) {
                 return std::get<1>(a) < std::get<1>(b);
               }
-              return std::get<0>(a) < std::get<0>(b);
+              return std::get<0>(a) > std::get<0>(b);
             });
 
   // for (auto& num : distances) {
-  //   std::cout << "(" << num.second->id() << " " << num.first << ") ";
+  //   std::cout << "(" << *std::get<2>(num) << " " << std::get<0>(num) << ") ";
   // }
 
   if (distances.size() > this->candidates_size_) {
@@ -153,7 +129,7 @@ ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates,
   // for (auto& num : distances) {
   //   std::cout << num.second->id() << " ";
   // }
-  std::cout << "Seleccionamos: " << *std::get<2>(distances[random_index]) <<
-  "\n"; std::cout << "Indice seleccionado: " << random_index << "\n";
+  // std::cout << "Seleccionamos: " << *std::get<2>(distances[random_index]) <<
+  // "\n"; std::cout << "Indice seleccionado: " << random_index << "\n";
   return std::get<2>(distances[random_index]);
 }

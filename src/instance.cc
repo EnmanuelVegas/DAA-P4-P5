@@ -35,8 +35,8 @@ Instance::Instance(std::string& input_name)
     std::cout << *set;
   }
   ElementSetPtr prueba = input_set_->GravityCenter();
-  // std::cout << "CENTRO:" << std::endl;
-  // std::cout << *prueba;
+  std::cout << "CENTRO:" << std::endl;
+  std::cout << *prueba;
   input_file.close();
   return;
 }

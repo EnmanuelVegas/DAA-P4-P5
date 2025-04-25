@@ -29,7 +29,7 @@
 #include <string_view>
 #include <vector>
 
-constexpr double kEpsilon = 1e-9;
+constexpr double kEpsilon = 1e-5;
 
 /**
  * @struct ProgramOptions
@@ -107,7 +107,7 @@ inline auto CenterText = [](const std::string& text, int width = 15) {
  * @param epsilon The tolerance value (default is `kEpsilon`).
  * @return true if `a` is less than `b` within the tolerance, false otherwise.
  */
-bool IsLess(double a, double b, double epsilon = kEpsilon);
+bool IsGreater(double a, double b, double epsilon = kEpsilon);
 
 /**
  * @brief Rounds a floating-element number to Two decimal places.

@@ -21,10 +21,8 @@
 #include "local_search.h"
 
 struct InterSwapMovement {
-  int from_set_index = -1;
-  int to_set_index = - 1;
-  int from_pos = -1;
-  int to_pos = - 1;
+  int solution_pos = -1;
+  int candidate_pos = - 1;
 };
 
 
@@ -55,15 +53,18 @@ class InterSwap : public LocalSearch {
    * @return A pair indicating whether a better neighbor was found and the
    * corresponding solution.
    */
-  std::pair<bool, SetContainerPtr> GetBestNeighbor(
-     SetContainerPtr solution, SetContainerPtr candidates);
+  bool GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candidates);
 
-//   /**
-//    * @brief Returns the type of local search.
-//    *
-//    * @return A string describing the type of local search.
-//    */
-//   std::string type() { return "Inter swap.\n"; }
+  double GetNewInnerDistance(InterSwapMovement movement, SetContainerPtr solution,
+                           SetContainerPtr candidates);
+
+
+  /**
+   * @brief Returns the type of local search.
+   *
+   * @return A string describing the type of local search.
+   */
+  std::string type() { return "Inter swap.\n"; }
 
 //  private:
 //   /**
