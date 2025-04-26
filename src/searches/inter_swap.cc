@@ -39,6 +39,11 @@ bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candid
     // std::cout << "candidates->sets()[" << movement_.candidate_pos << "]: " 
     //           << *candidates->sets()[movement_.candidate_pos] << std::endl;
 
+
+    std::cout << movement_.solution_pos << " " << movement_.candidate_pos << std::endl;//"]: " 
+              // << *candidates->sets()[movement_.candidate_pos] << std::endl;
+
+
     // if (!solution->sets()[movement_.solution_pos] || !candidates->sets()[movement_.candidate_pos]) {
     //   std::cerr << "Error: Punteros nulos detectados." << std::endl;
     //   return false;

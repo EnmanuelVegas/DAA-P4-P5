@@ -43,7 +43,7 @@ SetContainerPtr SolutionGenerator::BuildSolution() {
   SetContainerPtr solution = std::make_shared<SetContainer>();
   SetContainerPtr input_elements = this->instance_->input_set(); 
   ElementSetPtr center = input_elements->GravityCenter();
-  while (solution->Size() < 5) {
+  while (solution->Size() < 10) {
     ElementSetPtr furthest_set = GetFurthestSet(input_elements, center);
     solution->AddSet(furthest_set);
     input_elements->DeleteSet(furthest_set);
