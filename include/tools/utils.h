@@ -41,7 +41,7 @@ constexpr double kEpsilon = 1e-5;
 struct ProgramOptions {
   bool show_help{false};
   std::string instances_source{""};
-  int multistart_quantity{0};
+  int solution_size{0};
   int grasp_size{0};
 };
 

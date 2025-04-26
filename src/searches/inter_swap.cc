@@ -13,7 +13,7 @@
 #include <iomanip>
 
 bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candidates) {
-  std::cout << "Distancia solución: " << solution->inner_distance() <<  std::endl;
+  // std::cout << "Distancia solución: " << solution->inner_distance() <<  std::endl;
   int solution_size = solution->sets().size();
   int candidates_size = candidates->sets().size();
   double max_inner_distance{solution->inner_distance()};
@@ -26,7 +26,7 @@ bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candid
                                                             solution,
                                                             candidates);
       if (candidate_inner_distance > max_inner_distance) {
-        std::cout << "Mejor solución! " << max_inner_distance << " -> " << candidate_inner_distance << std::endl;
+        // std::cout << "Mejor solución! " << max_inner_distance << " -> " << candidate_inner_distance << std::endl;
         movement_ = candidate_movement;
         max_inner_distance = candidate_inner_distance;
       }
@@ -40,7 +40,7 @@ bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candid
     //           << *candidates->sets()[movement_.candidate_pos] << std::endl;
 
 
-    std::cout << movement_.solution_pos << " " << movement_.candidate_pos << std::endl;//"]: " 
+    // std::cout << movement_.solution_pos << " " << movement_.candidate_pos << std::endl;//"]: " 
               // << *candidates->sets()[movement_.candidate_pos] << std::endl;
 
 
@@ -64,7 +64,7 @@ bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candid
     std::swap(solution->sets()[movement_.solution_pos], candidates->sets()[movement_.candidate_pos]);
     solution->RecalculateInnerDistance();
     candidates->RecalculateInnerDistance();
-    std::cout << *solution;
+    // std::cout << *solution;
     return true;
   }
   return false;

@@ -19,6 +19,7 @@
 #include "../include/set_container.h"
 #include "../include/solution_generator.h"
 #include "../include/tools/timer.h"
+#include "../include/tools/results.h"
 
 int main(int argc, char* argv[]) {
   auto options_container = ParseArguments(argc, argv);
@@ -32,20 +33,28 @@ int main(int argc, char* argv[]) {
   }
   try {
     std::vector<std::string> files = GetFiles(options.instances_source);
-    std::vector<SetContainerPtr> solutions = std::vector<SetContainerPtr>(0);
+    std::vector<Result> solutions = std::vector<Result>(0);
     int grasp_size = options.grasp_size;
-    int multistart_quantity = options.multistart_quantity;
+    int fixed_solution_size = options.solution_size;
     std::shared_ptr<Instance> instance;
     std::shared_ptr<SolutionGenerator> solver;
+    Timer timer = Timer();
     for (auto& input_file : files) {
-      instance = std::make_shared<Instance>(input_file);
-      // for (int i{0}; i < 3; i++) {
-      solver = std::make_shared<SolutionGenerator>(
-          instance, grasp_size, multistart_quantity);  // 123, seed
-      solutions.push_back(solver->GenerateSolution());
-      // }
+      std::cout << input_file << std::endl;
+      for (int solution_size{2}; solution_size <= 5; solution_size++) {
+        Result result = Result();
+        timer.StartStopwatch();
+        instance = std::make_shared<Instance>(input_file);
+        solver = std::make_shared<SolutionGenerator>(instance, grasp_size, solution_size);  // 123, seed
+        result.filename = input_file;
+        result.input_size = instance->input_set()->Size();
+        result.LRC_size = grasp_size;
+        result.set_solution = solver->GenerateSolution();
+        result.CPU_time = timer.FinishStopwatch();
+        solutions.push_back(result);
+      }
     }
-    // PrintSolutionSummary(solutions, files);
+    PrintSolutionSummary(solutions);
   } catch (const std::exception& error) {
     std::cerr << "An error has occurred: " << error.what() << std::endl;
     return EXIT_FAILURE;

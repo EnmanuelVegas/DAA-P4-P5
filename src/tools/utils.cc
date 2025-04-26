@@ -34,14 +34,14 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
     } else {
       throw std::invalid_argument("Expected -g (GRASP size)!");
     }
-    if (args[arguments_counter] == "-m" ||
-        args[arguments_counter] == "--multi") {
-      options.multistart_quantity =
+    if (args[arguments_counter] == "-s" ||
+        args[arguments_counter] == "--solution") {
+      options.solution_size =
           std::stoi(std::string(args[++arguments_counter]));
     } else {
-      throw std::invalid_argument("Expected -m (MULTISTART quantity)!");
+      throw std::invalid_argument("Expected -s (Solution quantity)!");
     }
-    if (options.grasp_size < 1 || options.multistart_quantity < 1) {
+    if (options.grasp_size < 1 || options.solution_size < 1) {
       throw std::invalid_argument("Arguments must be higher than 0!");
     }
   } catch (const std::exception& error) {

@@ -12,7 +12,7 @@
 
 SetContainerPtr SolutionGenerator::GenerateSolution() {
   SetContainerPtr best_solution = BuildSolution();
-  std::cout << best_solution->inner_distance();
+  // std::cout << best_solution->inner_distance();
   best_solution = ApplyLocalSearch(best_solution);
   return best_solution;
   // int counter{0};
@@ -34,7 +34,7 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
   //   }
   // }
   // best_solution->CPU_time() = timer.FinishStopwatch();
-  std::cout << *best_solution;
+  // std::cout << *best_solution;
   // return best_solution;
 }
 
@@ -43,23 +43,23 @@ SetContainerPtr SolutionGenerator::BuildSolution() {
   SetContainerPtr solution = std::make_shared<SetContainer>();
   SetContainerPtr input_elements = this->instance_->input_set(); 
   ElementSetPtr center = input_elements->GravityCenter();
-  while (solution->Size() < 10) {
+  while (solution->Size() < solution_size_) {
     ElementSetPtr furthest_set = GetFurthestSet(input_elements, center);
     solution->AddSet(furthest_set);
     input_elements->DeleteSet(furthest_set);
     center = solution->GravityCenter();
   }
-  std::cout << *solution;
+  // std::cout << *solution;
   return solution;
 }
 
 SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
-  std::cout << "Antes: " << solution->inner_distance() << std::endl;
+  // std::cout << "Antes: " << solution->inner_distance() << std::endl;
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>();
   bool search_result = true;
   while (search_result) {
     search_result = search_method->GetBestNeighbor(solution, instance_->input_set());
-    std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
+    // std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
   }
   // search_selector_.Reset();
   // int old_time = solution->total_time();

@@ -31,12 +31,12 @@ Instance::Instance(std::string& input_name)
     input_set_->AddSet(new_set);
   }
   // ComputeDistances();
-  for (auto& set : input_set_->sets()) {
-    std::cout << *set;
-  }
-  ElementSetPtr prueba = input_set_->GravityCenter();
-  std::cout << "CENTRO:" << std::endl;
-  std::cout << *prueba;
+  // for (auto& set : input_set_->sets()) {
+  //   std::cout << *set;
+  // }
+  // ElementSetPtr prueba = input_set_->GravityCenter();
+  // std::cout << "CENTRO:" << std::endl;
+  // std::cout << *prueba;
   input_file.close();
   return;
 }
