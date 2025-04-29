@@ -6,7 +6,7 @@ los ficheros especificados en la ruta DIRECTORY.
 
 Parámetros obligatorios:
   -g. --grasp [LRC]        Tamaño de la lista restringida de candidatos (LRC)
-  -m. --multi [REPS]       Número de repeticiones para el MultiStart.
+  -s, --size [SOL]        TAMAÑO DE LA SOLUCION.
 
 IMPORTANTE: Para ejecutar el Greedy constructivo se ejecuta el programa con tamaño
 de LRC = 1
