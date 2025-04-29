@@ -57,6 +57,9 @@ class SetContainer {
 
   ElementSetPtr GravityCenter();
 
+  std::string ContainedIDs() const;
+
+
   /**
    * @brief Overloads the output stream operator for `ElementSet`.
    *

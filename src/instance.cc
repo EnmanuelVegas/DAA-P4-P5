@@ -23,7 +23,7 @@ Instance::Instance(std::string& input_name)
   input_file >> set_size;
   double element_value;
   for (int i{0}; i < set_quantity; i++) {
-    ElementSetPtr new_set = std::make_shared<ElementSet>();
+    ElementSetPtr new_set = std::make_shared<ElementSet>(i + 1);
     for (int j{0}; j < set_size; j++) {
       input_file >> element_value;
       new_set->AddElement(element_value);

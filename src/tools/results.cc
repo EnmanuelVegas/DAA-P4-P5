@@ -19,14 +19,14 @@ void PrintHeader(int table_width) {
   std::cout << CenterText("K", 7) + "|";
   std::cout << CenterText("m", 7) + "|";
   std::cout << CenterText("z", 11) + "|";
-  std::cout << CenterText("S", 13) + "|";
+  std::cout << CenterText("S", 20) + "|";
   std::cout << CenterText("CPU_time", 11) + "|";
   std::cout << std::endl << std::string(table_width, '-') << std::endl << "|";
   return;
 }
 
 void PrintSolutionSummary(std::vector<Result>& solutions) {
-  int table_width = 79;
+  int table_width = 66;
   PrintHeader(table_width);
   std::regex re("(max_div_\\d+_\\d+)\\.txt");
   double distances_sum{0};
@@ -46,7 +46,7 @@ void PrintSolutionSummary(std::vector<Result>& solutions) {
     std::ostringstream distance_stream;
     distance_stream << std::fixed << std::setprecision(2) << result.set_solution->inner_distance();
     std::cout << CenterText(distance_stream.str(), 11) + "|";
-    std::cout << CenterText(std::string{" "}, 13) + "|";
+    std::cout << CenterText(result.set_solution->ContainedIDs(), 20) + "|";
     std::cout << CenterText(std::to_string(result.CPU_time), 11) << "|";
     // Sum values
     distances_sum += result.set_solution->inner_distance();

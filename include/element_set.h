@@ -33,7 +33,7 @@ class ElementSet {
    *
    * Initializes an empty solution with no vehicles, tasks, or time values.
    */
-  ElementSet() : elements_(std::vector<double>(0)) {}
+  ElementSet(int id) : elements_(std::vector<double>(0)), id_(id) { }
 
   /**
    * @brief Assignment operator for `ElementSet`.
@@ -46,6 +46,8 @@ class ElementSet {
   // ElementSet& operator=(const ElementSet& other);
 
   void AddElement(double element);
+
+  int id() { return id_; }
 
   std::vector<double> elements() const { return elements_; }
 
@@ -66,6 +68,7 @@ class ElementSet {
 
  protected:
   std::vector<double> elements_;
+  int id_;
 };
 
 #endif

@@ -54,9 +54,17 @@ void SetContainer::RecalculateInnerDistance() {
   return;
 }
 
+std::string SetContainer::ContainedIDs() const {
+  std::string result{""};
+  for (int i{0}; i < sets_.size(); i++) {
+    result += sets_[i]->id() + " ";
+  }
+  return result;
+}
+
 
 ElementSetPtr SetContainer::GravityCenter() {
-  ElementSetPtr center_set = std::make_shared<ElementSet>();
+  ElementSetPtr center_set = std::make_shared<ElementSet>(0);
   if (!this->Size() || !this->sets_[0]->elements().size()) {
     return center_set;
   }

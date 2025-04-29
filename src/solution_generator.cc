@@ -59,7 +59,7 @@ SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
   bool search_result = true;
   while (search_result) {
     search_result = search_method->GetBestNeighbor(solution, instance_->input_set());
-    // std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
+    std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
   }
   // search_selector_.Reset();
   // int old_time = solution->total_time();
