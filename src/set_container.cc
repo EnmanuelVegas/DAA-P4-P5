@@ -15,6 +15,20 @@
 
 #include "../include/set_container.h"
 
+
+SetContainer& SetContainer::operator=(const SetContainer& other) {
+  std::cout << "ASIGNACION" << std::endl;
+  if (this != &other) {
+    sets_.clear();
+    sets_.reserve(other.sets_.size());
+    for (const auto& set : other.sets_) {
+      sets_.push_back(std::make_shared<ElementSet>(*set));
+    }
+    inner_distance_ = other.inner_distance_;
+  }
+  return *this;
+}
+
 void SetContainer::AddSet(ElementSetPtr set) {
   double added_distance{0};
   for (int i{0}; i < sets_.size(); i++) {
@@ -57,7 +71,7 @@ void SetContainer::RecalculateInnerDistance() {
 std::string SetContainer::ContainedIDs() const {
   std::string result{""};
   for (int i{0}; i < sets_.size(); i++) {
-    result += sets_[i]->id() + " ";
+    result += std::to_string(sets_[i]->id()) + " ";
   }
   return result;
 }

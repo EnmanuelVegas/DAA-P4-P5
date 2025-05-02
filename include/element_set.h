@@ -35,6 +35,8 @@ class ElementSet {
    */
   ElementSet(int id) : elements_(std::vector<double>(0)), id_(id) { }
 
+  ElementSet(const ElementSet& other) : elements_(other.elements_), id_(other.id_) {}
+  
   /**
    * @brief Assignment operator for `ElementSet`.
    *

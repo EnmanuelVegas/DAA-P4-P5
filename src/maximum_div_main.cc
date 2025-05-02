@@ -35,7 +35,8 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> files = GetFiles(options.instances_source);
     std::vector<Result> solutions = std::vector<Result>(0);
     int grasp_size = options.grasp_size;
-    int fixed_solution_size = options.solution_size;
+    bool local_search = options.apply_local_search;
+    // std::string algorithm = options.algorithm;
     std::shared_ptr<Instance> instance;
     std::shared_ptr<SolutionGenerator> solver;
     Timer timer = Timer();
@@ -45,7 +46,7 @@ int main(int argc, char* argv[]) {
         Result result = Result();
         timer.StartStopwatch();
         instance = std::make_shared<Instance>(input_file);
-        solver = std::make_shared<SolutionGenerator>(instance, grasp_size, solution_size);  // 123, seed
+        solver = std::make_shared<SolutionGenerator>(instance, grasp_size, solution_size, local_search);  // 123, seed
         result.filename = input_file;
         result.input_size = instance->input_set()->Size();
         result.LRC_size = grasp_size;

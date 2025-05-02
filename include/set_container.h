@@ -31,7 +31,7 @@ class SetContainer {
    *
    * Initializes an empty solution with no vehicles, tasks, or time values.
    */
-  SetContainer() : sets_(std::vector<ElementSetPtr>(0)) {}
+  SetContainer() : sets_(std::vector<ElementSetPtr>(0)), inner_distance_(0) { }
 
   /**
    * @brief Assignment operator for `ElementSet`.
@@ -41,7 +41,7 @@ class SetContainer {
    * @param other The `ElementSet` instance to assign.
    * @return A reference to this `ElementSet` instance.
    */
-  // ElementSet& operator=(const ElementSet& other);
+  SetContainer& operator=(const SetContainer& other);
 
   void AddSet(ElementSetPtr set);
 

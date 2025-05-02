@@ -11,37 +11,28 @@
 #include "../include/solution_generator.h"
 
 SetContainerPtr SolutionGenerator::GenerateSolution() {
-  SetContainerPtr best_solution = BuildSolution();
-  // std::cout << best_solution->inner_distance();
-  best_solution = ApplyLocalSearch(best_solution);
+  SetContainerPtr best_solution = std::make_shared<SetContainer>();
+  SetContainerPtr current_solution = nullptr;
+  int counter{0};
+  int limit{(candidates_size_ > 1) ? 500 : 1};
+  while (counter++ < limit) {
+    std::cout << counter << std::endl;
+    current_solution = BuildSolution();
+    if (apply_local_search_) {
+      std::cout << "ls" << std::endl;
+      current_solution = ApplyLocalSearch(current_solution); // TODO: HACER UNA TABLA CON GRASP SOLO Y OTRA CON GRASP Y BUSQUEDA LOCAL.
+    }
+    if (current_solution->inner_distance() > best_solution->inner_distance()) {
+      best_solution = current_solution;
+    }
+  }
   return best_solution;
-  // int counter{0};
-  // int not_improved{0};
-  // Timer timer = Timer();
-  // timer.StartStopwatch();
-  // while (counter++ < this->multistart_rep_) {
-    // SolutionPtr solution = BuildCollectionRoutes();
-  //   solution = RandomVND(solution);
-  //   solution->CleanCollectionRoutes(instance_);
-  //   solution->BuildTasks(instance_);
-  //   solution = BuildTransferRoutes(solution);
-  //   if (solution->IsBetter(best_solution)) {
-  //     best_solution = solution;
-  //     not_improved = 0;
-  //   }
-  //   if (not_improved >= this->multistart_rep_ * 0.15) {
-  //     break;
-  //   }
-  // }
-  // best_solution->CPU_time() = timer.FinishStopwatch();
-  // std::cout << *best_solution;
-  // return best_solution;
 }
-
 
 SetContainerPtr SolutionGenerator::BuildSolution() {
   SetContainerPtr solution = std::make_shared<SetContainer>();
-  SetContainerPtr input_elements = this->instance_->input_set(); 
+  SetContainerPtr input_elements = std::make_shared<SetContainer>(*this->instance_->input_set());
+  std::cout << input_elements->Size() << std::endl;
   ElementSetPtr center = input_elements->GravityCenter();
   while (solution->Size() < solution_size_) {
     ElementSetPtr furthest_set = GetFurthestSet(input_elements, center);

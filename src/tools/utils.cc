@@ -23,7 +23,7 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
       options.show_help = true;
       return options;
     }
-    if (argc != 6) {
+    if (argc < 4 || argc > 5) {
       throw std::invalid_argument("Quantity of arguments not correct!\n");
     }
     options.instances_source = std::string(args[arguments_counter++]);
@@ -34,15 +34,23 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
     } else {
       throw std::invalid_argument("Expected -g (GRASP size)!");
     }
-    if (args[arguments_counter] == "-s" ||
-        args[arguments_counter] == "--solution") {
-      options.solution_size =
-          std::stoi(std::string(args[++arguments_counter]));
-    } else {
-      throw std::invalid_argument("Expected -s (Solution quantity)!");
-    }
-    if (options.grasp_size < 1 || options.solution_size < 1) {
+    // if (args[arguments_counter] == "-s" ||
+    //     args[arguments_counter] == "--solution") {
+    //   options.solution_size =
+    //       std::stoi(std::string(args[++arguments_counter]));
+    // } else {
+    //   throw std::invalid_argument("Expected -s (Solution quantity)!");
+    // }
+    if (options.grasp_size < 1) {
       throw std::invalid_argument("Arguments must be higher than 0!");
+    }
+    std::cout << argc << std::endl;
+    if (argc == 5) {
+      if (args[arguments_counter] == "-l" || args[arguments_counter] == "--local_search") {
+        options.apply_local_search = true;
+      } else {
+        throw std::invalid_argument("Expected -l (Local Search Flag)!");
+      }
     }
   } catch (const std::exception& error) {
     std::cerr << "\nError: " << error.what();

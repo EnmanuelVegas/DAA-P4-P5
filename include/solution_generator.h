@@ -48,10 +48,11 @@ class SolutionGenerator {
    * @param seed The random seed (default is a random device).
    */
   SolutionGenerator(std::shared_ptr<Instance> instance, int candidate_size,
-                    int solution_size, int seed = std::random_device{}())
+                    int solution_size, bool apply_local_search, int seed = std::random_device{}())
       : candidates_size_(candidate_size),
         solution_size_(solution_size),
         instance_(instance),
+        apply_local_search_(apply_local_search),
         gen_(seed) { }  //,
                        // search_selector_(seed) {}
   
@@ -86,6 +87,7 @@ class SolutionGenerator {
   // SearchMethodSelector search_selector_;
   std::mt19937 gen_;
   int candidates_size_;
+  bool apply_local_search_;
   int solution_size_;
 };
 
