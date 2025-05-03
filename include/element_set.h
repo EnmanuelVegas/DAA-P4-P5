@@ -28,12 +28,22 @@ typedef std::shared_ptr<ElementSet> ElementSetPtr;
 
 class ElementSet {
  public:
+
+
   /**
    * @brief Default constructor for `ElementSet`.
    *
    * Initializes an empty solution with no vehicles, tasks, or time values.
    */
+  ElementSet(int id, std::vector<double> elements) : elements_(elements), id_(id) { }
+
+ /**
+   * @brief Default constructor for `ElementSet`.
+   *
+   * Initializes an empty solution with no vehicles, tasks, or time values.
+   */
   ElementSet(int id) : elements_(std::vector<double>(0)), id_(id) { }
+
 
   ElementSet(const ElementSet& other) : elements_(other.elements_), id_(other.id_) {}
   
@@ -50,6 +60,8 @@ class ElementSet {
   void AddElement(double element);
 
   int id() { return id_; }
+
+  ElementSetPtr Clone() const;  
 
   std::vector<double> elements() const { return elements_; }
 

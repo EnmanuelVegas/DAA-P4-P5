@@ -30,6 +30,16 @@ Instance::Instance(std::string& input_name)
     }
     input_set_->AddSet(new_set);
   }
+  this->highest_distance_ = 0;
+  for (int i{0}; i < input_set_->Size(); i++) {
+    for (int j{i + 1}; j < input_set_->Size(); j++) {
+      double new_distance{ComputeEuclideanDistance(input_set_->sets()[i]->elements(),
+                                                   input_set_->sets()[j]->elements())};
+      if (new_distance > highest_distance_) {
+        highest_distance_ = new_distance;
+      }
+    }
+  }
   // ComputeDistances();
   // for (auto& set : input_set_->sets()) {
   //   std::cout << *set;
@@ -41,20 +51,18 @@ Instance::Instance(std::string& input_name)
   return;
 }
 
-// double Instance::GetDistance(ElementPtr actual, ElementPtr destination) {
-//   int actual_id = actual->id();
-//   int destination_id = destination->id();
-//   if ((destination_id <= 0 || destination_id > input_elements_->Size()) ||
-//       (actual_id <= 0 || actual_id > input_elements_->Size())) {
-//     std::string error_positions =
-//         std::to_string(actual_id) + ", " + std::to_string(destination_id);
-//     throw std::out_of_range("Not permited positions: " + error_positions + ".");
-//   }
-//   if (actual_id >= destination_id) {
-//     return distances_[actual_id - 1][destination_id - 1];
-//   }
-//   return distances_[destination_id - 1][actual_id - 1];
-// }
+double Instance::GetDistance(int first, int second) {
+  if ((second <= 0 || second > input_set_->Size()) ||
+      (first <= 0 || first > input_set->Size())) {
+    std::string error_positions =
+        std::to_string(first) + ", " + std::to_string(second);
+    throw std::out_of_range("Not permited positions: " + error_positions + ".");
+  }
+  if (first >= second) {
+    return distances_[first - 1][second - 1];
+  }
+  return distances_[second - 1][first - 1];
+}
 
 // void Instance::ComputeDistances() {
 //   distances_.resize(input_elements_->elements().size());

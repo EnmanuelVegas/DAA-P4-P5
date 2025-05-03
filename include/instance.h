@@ -38,9 +38,13 @@ class Instance {
 
   SetContainerPtr& input_set() { return input_set_; }
 
+  double highest_distance() { return highest_distance_; } 
+
+  double GetDistance(int first_id, int second_id);
+
  private:
-  // int solution_size_;
   SetContainerPtr input_set_;
+  double highest_distance_;
   std::vector<std::vector<double>> distances_;
 };
 

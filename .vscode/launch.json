@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/max_diversity",
-      "args": ["${workspaceFolder}/instances", "-g", "1", "-s", "1"],
+      "args": ["${workspaceFolder}/instances/max_div_15_2.txt", "-g", "1"],
       // "args": ["${workspaceFolder}/instances/max_div_15_2.txt", "-g", "1", "-s", "3"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

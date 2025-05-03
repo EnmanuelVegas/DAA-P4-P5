@@ -13,22 +13,9 @@
  * @date  April 29, 2025
  */
 
-#include "../include/element_set.h"
+#include "../include/node.h"
 
 
-ElementSetPtr ElementSet::Clone() const {
-  return std::make_shared<ElementSet>(*this);
-}
-
-void ElementSet::AddElement(double element) {
-  this->elements_.push_back(element);
-}
-
-std::ostream& operator<<(std::ostream& os, const ElementSet& set) { 
-  os << "{ ";
-  for (auto& element : set.elements_) {
-    os << element << " ";
-  }
-  os << "}" << std::endl;
-  return os;
+bool Node::operator<(Node& other) {
+  return this->highest_limit_ < other.highest_limit_;
 }

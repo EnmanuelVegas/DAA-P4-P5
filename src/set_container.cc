@@ -17,7 +17,6 @@
 
 
 SetContainer& SetContainer::operator=(const SetContainer& other) {
-  std::cout << "ASIGNACION" << std::endl;
   if (this != &other) {
     sets_.clear();
     sets_.reserve(other.sets_.size());
@@ -97,7 +96,7 @@ ElementSetPtr SetContainer::GravityCenter() {
 std::ostream& operator<<(std::ostream& os, const SetContainer& container) { 
   os << "Solution has " << container.sets_.size() << " sets:\n";
   for (int i{0}; i < container.sets_.size(); i++) {
-    os << "** Set Nº " << i + 1 << ":\n";
+    os << "** Set Nº " << container.sets_[i]->id() << ":\n";
     os << *container.sets_[i];
   }
   return os;

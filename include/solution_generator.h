@@ -26,6 +26,7 @@
 #include "./searches/search_method_selector.h"
 #include "set_container.h"
 #include "instance.h"
+#include "node.h"
 
 /**
  * @class SolutionGenerator
@@ -68,6 +69,10 @@ class SolutionGenerator {
   SetContainerPtr GenerateSolution();
 
   SetContainerPtr BuildSolution();
+
+  SetContainerPtr ApplyBranchAndBound(SetContainerPtr solution);
+
+  double ComputeHighestLimit(Node node);
 
   ElementSetPtr GetFurthestSet(SetContainerPtr candidates, ElementSetPtr center);
 
