@@ -31,6 +31,7 @@ SetContainer& SetContainer::operator=(const SetContainer& other) {
 void SetContainer::AddSet(ElementSetPtr set) {
   double added_distance{0};
   for (int i{0}; i < sets_.size(); i++) {
+    // added_distance += ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
     added_distance += ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
   }
   // std::cout << "Sumamos " << added_distance << std::endl;

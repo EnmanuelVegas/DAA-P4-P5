@@ -30,17 +30,7 @@ Instance::Instance(std::string& input_name)
     }
     input_set_->AddSet(new_set);
   }
-  this->highest_distance_ = 0;
-  for (int i{0}; i < input_set_->Size(); i++) {
-    for (int j{i + 1}; j < input_set_->Size(); j++) {
-      double new_distance{ComputeEuclideanDistance(input_set_->sets()[i]->elements(),
-                                                   input_set_->sets()[j]->elements())};
-      if (new_distance > highest_distance_) {
-        highest_distance_ = new_distance;
-      }
-    }
-  }
-  // ComputeDistances();
+  ComputeDistances();
   // for (auto& set : input_set_->sets()) {
   //   std::cout << *set;
   // }
@@ -53,9 +43,8 @@ Instance::Instance(std::string& input_name)
 
 double Instance::GetDistance(int first, int second) {
   if ((second <= 0 || second > input_set_->Size()) ||
-      (first <= 0 || first > input_set->Size())) {
-    std::string error_positions =
-        std::to_string(first) + ", " + std::to_string(second);
+      (first <= 0 || first > input_set_->Size())) {
+    std::string error_positions = std::to_string(first) + ", " + std::to_string(second);
     throw std::out_of_range("Not permited positions: " + error_positions + ".");
   }
   if (first >= second) {
@@ -64,27 +53,30 @@ double Instance::GetDistance(int first, int second) {
   return distances_[second - 1][first - 1];
 }
 
-// void Instance::ComputeDistances() {
-//   distances_.resize(input_elements_->elements().size());
-//   for (int i{0}; i < this->distances_.size(); i++) {
-//     this->distances_[i] =
-//         std::vector<double>(input_elements_->elements().size(), 0);
-//     for (int j{0}; j < i; j++) {
-//       distances_[i][j] = ComputeEuclideanDistance(
-//           input_elements_->elements()[i]->position(),
-//           input_elements_->elements()[j]->position());
-//     }
-//   }
-  // for (int i{-1}; i < input_elements_->elements().size(); i++) {
+void Instance::ComputeDistances() {
+  this->highest_distance_ = 0;
+  distances_.resize(input_set_->sets().size());
+  for (int i{0}; i < this->distances_.size(); i++) {
+    this->distances_[i] = std::vector<double>(input_set_->sets().size(), 0);
+    for (int j{0}; j < i; j++) {
+      double distance = ComputeEuclideanDistance(input_set_->sets()[i]->elements(),
+                                                 input_set_->sets()[j]->elements());
+      distances_[i][j] = distance;
+      if (distance > highest_distance_) {
+        highest_distance_ = distance;
+      }
+    }
+  }
+  // for (int i{-1}; i < input_set_->sets().size(); i++) {
   //   std::cout << std::setw(8) << i + 1 << " ";
   // }
   // std::cout << std::endl;
-  // for (int i{0}; i < input_elements_->elements().size(); i++) {
+  // for (int i{0}; i < input_set_->sets().size(); i++) {
   //   std::cout << std::setw(8) << i + 1 << " ";
-  //   for (int j{0}; j < input_elements_->elements().size(); j++) {
+  //   for (int j{0}; j < input_set_->sets().size(); j++) {
   //     std::cout << std::setw(8) << distances_[i][j] << " ";
   //   }
   //   std::cout << std::endl;
   // }
-//   return;
-// }
+  return;
+}

@@ -42,10 +42,10 @@ int main(int argc, char* argv[]) {
     Timer timer = Timer();
     for (auto& input_file : files) {
       std::cout << input_file << std::endl;
+      instance = std::make_shared<Instance>(input_file);
       for (int solution_size{2}; solution_size <= 5; solution_size++) {
         Result result = Result();
         timer.StartStopwatch();
-        instance = std::make_shared<Instance>(input_file);
         solver = std::make_shared<SolutionGenerator>(instance, grasp_size, solution_size, local_search);  // 123, seed
         result.filename = input_file;
         result.input_size = instance->input_set()->Size();
