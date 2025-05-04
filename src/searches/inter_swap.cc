@@ -13,7 +13,7 @@
 #include <iomanip>
 
 bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candidates) {
-  // std::cout << "Distancia solución: " << solution->inner_distance() <<  std::endl;
+  // std::cout << "Distancia solución: " << solution->inner_distance() << std::endl;
   int solution_size = solution->sets().size();
   int candidates_size = candidates->sets().size();
   double max_inner_distance{solution->inner_distance()};
@@ -65,8 +65,8 @@ bool InterSwap::GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candid
 }
 
 double InterSwap::GetNewInnerDistance(InterSwapMovement movement,
-                                    SetContainerPtr solution,
-                                    SetContainerPtr candidates) {
+                                      SetContainerPtr solution,
+                                      SetContainerPtr candidates) {
   ElementSetPtr out_set = solution->sets()[movement.solution_pos];
   ElementSetPtr in_set = candidates->sets()[movement.candidate_pos];
   double new_inner_distance = solution->inner_distance();

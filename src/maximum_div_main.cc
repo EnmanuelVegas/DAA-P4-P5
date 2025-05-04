@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     std::vector<Result> solutions = std::vector<Result>(0);
     int grasp_size = options.grasp_size;
     bool local_search = options.apply_local_search;
+    bool byb = options.apply_byb;
     // std::string algorithm = options.algorithm;
     std::shared_ptr<Instance> instance;
     std::shared_ptr<SolutionGenerator> solver;
@@ -46,12 +47,15 @@ int main(int argc, char* argv[]) {
       for (int solution_size{2}; solution_size <= 5; solution_size++) {
         Result result = Result();
         timer.StartStopwatch();
-        solver = std::make_shared<SolutionGenerator>(instance, grasp_size, solution_size, local_search);  // 123, seed
+        solver = std::make_shared<SolutionGenerator>(instance, grasp_size,
+                                                     solution_size, local_search,
+                                                     byb);  // 123, seed
         result.filename = input_file;
         result.input_size = instance->input_set()->Size();
         result.LRC_size = grasp_size;
         result.set_solution = solver->GenerateSolution();
         result.CPU_time = timer.FinishStopwatch();
+        result.generated_nodes = solver->generated_nodes();
         solutions.push_back(result);
       }
     }

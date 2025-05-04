@@ -14,25 +14,32 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
   SetContainerPtr best_solution = std::make_shared<SetContainer>();
   SetContainerPtr current_solution = nullptr;
   int counter{0};
-  int limit{(candidates_size_ > 1) ? 500 : 1};
+  int limit{(candidates_size_ > 1) ? 20 : 1};
   while (counter++ < limit) {
-    // std::cout << counter << std::endl;
-    current_solution = BuildSolution();
+    std::cout << counter << std::endl;
+    SetContainerPtr input_elements_copy = std::make_shared<SetContainer>(*this->instance_->input_set());
+    current_solution = BuildSolution(input_elements_copy); // GREEDY AND GRASP
+    // std::cout << *current_solution;
     if (apply_local_search_) {
       std::cout << "ls" << std::endl;
-      current_solution = ApplyLocalSearch(current_solution); // TODO: HACER UNA TABLA CON GRASP SOLO Y OTRA CON GRASP Y BUSQUEDA LOCAL.
+      current_solution = ApplyLocalSearch(current_solution, input_elements_copy);
+    // std::cout << *current_solution;
+
     }
     if (current_solution->inner_distance() > best_solution->inner_distance()) {
       best_solution = current_solution;
     }
   }
-  best_solution = ApplyBranchAndBound(best_solution);
+  if (apply_byb_) {
+    std::cout << "byb" << std::endl;
+    best_solution = ApplyBranchAndBound(best_solution);
+  }
   return best_solution;
 }
 
-SetContainerPtr SolutionGenerator::BuildSolution() {
+SetContainerPtr SolutionGenerator::BuildSolution(SetContainerPtr input_elements) {
   SetContainerPtr solution = std::make_shared<SetContainer>();
-  SetContainerPtr input_elements = std::make_shared<SetContainer>(*this->instance_->input_set());
+  // std::cout << *input_elements_copy;
   ElementSetPtr center = input_elements->GravityCenter();
   while (solution->Size() < solution_size_) {
     ElementSetPtr furthest_set = GetFurthestSet(input_elements, center);
@@ -44,12 +51,14 @@ SetContainerPtr SolutionGenerator::BuildSolution() {
   return solution;
 }
 
-SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution) {
+SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution, 
+                                                    SetContainerPtr input_elements_copy) {
   // std::cout << "Antes: " << solution->inner_distance() << std::endl;
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>();
   bool search_result = true;
   while (search_result) {
-    search_result = search_method->GetBestNeighbor(solution, instance_->input_set());
+    // SetContainerPtr input_elements_copy = std::make_shared<SetContainer>(*this->instance_->input_set());
+    search_result = search_method->GetBestNeighbor(solution, input_elements_copy);
     std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
   }
   return solution;
@@ -68,6 +77,7 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
     Node insert_node(new_container);
     insert_node.highest_limit() = ComputeHighestLimit(insert_node);
     nodes.push_back(insert_node);
+    ++generated_nodes_;
   }
 
   while (!nodes.empty()) {
@@ -107,15 +117,14 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
         // std::cout << insert_node.partial_sol() << std::endl;
         // std::cout << "Y COTA SUPERIOR:" << insert_node.highest_limit() << std::endl;        
         nodes.push_back(insert_node);
+        ++generated_nodes_;
       }
     }
     for (int i = nodes.size() - 1; i >= 0; --i) {
       // if (nodes[i].highest_limit() < lowest_limit ||
       // nodes[i].partial_sol().inner_distance() + nodes[i].highest_limit() <= lowest_limit) {
-      if (nodes[i].highest_limit() < lowest_limit) {
-        // std::cout << "ELIMINAMOS A NODO CON CONJUNTOS:" << std::endl;
-        // std::cout << nodes[i].partial_sol() << std::endl;
-        // std::cout << "Y COTA SUPERIOR:" << nodes[i].highest_limit() << std::endl;
+      if (nodes[i].highest_limit() <= lowest_limit || 
+          nodes[i].partial_sol().inner_distance() + nodes[i].highest_limit() <= lowest_limit) {
         nodes.erase(nodes.begin() + i);
       }
     }

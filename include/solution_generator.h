@@ -21,6 +21,7 @@
 #include <limits>
 #include <memory>
 #include <random>
+#include <unordered_set>
 #include <vector>
 
 #include "./searches/search_method_selector.h"
@@ -49,11 +50,14 @@ class SolutionGenerator {
    * @param seed The random seed (default is a random device).
    */
   SolutionGenerator(std::shared_ptr<Instance> instance, int candidate_size,
-                    int solution_size, bool apply_local_search, int seed = std::random_device{}())
+                    int solution_size, bool apply_local_search, bool apply_byb,
+                    int seed = std::random_device{}())
       : candidates_size_(candidate_size),
         solution_size_(solution_size),
         instance_(instance),
         apply_local_search_(apply_local_search),
+        apply_byb_(apply_byb),
+        generated_nodes_(0),
         gen_(seed) { }  //,
                        // search_selector_(seed) {}
   
@@ -68,11 +72,11 @@ class SolutionGenerator {
    */
   SetContainerPtr GenerateSolution();
 
-  SetContainerPtr BuildSolution();
-
-  SetContainerPtr ApplyBranchAndBound(SetContainerPtr solution);
+  SetContainerPtr BuildSolution(SetContainerPtr input_elements);
 
   double ComputeHighestLimit(Node node);
+
+  int generated_nodes() { return generated_nodes_; }
 
   ElementSetPtr GetFurthestSet(SetContainerPtr candidates, ElementSetPtr center);
 
@@ -85,7 +89,9 @@ class SolutionGenerator {
    * @param solution The initial solution.
    * @return A elementer to the optimized solution.
    */
-  SetContainerPtr ApplyLocalSearch(SetContainerPtr solution);
+  SetContainerPtr ApplyLocalSearch(SetContainerPtr solution, SetContainerPtr input_elements);
+
+  SetContainerPtr ApplyBranchAndBound(SetContainerPtr solution);
 
   std::shared_ptr<Instance> instance_;
   ElementSetPtr solution_set_;
@@ -93,6 +99,8 @@ class SolutionGenerator {
   std::mt19937 gen_;
   int candidates_size_;
   bool apply_local_search_;
+  bool apply_byb_;
+  int generated_nodes_;
   int solution_size_;
 };
 

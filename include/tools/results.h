@@ -32,6 +32,7 @@ struct Result {
   int input_size = 0;
   int LRC_size = 0;
   double CPU_time = 0;
+  int generated_nodes = 0;
   std::string filename = "";
 };
 

@@ -41,6 +41,7 @@ constexpr double kEpsilon = 1e-5;
 struct ProgramOptions {
   bool show_help{false};
   bool apply_local_search{false};
+  bool apply_byb{false};
   std::string instances_source{""};
   std::string algorithm{""};
   int grasp_size{0};

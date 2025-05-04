@@ -23,7 +23,7 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
       options.show_help = true;
       return options;
     }
-    if (argc < 4 || argc > 5) {
+    if (argc < 4) {
       throw std::invalid_argument("Quantity of arguments not correct!\n");
     }
     options.instances_source = std::string(args[arguments_counter++]);
@@ -44,13 +44,17 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
     if (options.grasp_size < 1) {
       throw std::invalid_argument("Arguments must be higher than 0!");
     }
-    std::cout << argc << std::endl;
-    if (argc == 5) {
-      if (args[arguments_counter] == "-l" || args[arguments_counter] == "--local_search") {
+    while (arguments_counter < argc - 1) {
+      if (args[arguments_counter] == "-l") {
         options.apply_local_search = true;
-      } else {
-        throw std::invalid_argument("Expected -l (Local Search Flag)!");
       }
+      else if (args[arguments_counter] == "-bb") {
+        options.apply_byb = true;
+      }
+      else {
+        throw std::invalid_argument("Expected -l or -bb (Local Search or Branch and Bound flag)!");
+      }
+      arguments_counter++;
     }
   } catch (const std::exception& error) {
     std::cerr << "\nError: " << error.what();

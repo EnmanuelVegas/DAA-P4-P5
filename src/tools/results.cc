@@ -21,16 +21,18 @@ void PrintHeader(int table_width) {
   std::cout << CenterText("z", 11) + "|";
   std::cout << CenterText("S", 30) + "|";
   std::cout << CenterText("CPU_time", 11) + "|";
+  std::cout << CenterText("Nº nodes", 11) + "|";
   std::cout << std::endl << std::string(table_width, '-') << std::endl << "|";
   return;
 }
 
 void PrintSolutionSummary(std::vector<Result>& solutions) {
-  int table_width = 96;
+  int table_width = 107;
   PrintHeader(table_width);
   std::regex re("(max_div_\\d+_\\d+)\\.txt");
   double distances_sum{0};
   double total_cpu_time{0};
+  int nodes_sum{0};
   for (int i{0}; i < solutions.size(); i++) {
     Result result = solutions[i];
     std::string input_file = result.filename;
@@ -46,9 +48,11 @@ void PrintSolutionSummary(std::vector<Result>& solutions) {
     std::cout << CenterText(distance_stream.str(), 11) + "|";
     std::cout << CenterText(result.set_solution->ContainedIDs(), 30) + "|";
     std::cout << CenterText(std::to_string(result.CPU_time), 11) << "|";
+    std::cout << CenterText(std::to_string(result.generated_nodes), 11) << "|";
     // Sum values
     distances_sum += result.set_solution->inner_distance();
     total_cpu_time += result.CPU_time;
+    nodes_sum += result.generated_nodes;
     // Next line
     std::cout << std::endl << (((i + 1) % 4) ? "|" : std::string(table_width, '-') + "\n|") ;
   }
@@ -60,6 +64,7 @@ void PrintSolutionSummary(std::vector<Result>& solutions) {
   std::cout << CenterText(std::to_string(distances_sum / instances_size), 11) + "|";
   std::cout << CenterText("-", 30) + "|";
   std::cout << CenterText(std::to_string(total_cpu_time / instances_size), 11) << "|";
+  std::cout << CenterText(std::to_string(nodes_sum / instances_size), 11) << "|";
   std::cout << std::endl << std::string(table_width, '-') << std::endl;
   return;
 }
