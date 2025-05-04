@@ -21,7 +21,6 @@
 #include <limits>
 #include <memory>
 #include <random>
-#include <unordered_set>
 #include <vector>
 
 #include "./searches/search_method_selector.h"

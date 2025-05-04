@@ -15,6 +15,10 @@
 
 #include "../include/set_container.h"
 
+SetContainer::SetContainer(const SetContainer& other) : SetContainer() {
+  *this = other;
+}
+
 
 SetContainer& SetContainer::operator=(const SetContainer& other) {
   if (this != &other) {

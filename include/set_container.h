@@ -33,6 +33,8 @@ class SetContainer {
    */
   SetContainer() : sets_(std::vector<ElementSetPtr>(0)), inner_distance_(0) { }
 
+  SetContainer(const SetContainer& other);
+
   /**
    * @brief Assignment operator for `ElementSet`.
    *

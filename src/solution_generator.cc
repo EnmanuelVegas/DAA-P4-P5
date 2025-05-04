@@ -16,7 +16,6 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
   int counter{0};
   int limit{(candidates_size_ > 1) ? 20 : 1};
   while (counter++ < limit) {
-    std::cout << counter << std::endl;
     SetContainerPtr input_elements_copy = std::make_shared<SetContainer>(*this->instance_->input_set());
     current_solution = BuildSolution(input_elements_copy); // GREEDY AND GRASP
     // std::cout << *current_solution;
@@ -31,7 +30,7 @@ SetContainerPtr SolutionGenerator::GenerateSolution() {
     }
   }
   if (apply_byb_) {
-    std::cout << "byb" << std::endl;
+    // std::cout << "byb" << std::endl;
     best_solution = ApplyBranchAndBound(best_solution);
   }
   return best_solution;
@@ -92,11 +91,9 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
     nodes.erase(nodes.begin());
     // Node open_node = nodes.back();
     // nodes.erase(nodes.end());
-  
     // // std::cout << "ABRIMOS:\n";
     // std::cout << open_node.partial_sol() << std::endl;
     // std::cout << open_node.highest_limit() << std::endl;
-
     if (open_node.partial_sol().Size() == solution_size_) {
       if (open_node.partial_sol().inner_distance() > lowest_limit) {
         // std::cout << "TENEMOS NUEVA COTA (Nodo abierto): " << open_node.partial_sol().inner_distance();
@@ -112,19 +109,17 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
         container.AddSet(set);
         Node insert_node(container);
         insert_node.highest_limit() = ComputeHighestLimit(insert_node);
-
-        // std::cout << "METEMOS A NODO CON CONJUNTOS:" << std::endl;
-        // std::cout << insert_node.partial_sol() << std::endl;
-        // std::cout << "Y COTA SUPERIOR:" << insert_node.highest_limit() << std::endl;        
-        nodes.push_back(insert_node);
-        ++generated_nodes_;
+        if (insert_node.highest_limit() > lowest_limit) {
+          // std::cout << "METEMOS A NODO CON CONJUNTOS:" << std::endl;
+          // std::cout << insert_node.partial_sol() << std::endl;
+          // std::cout << "Y COTA SUPERIOR:" << insert_node.highest_limit() << std::endl;        
+          nodes.push_back(insert_node);
+          ++generated_nodes_;
+        }
       }
     }
     for (int i = nodes.size() - 1; i >= 0; --i) {
-      // if (nodes[i].highest_limit() < lowest_limit ||
-      // nodes[i].partial_sol().inner_distance() + nodes[i].highest_limit() <= lowest_limit) {
-      if (nodes[i].highest_limit() <= lowest_limit || 
-          nodes[i].partial_sol().inner_distance() + nodes[i].highest_limit() <= lowest_limit) {
+      if (nodes[i].highest_limit() < lowest_limit) {
         nodes.erase(nodes.begin() + i);
       }
     }
@@ -133,33 +128,42 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
 }
 
 double SolutionGenerator::ComputeHighestLimit(Node node) {
-  int number_of_points = node.partial_sol().Size();
   SetContainer solution = node.partial_sol();
-  int point_dimension = solution.sets()[0]->Size();
-  while (number_of_points < solution_size_) {
-    std::vector<double> coordinates;
-    for (int i = 0; i < point_dimension; i++) {
-      coordinates.push_back(-1);
-    }
-    ElementSetPtr set = std::make_shared<ElementSet>(-1, coordinates);
-    solution.AddSet(set);
-    number_of_points++;
+  std::vector<int> used_nodes_id(0);
+  for (auto& set : solution.sets()) {
+    used_nodes_id.push_back(set->id());
   }
-  double value = 0;
-  for (int i = 0; i < solution.Size(); i++) {
-    for (int j = i + 1; j < solution.Size(); j++) {
-      if (solution.sets()[i]->id() != -1 && solution.sets()[j]->id() != -1) {
-        // value += ComputeEuclideanDistance(solution.sets()[i]->elements(), solution.sets()[j]->elements());
-        value += instance_->GetDistance(solution.sets()[i]->id(), solution.sets()[j]->id());
-      } else {
-        value += instance_->highest_distance();
+  while (solution.Size() < solution_size_) {
+    double best_gain = -1;
+    int best_id = -1;
+    for (int i = 0; i < instance_->input_set()->Size(); ++i) {
+      int candidate_id = instance_->input_set()->sets()[i]->id();
+      if (std::find(used_nodes_id.begin(), used_nodes_id.end(), candidate_id) != used_nodes_id.end()) {
+        continue;
+      }
+      double gain = 0.0;
+      for (const auto& set : solution.sets()) {
+        gain += instance_->GetDistance(set->id(), candidate_id);
+      }
+      if (gain > best_gain) {
+        best_gain = gain;
+        best_id = candidate_id;
       }
     }
+    if (best_id == -1) break;
+    ElementSetPtr best_set;
+    for (int i = 0; i < instance_->input_set()->Size(); ++i) {
+      int candidate_id = instance_->input_set()->sets()[i]->id();
+      if (candidate_id == best_id) {
+        best_set = instance_->input_set()->sets()[i]->Clone();
+        break;
+      }
+    }
+    solution.AddSet(best_set);
+    used_nodes_id.push_back(best_id);
   }
-  return value;
+  return solution.inner_distance() + instance_->highest_distance() * 0.4;
 }
-
-
 
 ElementSetPtr SolutionGenerator::GetFurthestSet(SetContainerPtr candidates, 
                                                 ElementSetPtr center) {

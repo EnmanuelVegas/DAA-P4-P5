@@ -16,6 +16,18 @@
 #include "../include/node.h"
 
 
-bool Node::operator<(Node& other) {
-  return this->highest_limit_ < other.highest_limit_;
+bool Node::operator<(const Node& other) const {
+  if (this->highest_limit_ != other.highest_limit_) {
+    return this->highest_limit_ < other.highest_limit_;
+  }
+  if (this->partial_sol().Size() != other.partial_sol().Size()) {
+    return this->partial_sol().Size() < other.partial_sol().Size();
+  }
+  int this_last_id = this->partial_sol().sets().back()->id();
+  int other_last_id = other.partial_sol().sets().back()->id();
+  return this_last_id > other_last_id;
+}
+
+bool Node::operator>(const Node& other) const {
+  return other < *this;
 }

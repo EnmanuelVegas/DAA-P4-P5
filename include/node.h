@@ -39,9 +39,11 @@ class Node {
 
   double& highest_limit() { return highest_limit_; }
 
-  SetContainer partial_sol() { return partial_sol_; }
+  SetContainer partial_sol() const { return partial_sol_; }
 
-  bool operator<(Node& other);
+  bool operator<(const Node& other) const;
+
+  bool operator>(const Node& other) const;
 
  protected:
   SetContainer partial_sol_;
