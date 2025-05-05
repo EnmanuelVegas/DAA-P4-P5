@@ -75,6 +75,14 @@ class Instance {
    */
   double GetDistance(int first_id, int second_id);
 
+  /**
+   * @brief Gets the max distance between a element and any other (for heuristics).
+   *
+   * @param element_id The ID of the element.
+   * @return The maxdistance between an element and any other.
+   */
+  double GetMaxDistance(int element_id);
+
  private:
   /**
    * @brief Computes the pairwise distances between all elements.
@@ -83,10 +91,11 @@ class Instance {
    * of elements in the instance.
    */
   void ComputeDistances();
-
-  SetContainerPtr input_set_;
+ 
   double highest_distance_;
+  SetContainerPtr input_set_;
   std::vector<std::vector<double>> distances_;
+  std::vector<double> max_distances_;
 };
 
 #endif

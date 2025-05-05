@@ -140,7 +140,6 @@ class SolutionGenerator {
 
   std::shared_ptr<Instance> instance_;
   ElementSetPtr solution_set_;
-  // SearchMethodSelector search_selector_;
   std::mt19937 gen_;
   int candidates_size_;
   bool apply_local_search_;

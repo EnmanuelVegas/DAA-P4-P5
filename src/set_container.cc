@@ -68,13 +68,10 @@ void SetContainer::RecalculateInnerDistance() {
         continue;
       }
       // std::cout << *sets_[j] << ": ";
-      inner_distance_ +=
-          ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements());
-      // std::cout << ComputeEuclideanDistance(sets_[i]->elements(),
-      // sets_[j]->elements()) << std::endl;
+      inner_distance_ += ComputeEuclideanDistance(sets_[i]->elements(),
+                                                  sets_[j]->elements());
     }
   }
-  // // std::cout << inner_distance_ << std::endl;
   return;
 }
 

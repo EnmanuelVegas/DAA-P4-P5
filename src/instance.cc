@@ -12,7 +12,8 @@
 
 Instance::Instance(std::string& input_name)
     : input_set_(std::make_shared<SetContainer>()),
-      distances_(std::vector<std::vector<double>>(0)) {
+      distances_(std::vector<std::vector<double>>(0)),
+      max_distances_(std::vector<double>(0)) {
   std::ifstream input_file{input_name};
     if (!input_file.is_open()) {
     throw std::runtime_error("Cannot open input file!");
@@ -53,9 +54,15 @@ double Instance::GetDistance(int first, int second) {
   return distances_[second - 1][first - 1];
 }
 
+double Instance::GetMaxDistance(int element_id) {
+  return this->max_distances_[element_id - 1];
+}
+
+
 void Instance::ComputeDistances() {
   this->highest_distance_ = 0;
   distances_.resize(input_set_->sets().size());
+  max_distances_.resize(input_set_->sets().size());
   for (int i{0}; i < this->distances_.size(); i++) {
     this->distances_[i] = std::vector<double>(input_set_->sets().size(), 0);
     for (int j{0}; j < i; j++) {
@@ -67,7 +74,17 @@ void Instance::ComputeDistances() {
       }
     }
   }
-  // for (int i{-1}; i < input_set_->sets().size(); i++) {
+  for (int i{0}; i < distances_.size(); i++) {
+    double max_distance = 0.0;
+    for (int j{0}; j < distances_.at(i).size(); j++) {
+      if (GetDistance(i + 1, j + 1) > max_distance) {
+        max_distance = GetDistance(i + 1, j + 1);
+      }
+    }
+    max_distances_[i] = max_distance;
+  }
+  // // Impresión de distancias:
+  // for (int i{-1}; i < (int)input_set_->sets().size(); i++) {
   //   std::cout << std::setw(8) << i + 1 << " ";
   // }
   // std::cout << std::endl;
@@ -77,6 +94,9 @@ void Instance::ComputeDistances() {
   //     std::cout << std::setw(8) << distances_[i][j] << " ";
   //   }
   //   std::cout << std::endl;
+  // }
+  // for (int i{0}; i < max_distances_.size(); i++) {
+  //   std::cout << max_distances_[i] << ", ";
   // }
   return;
 }
