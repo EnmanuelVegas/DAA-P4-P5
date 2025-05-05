@@ -52,11 +52,9 @@ SetContainerPtr SolutionGenerator::BuildSolution(SetContainerPtr input_elements)
 
 SetContainerPtr SolutionGenerator::ApplyLocalSearch(SetContainerPtr solution, 
                                                     SetContainerPtr input_elements_copy) {
-  // std::cout << "Antes: " << solution->inner_distance() << std::endl;
   std::shared_ptr<LocalSearch> search_method = std::make_shared<InterSwap>();
   bool search_result = true;
   while (search_result) {
-    // SetContainerPtr input_elements_copy = std::make_shared<SetContainer>(*this->instance_->input_set());
     search_result = search_method->GetBestNeighbor(solution, input_elements_copy);
     std::cout << "Mejorado: " << solution->inner_distance() << std::endl;
   }
@@ -81,22 +79,12 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
 
   while (!nodes.empty()) {
     std::sort(nodes.begin(), nodes.end());
-    // std::cout << "NODOS SIN ABRIR ordenados: " << nodes.size() << std::endl;
-    // for (auto& node : nodes) {
-    //   std::cout << node.partial_sol() << std::endl;
-    //   std::cout << node.highest_limit() << std::endl;
-    // }
-    // std::cout << std::endl;
     Node open_node = nodes.front();
     nodes.erase(nodes.begin());
     // Node open_node = nodes.back();
     // nodes.erase(nodes.end());
-    // // std::cout << "ABRIMOS:\n";
-    // std::cout << open_node.partial_sol() << std::endl;
-    // std::cout << open_node.highest_limit() << std::endl;
     if (open_node.partial_sol().Size() == solution_size_) {
       if (open_node.partial_sol().inner_distance() > lowest_limit) {
-        // std::cout << "TENEMOS NUEVA COTA (Nodo abierto): " << open_node.partial_sol().inner_distance();
         lowest_limit = open_node.partial_sol().inner_distance();
         optimal_solution = std::make_shared<SetContainer>(open_node.partial_sol());
       }
@@ -110,9 +98,6 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
         Node insert_node(container);
         insert_node.highest_limit() = ComputeHighestLimit(insert_node);
         if (insert_node.highest_limit() > lowest_limit) {
-          // std::cout << "METEMOS A NODO CON CONJUNTOS:" << std::endl;
-          // std::cout << insert_node.partial_sol() << std::endl;
-          // std::cout << "Y COTA SUPERIOR:" << insert_node.highest_limit() << std::endl;        
           nodes.push_back(insert_node);
           ++generated_nodes_;
         }
