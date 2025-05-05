@@ -1,3 +1,11 @@
 
-Uso: ./vrpt_routes [FILE|DIRECTORY] -g <LRC> -s <SOLUTION>
+Uso: ./max_diversity FILE|DIRECTORY -g <LRC> [-l|--localsearch] [-bb|-branchbound]
 
+Parámetros obligatorios:
+  -g, --grasp <LRC>        Tamaño de la lista restringida de candidatos (LRC)
+
+Parámetros opcionales:
+  -l, --localsearch        Aplica el algoritmo de búsqueda local a la salida del
+                           voraz o GRASP.
+  -bb, --branchbound       Aplica el algoritmo de ramificación y poda a la salida
+                           del voraz o GRASP.

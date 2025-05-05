@@ -45,10 +45,10 @@ std::optional<ProgramOptions> ParseArguments(int argc, char* argv[]) {
       throw std::invalid_argument("Arguments must be higher than 0!");
     }
     while (arguments_counter < argc - 1) {
-      if (args[arguments_counter] == "-l") {
+      if (args[arguments_counter] == "-l" || args[arguments_counter] == "--localsearch") {
         options.apply_local_search = true;
       }
-      else if (args[arguments_counter] == "-bb") {
+      else if (args[arguments_counter] == "-bb" || args[arguments_counter] == "--branchbound") {
         options.apply_byb = true;
       }
       else {
