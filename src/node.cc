@@ -10,11 +10,10 @@
  * This file contains the definition of the `ElementSet` class, which represents
  * a set of elements in the context of the Maximum Diversity Problem.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #include "../include/node.h"
-
 
 bool Node::operator<(const Node& other) const {
   if (this->highest_limit_ != other.highest_limit_) {
@@ -28,6 +27,4 @@ bool Node::operator<(const Node& other) const {
   return this_last_id > other_last_id;
 }
 
-bool Node::operator>(const Node& other) const {
-  return other < *this;
-}
+bool Node::operator>(const Node& other) const { return other < *this; }

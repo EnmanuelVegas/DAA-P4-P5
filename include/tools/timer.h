@@ -10,7 +10,7 @@
  * This file contains the declaration of the `Timer` class, which provides
  * methods to measure execution time using a stopwatch mechanism.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #ifndef TIMER_H

@@ -9,7 +9,7 @@
  * This file contains utility methods for processing and summarizing results
  * in the context of the Maximum Diversity Problem.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #ifndef RESULTS_H

@@ -11,7 +11,7 @@
  * provides an interface for implementing various local search methods in the
  * context of the Maximum Diversity Problem.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #ifndef LOCAL_SEARCH_H
@@ -23,8 +23,8 @@
 #include <random>
 #include <vector>
 
-#include "../tools/utils.h"
 #include "../set_container.h"
+#include "../tools/utils.h"
 
 /**
  * @class LocalSearch
@@ -53,7 +53,8 @@ class LocalSearch {
    * @return A pair indicating whether a better neighbor was found and the
    * corresponding solution.
    */
-  virtual bool GetBestNeighbor(SetContainerPtr solution, SetContainerPtr candidates) = 0;
+  virtual bool GetBestNeighbor(SetContainerPtr solution,
+                               SetContainerPtr candidates) = 0;
 
   /**
    * @brief Returns the type of local search.

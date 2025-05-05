@@ -12,7 +12,7 @@
  * project, including mathematical operations, file handling, and text
  * formatting.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #ifndef UTILS_H
@@ -132,7 +132,8 @@ double RoundToTwoDecimals(double value);
  * @param second The coordinates of the second element.
  * @return The Euclidean distance between the two elements.
  */
-double ComputeEuclideanDistance(std::vector<double> first, std::vector<double> second);
+double ComputeEuclideanDistance(std::vector<double> first,
+                                std::vector<double> second);
 
 /**
  * @brief Finds the index of the first space in a string.

@@ -10,7 +10,7 @@
  * This file contains the definition of the `ElementSet` class, which represents
  * a set of elements in the context of the Maximum Diversity Problem.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #include "../include/set_container.h"
@@ -18,7 +18,6 @@
 SetContainer::SetContainer(const SetContainer& other) : SetContainer() {
   *this = other;
 }
-
 
 SetContainer& SetContainer::operator=(const SetContainer& other) {
   if (this != &other) {
@@ -35,8 +34,10 @@ SetContainer& SetContainer::operator=(const SetContainer& other) {
 void SetContainer::AddSet(ElementSetPtr set) {
   double added_distance{0};
   for (int i{0}; i < sets_.size(); i++) {
-    // added_distance += ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
-    added_distance += ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
+    // added_distance += ComputeEuclideanDistance(set->elements(),
+    // sets_[i]->elements());
+    added_distance +=
+        ComputeEuclideanDistance(set->elements(), sets_[i]->elements());
   }
   // std::cout << "Sumamos " << added_distance << std::endl;
   inner_distance_ += added_distance;
@@ -50,7 +51,8 @@ void SetContainer::DeleteSet(ElementSetPtr delete_set) {
   auto it = std::find(sets_.begin(), sets_.end(), delete_set);
   if (it != sets_.end()) {
     for (int i{0}; i < sets_.size(); i++) {
-      inner_distance_ -= ComputeEuclideanDistance(delete_set->elements(), sets_[i]->elements());
+      inner_distance_ -= ComputeEuclideanDistance(delete_set->elements(),
+                                                  sets_[i]->elements());
     }
     sets_.erase(it);
   }
@@ -62,10 +64,14 @@ void SetContainer::RecalculateInnerDistance() {
   for (int i{0}; i < sets_.size(); i++) {
     // std::cout << "Distancia de " << *sets_[i] << " con ";
     for (int j{i + 1}; j < sets_.size(); j++) {
-      if (i == j) { continue; }
+      if (i == j) {
+        continue;
+      }
       // std::cout << *sets_[j] << ": ";
-      inner_distance_ += ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements());
-      // std::cout << ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements()) << std::endl;
+      inner_distance_ +=
+          ComputeEuclideanDistance(sets_[i]->elements(), sets_[j]->elements());
+      // std::cout << ComputeEuclideanDistance(sets_[i]->elements(),
+      // sets_[j]->elements()) << std::endl;
     }
   }
   // // std::cout << inner_distance_ << std::endl;
@@ -79,7 +85,6 @@ std::string SetContainer::ContainedIDs() const {
   }
   return result;
 }
-
 
 ElementSetPtr SetContainer::GravityCenter() {
   ElementSetPtr center_set = std::make_shared<ElementSet>(0);
@@ -98,7 +103,7 @@ ElementSetPtr SetContainer::GravityCenter() {
   return center_set;
 }
 
-std::ostream& operator<<(std::ostream& os, const SetContainer& container) { 
+std::ostream& operator<<(std::ostream& os, const SetContainer& container) {
   os << "Solution has " << container.sets_.size() << " sets:\n";
   for (int i{0}; i < container.sets_.size(); i++) {
     os << "** Set Nº " << container.sets_[i]->id() << ":\n";

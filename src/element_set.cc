@@ -10,11 +10,10 @@
  * This file contains the definition of the `ElementSet` class, which represents
  * a set of elements in the context of the Maximum Diversity Problem.
  *
- * @date  April 29, 2025
+ * @date  May 6, 2025
  */
 
 #include "../include/element_set.h"
-
 
 ElementSetPtr ElementSet::Clone() const {
   return std::make_shared<ElementSet>(*this);
@@ -24,7 +23,7 @@ void ElementSet::AddElement(double element) {
   this->elements_.push_back(element);
 }
 
-std::ostream& operator<<(std::ostream& os, const ElementSet& set) { 
+std::ostream& operator<<(std::ostream& os, const ElementSet& set) {
   os << "{ ";
   for (auto& element : set.elements_) {
     os << element << " ";

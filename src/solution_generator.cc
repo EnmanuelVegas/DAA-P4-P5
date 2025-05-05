@@ -87,10 +87,10 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
     //   std::cout << node.highest_limit() << std::endl;
     // }
     // std::cout << std::endl;
-    Node open_node = nodes.front();
-    nodes.erase(nodes.begin());
-    // Node open_node = nodes.back();
-    // nodes.erase(nodes.end());
+    // Node open_node = nodes.front();
+    // nodes.erase(nodes.begin());
+    Node open_node = nodes.back();
+    nodes.erase(nodes.end());
     // // std::cout << "ABRIMOS:\n";
     // std::cout << open_node.partial_sol() << std::endl;
     // std::cout << open_node.highest_limit() << std::endl;
