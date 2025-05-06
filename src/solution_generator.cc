@@ -76,11 +76,18 @@ SetContainerPtr SolutionGenerator::ApplyBranchAndBound(SetContainerPtr solution)
   while (!nodes.empty()) {
     std::sort(nodes.begin(), nodes.end());
     // Explorar el que menor cota superior tiene
-    Node open_node = nodes.front();
-    nodes.erase(nodes.begin());
-    // Explorar el que mayor cota superior tiene
-    // Node open_node = nodes.back();
-    // nodes.pop_back();
+    // Node open_node = nodes.front();
+    // nodes.erase(nodes.begin());
+    // MODIFICACIÓN: Explorar el nodo que tiene la segunda mayor cota
+    Node open_node;
+    if (nodes.size() == 1) {
+      open_node = nodes.back();
+      nodes.pop_back();
+    }
+    else {
+      open_node = nodes.at(nodes.size() - 2);
+      nodes.erase(nodes.begin() + nodes.size() - 2);
+    }
 
     if (open_node.partial_sol().Size() == solution_size_) {
       if (open_node.partial_sol().inner_distance() > lowest_limit) {
