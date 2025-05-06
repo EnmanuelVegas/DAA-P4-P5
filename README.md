@@ -2,7 +2,7 @@
 
 ## P6: Enmanuel Vegas Acosta (alu0101281698@ull.edu.es)
 
-Uso: ./max_diversity FILE|DIRECTORY -g <LRC> [-l] [-bb]
+Uso: `./max_diversity FILE|DIRECTORY -g <LRC> [-l] [-bb]`
 
 Programa para resolver el Problema de Máxima Diversidad (MDP) para el fichero 
 FILE o para todos los ficheros especificados en la ruta DIRECTORY.
